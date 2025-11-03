@@ -109,7 +109,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
       formData.economicsIssueRating === 0 &&
       formData.capacityIssueRating === 0
     ) {
-      newErrors.volumeIssueRating = 0
+      newErrors.volumeIssueRating = "Please rate at least one challenge" as unknown as number
     }
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -126,7 +126,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
   const validateStep4 = () => {
     const newErrors: Partial<FormData> = {}
-    if (!formData.termsAccepted) newErrors.termsAccepted = false
+    if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms" as unknown as number
     if (!formData.hearAboutUs) newErrors.hearAboutUs = "Please select how you heard about us"
     if (formData.hearAboutUs === "Other" && !formData.otherSource.trim()) {
       newErrors.otherSource = "Please specify your source"
