@@ -126,7 +126,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
   const validateStep4 = () => {
     const newErrors: Partial<FormData> = {}
-    if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms" as unknown as number
+    if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms" as unknown as boolean
     if (!formData.hearAboutUs) newErrors.hearAboutUs = "Please select how you heard about us"
     if (formData.hearAboutUs === "Other" && !formData.otherSource.trim()) {
       newErrors.otherSource = "Please specify your source"
