@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Menu, X, ChevronDown } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -12,19 +13,20 @@ export function Header() {
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)
 
   return (
-    <header className="bg-[#1a1a1a] text-white sticky top-0 z-40">
+    <header className="bg-[#74c0fc] text-white sticky top-0 z-40">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20">
+        <div className="flex items-center justify-between h-16 md:h-20" title="Life By Design | Home">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <svg className="h-6 md:h-8 w-6 md:w-8" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M20 5L5 15L10 25L20 20L30 25L35 15L20 5Z" fill="white" />
-              <path d="M10 25L15 35L20 32.5L25 35L30 25L20 30L10 25Z" fill="white" />
-            </svg>
-            <span className="text-sm md:text-xl font-bold hidden sm:inline">
-              ACQUISITION<span className="text-white">.COM</span>
-            </span>
-          </Link>
+            <Link href="/" className="flex items-center gap-2">
+              {/*<svg className="h-8 w-8" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 5L5 15L10 25L20 20L30 25L35 15L20 5Z" fill="white" />
+                <path d="M10 25L15 35L20 32.5L25 35L30 25L20 30L10 25Z" fill="white" />
+              </svg>*/}
+              <Image src={"/lifebydesignlogo.png"} alt="Life By Design" width={32} height={32}></Image>
+              <span className="text-xl font-bold">
+                LBD<span className="text-white">.GROUP</span>
+              </span>
+            </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-wrap justify-center flex-1 mx-4">
@@ -108,7 +110,7 @@ export function Header() {
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t border-gray-700 bg-[#1a1a1a]">
+          <nav className="lg:hidden py-4 border-t border-gray-700 bg-[#74c0fc]">
             <div className="flex flex-col gap-4">
               <Link
                 href="/workshops"

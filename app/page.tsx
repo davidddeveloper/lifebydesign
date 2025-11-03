@@ -12,7 +12,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <AnnouncementBanner />
       <Header />
       <main>
         <HeroSection onOpenForm={() => setFormModalOpen(true)} />
