@@ -22,10 +22,10 @@ export function Header() {
                 <path d="M20 5L5 15L10 25L20 20L30 25L35 15L20 5Z" fill="white" />
                 <path d="M10 25L15 35L20 32.5L25 35L30 25L20 30L10 25Z" fill="white" />
               </svg>*/}
-              <Image src={"/lifebydesignlogo.png"} alt="Life By Design" width={32} height={32}></Image>
-              <span className="text-xl font-bold">
+              <Image src={"/images/startupbodyshoplogo.png"} alt="Life By Design" width={120} height={120}></Image>
+              {/*<span className="text-xl font-bold">
                 LBD<span className="text-white">.GROUP</span>
-              </span>
+              </span>*/}
             </Link>
 
           {/* Desktop Navigation */}

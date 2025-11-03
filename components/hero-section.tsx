@@ -11,18 +11,18 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
   return (
     <section className="bg-gray-100 py-16 md:py-24 lg:py-32 relative overflow-hidden"> {/*bg-gray-100*/}
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-[300px_1fr_100px] items-center gap-8">
+        <div className="items-center gap-8"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
-          <div className="hidden lg:block">
+          {/*<div className="hidden lg:block">
             <img
               src="/images/joeabasshero.png"
               alt="Team member"
               className="w-full h-auto object-cover"
             />
-          </div>
+          </div>*/}
 
           {/* Center Content */}
-          <div className="text-center max-w-3xl mx-auto">
+          <div className="mt-16 text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight text-balance">
               DO YOU WANT TO SCALE YOUR BUSINESS?
             </h1>
@@ -55,11 +55,11 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
             alt="Team member"
             className="w-full h-auto object-cover rounded-lg"
           />*/}
-          <img
+          {/*<img
             src="/images/joeabasshero.png"
             alt="Team member"
             className="w-full h-auto object-cover rounded-lg"
-          />
+          />*/}
         </div>
       </div>
     </section>

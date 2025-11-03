@@ -19,13 +19,6 @@ export default function Home() {
       </main>
 
       <ScaleFormModal isOpen={formModalOpen} onClose={() => setFormModalOpen(false)} />
-
-      <button
-        className="fixed bottom-6 left-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-black text-white font-bold text-sm hover:bg-gray-900 transition-colors"
-        aria-label="Contact"
-      >
-        CO
-      </button>
     </div>
   )
 }
