@@ -1,12 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 "use client"
 
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 
 export default function NotFound() {
-  const containerVariants = {
+  // --- Animation Variants ---
+
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -17,7 +17,7 @@ export default function NotFound() {
     },
   }
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
@@ -26,20 +26,26 @@ export default function NotFound() {
     },
   }
 
-  const floatingVariants = {
+  const floatingVariants: Variants = {
     animate: {
       y: [0, -20, 0],
       transition: {
         duration: 3,
-        repeat: Number.POSITIVE_INFINITY,
+        repeat: Infinity,
         ease: "easeInOut",
       },
     },
   }
 
+  // --- Component ---
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center px-4 py-12">
-      <motion.div className="text-center max-w-2xl" variants={containerVariants} initial="hidden" animate="visible">
+      <motion.div
+        className="text-center max-w-2xl"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
         {/* Animated SVG */}
         <motion.div className="mb-8 flex justify-center" variants={itemVariants}>
           <motion.svg
@@ -47,7 +53,8 @@ export default function NotFound() {
             viewBox="0 0 200 200"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            animate={floatingVariants}
+            variants={floatingVariants}
+            animate="animate"
           >
             {/* Background circle */}
             <circle cx="100" cy="100" r="95" fill="rgba(124, 58, 237, 0.1)" />
@@ -55,9 +62,7 @@ export default function NotFound() {
 
             {/* Construction cone */}
             <g transform="translate(100, 60)">
-              {/* Cone body */}
               <path d="M -20 30 L 0 0 L 20 30 Z" fill="#7c3aed" stroke="#7c3aed" strokeWidth="2" />
-              {/* Cone stripes */}
               <line x1="-15" y1="10" x2="15" y2="10" stroke="white" strokeWidth="2" />
               <line x1="-10" y1="20" x2="10" y2="20" stroke="white" strokeWidth="2" />
             </g>
@@ -92,14 +97,20 @@ export default function NotFound() {
         </motion.div>
 
         {/* Heading */}
-        <motion.h2 variants={itemVariants} className="text-3xl md:text-4xl font-black text-gray-900 mb-4">
+        <motion.h2
+          variants={itemVariants}
+          className="text-3xl md:text-4xl font-black text-gray-900 mb-4"
+        >
           Page Coming Soon
         </motion.h2>
 
         {/* Description */}
-        <motion.p variants={itemVariants} className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">
-          We're currently building something amazing here. This page is under development and will be ready to scale
-          soon.
+        <motion.p
+          variants={itemVariants}
+          className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed"
+        >
+          We're currently building something amazing here. This page is under development and will
+          be ready to scale soon.
         </motion.p>
 
         {/* CTA Button */}
