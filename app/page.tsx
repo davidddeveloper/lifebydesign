@@ -1,4 +1,4 @@
-import { Header } from "@/components/header"
+import { Header } from "@/components/Header"
 import { AnnouncementBanner } from "@/components/announcement-banner"
 import { HeroSection } from "@/components/hero-section"
 import { FreeTrainingSection } from "@/components/free-training-section"
