@@ -75,7 +75,7 @@ export function Header() {
                   <Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Podcast
                   </Link>
-                  <Link href="/media/youtube" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                  <Link href="https://www.youtube.com/@JABShow" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     YouTube
                   </Link>
                   <Link href="/media/blog" className="block px-4 py-2 hover:bg-gray-100 text-sm">
@@ -93,9 +93,9 @@ export function Header() {
             <Link href="/careers" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Careers
             </Link>
-            <Link href="/ventures" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
+            {/*<Link href="/ventures" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Ventures
-            </Link>
+            </Link>*/}
           </nav>
 
           {/* Mobile Menu Button */}
