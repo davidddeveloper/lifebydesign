@@ -22,12 +22,12 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
           </div>*/}
 
           {/* Center Content */}
-          <div className="mt-16 text-center max-w-3xl mx-auto">
+          <div className="mt-16 text-center max-w-5xl mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight text-balance">
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Learn from the team that have scaled businesses to over $1.5M in annual revenue. Check whether you qualify for a free business diagnostics.
+              Learn from the team that has scaled businesses to $1.5M+ in annual revenue. Check whether you qualify for a free business diagnostics.
             </p>
             <Button
                 onClick={onOpenForm}
