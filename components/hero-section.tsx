@@ -24,17 +24,17 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
           {/* Center Content */}
           <div className="mt-16 text-center max-w-3xl mx-auto">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight text-balance">
-              DO YOU WANT TO SCALE YOUR BUSINESS?
+              ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Learn from the team that has scaled a portfolio to over $1m+ in annual revenue.
+              Learn from the team that has scaled a portfolio to over $1.5M+ in annual revenue. Click here to to see if you qualify for this exclusive opportunity.
             </p>
             <Button
                 onClick={onOpenForm}
                 size="lg"
                 className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto"
               > {/** bg-[#74c0fc] #7c3aed hover: 6d28d9*/}
-                LEARN TO SCALE
+                APPLY HERE
               </Button>
           </div>
 
