@@ -8,7 +8,7 @@ import { FreeTrainingSection } from "@/components/free-training-section"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 import { FAQSection } from "@/components/faq-section"
 import { FoundersSection } from "@/components/founders-section"
-import { Footer } from "@/components/footer"
+import { Footer } from "@/components/Footer"
 
 export default function Home() {
   const [formModalOpen, setFormModalOpen] = useState(false)
