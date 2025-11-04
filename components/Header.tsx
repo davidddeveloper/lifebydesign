@@ -72,9 +72,9 @@ export function Header() {
               </button>
               {mediaOpen && (
                 <div className="absolute top-full left-0 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
-                  <Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                  {/*<Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Podcast
-                  </Link>
+                  </Link>*/}
                   <Link href="https://www.youtube.com/@JABShow" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     YouTube
                   </Link>
