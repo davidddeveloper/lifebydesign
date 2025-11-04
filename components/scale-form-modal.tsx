@@ -304,7 +304,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden pointer-events-auto">
-              <div className="bg-[#1e293b] px-6 py-5 flex items-center justify-between">
+              <div className="bg-[#1e293b] px-6 py-5 flex items-center justify-between"> {/**1e293b */}
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">Ready to Scale Your Business?</h2>
                   <p className="text-white/70 text-sm mt-1">Complete the form to secure your spot</p>
@@ -319,7 +319,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
               <div className="bg-gray-100 h-2">
                 <motion.div
-                  className="bg-[#7c3aed] h-full"
+                  className="bg-[#177fc9] h-full"
                   // Updated progress bar initial width for 4 steps
                   initial={{ width: "25%" }}
                   animate={{ width: `${progress}%` }}
@@ -343,7 +343,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           (formData.personalEmail || formData.businessEmail) &&
                           formData.phone
                             ? "bg-green-500"
-                            : "bg-[#7c3aed]"
+                            : "bg-[#177fc9]"
                         } text-white font-bold`}
                       >
                         {formData.firstName &&
@@ -460,9 +460,9 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                                 formData.capacityIssueRating > 0
                             )
                               ? "bg-green-500"
-                              : "bg-[#7c3aed]"
+                              : "bg-[#177fc9]"
                           } text-white font-bold`}
-                        >
+                        > {/**7c3aed */}
                           {formData.businessName &&
                           formData.websiteLink &&
                           formData.businessSnapshot &&
@@ -641,7 +641,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                       className="space-y-4 pt-6 border-t"
                     >
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#7c3aed] text-white font-bold">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#177fc9] text-white font-bold">
                           3
                         </div>
                         <h3 className="text-xl font-bold text-gray-900">Goals and Expectations</h3>
@@ -705,7 +705,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                       className="space-y-4 pt-6 border-t"
                     >
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#7c3aed] text-white font-bold">
+                        <div className="w-8 h-8 rounded-full flex items-center justify-center bg-[#177fc9] text-white font-bold">
                           4
                         </div>
                         <h3 className="text-xl font-bold text-gray-900">Submission Confirmation</h3>

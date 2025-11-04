@@ -13,7 +13,7 @@ export function Header() {
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)
 
   return (
-    <header className="bg-[#74c0fc] text-white sticky top-0 z-40">
+    <header className="bg-[#fff] text-white sticky top-0 z-40"> {/** bg-[#74c0fc] #177fc9*/}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20" title="Life By Design | Home">
           {/* Logo */}
@@ -29,7 +29,7 @@ export function Header() {
             </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-wrap justify-center flex-1 mx-4">
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-wrap justify-center flex-1 mx-4 text-black">
             <Link href="/workshops" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Workshops
             </Link>
@@ -43,7 +43,7 @@ export function Header() {
                 <ChevronDown className="h-4 w-4" />
               </button>
               {coursesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                <div className="absolute top-full left-0 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
                   <Link
                     href="/courses/scaling"
                     className="block px-4 py-2 hover:bg-gray-100 text-purple-600 font-medium"
@@ -71,7 +71,7 @@ export function Header() {
                 <ChevronDown className="h-4 w-4" />
               </button>
               {mediaOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                <div className="absolute top-full left-0 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
                   <Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Podcast
                   </Link>
@@ -104,13 +104,13 @@ export function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="h-5 w-5 md:h-6 md:w-6" /> : <Menu className="h-5 w-5 md:h-6 md:w-6" />}
+            {mobileMenuOpen ? <X className="h-5 w-5 text-black md:h-6 md:w-6" /> : <Menu className="h-5 w-5 text-black md:h-6 md:w-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t border-gray-700 bg-[#74c0fc]">
+          <nav className="lg:hidden py-4 border-t border-gray-700 bg-[#fff] text-black">
             <div className="flex flex-col gap-4">
               <Link
                 href="/workshops"

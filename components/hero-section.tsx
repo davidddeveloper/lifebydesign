@@ -32,8 +32,8 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
             <Button
                 onClick={onOpenForm}
                 size="lg"
-                className="bg-[#74c0fc] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto"
-              > {/** #7c3aed hover: 6d28d9*/}
+                className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto"
+              > {/** bg-[#74c0fc] #7c3aed hover: 6d28d9*/}
                 LEARN TO SCALE
               </Button>
           </div>
