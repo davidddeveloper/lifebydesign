@@ -23,7 +23,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
 
           {/* Center Content */}
           <div className="mt-16 text-center max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight text-balance">
+            <h1 className="text-4xl md:text-3xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight text-balance">
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
