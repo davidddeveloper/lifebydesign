@@ -27,7 +27,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Learn from the team that has scaled businesses to $1.5M+ in annual revenue. Check whether you qualify for a free business diagnostics.
+              Learn from the team that has scaled businesses to $1.5M+ in annual revenue. <br />Check whether you qualify for a free business diagnostics.
             </p>
             <Button
                 onClick={onOpenForm}
