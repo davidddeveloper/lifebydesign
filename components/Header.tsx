@@ -62,9 +62,9 @@ export function Header() {
                 </div>
               )}
             </div>
-            <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
+            {/* <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Books
-            </Link>
+            </Link> */}
             <div className="relative" onMouseEnter={() => setMediaOpen(true)} onMouseLeave={() => setMediaOpen(false)}>
               <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
                 Media
