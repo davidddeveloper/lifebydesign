@@ -33,7 +33,7 @@ export function Header() {
             <Link href="/workshops" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Workshops
             </Link>
-            <div
+            {/*<div
               className="relative"
               onMouseEnter={() => setCoursesOpen(true)}
               onMouseLeave={() => setCoursesOpen(false)}
@@ -61,7 +61,7 @@ export function Header() {
                   </Link>
                 </div>
               )}
-            </div>
+            </div>*/}
             {/* <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Books
             </Link> */}
