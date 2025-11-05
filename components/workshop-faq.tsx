@@ -28,6 +28,11 @@ import { ScaleFormModal } from "@/components/scale-form-modal"
     question: "How much are tickets?",
     answer:
       "Investment details are provided during the application process. This ensures we're working with entrepreneurs who are the right fit for the intensive nature of the workshop.",
+  },
+  {
+    question: "How to register for a workshop",
+    answer:
+      'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
   },*/}
 
 const faqs = [
@@ -35,11 +40,6 @@ const faqs = [
     question: "What is the Scaling Blueprint?",
     answer:
       "The Scaling Blueprint is LBD Startup Bodyshop's flagship business growth system. It's a diagnostic and intervention framework designed to help entrepreneurs identify and eliminate the single biggest constraint holding back their business growth. It focuses on clarity, control, and capacity — giving founders the structure and tools to scale sustainably and profitably.",
-  },
-  {
-    question: "How to register for a workshop",
-    answer:
-      'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
   },
   {
     question: "How does the Scaling Blueprint work?",
