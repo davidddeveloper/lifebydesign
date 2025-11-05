@@ -62,11 +62,11 @@ const faqs = [
   {
     question: "How is LBD different from other business support programs?",
     answer:
-      "LBD's approach is diagnostic, data-driven, and implementation-focused. The Scaling Blueprint focuses on one key constraint at a time, ensuring measurable progress with strategy, systems, and accountability.",
+      "LBD Startup Bodyshop's approach is diagnostic, data-driven, and implementation-focused. The Scaling Blueprint focuses on one key constraint at a time, ensuring measurable progress with strategy, systems, and accountability.",
   },
   {
-    question: "What is LBD Startup Bodyshop broader vision?",
-    answer: "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through partnerships with IDT Labs and Inkee Media, LBD continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth."
+    question: "What is LBD Startup Bodyshop's broader vision?",
+    answer: "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through his work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth."
   }
 ]
 
