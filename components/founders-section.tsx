@@ -19,7 +19,7 @@ export function FoundersSection() {
           </div>
 
           {/* Founders Content */}
-          <div className="space-y-4 text-gray-900">
+          <div className="space-y-4 px-4 md:px-0 text-gray-900">
             <p className="text-lg leading-relaxed">
               <strong>Joe Abass Bangura</strong> is a Chartered Accountant, serial entrepreneur, and life & business coach, widely recognized as the host of Sierra Leone's first and largest personal development platform Life By Design.
             </p>
