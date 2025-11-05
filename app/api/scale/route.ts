@@ -7,7 +7,7 @@ export async function POST(request: Request) {
     console.log('this is the form data lol', formData)
     
 
-    const response = await fetch("https://david-conteh.app.n8n.cloud/webhook/81a87bd0-b954-41d3-8dcd-c06a31878457", {
+    const response = await fetch("https://n8n.srv1108378.hstgr.cloud/webhook/81a87bd0-b954-41d3-8dcd-c06a31878457", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
