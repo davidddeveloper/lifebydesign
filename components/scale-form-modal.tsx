@@ -307,7 +307,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
               <div className="bg-[#1e293b] px-6 py-5 flex items-center justify-between"> {/**1e293b */}
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">Ready to Scale Your Business?</h2>
-                  <p className="text-white/70 text-sm mt-1">Complete the form to secure your spot</p>
+                  <p className="text-white/70 text-sm mt-1">Complete this form for a free business diagnostic</p>
                 </div>
                 <button
                   onClick={onClose}
