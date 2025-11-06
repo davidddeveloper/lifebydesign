@@ -11,8 +11,8 @@ export function FoundersSection() {
           <div className="flex md:flex-shrink-0 justify-center md:order-first">
             <div className="w-full max-w-sm">
               <img
-                src="/images/joeabasshero.png"
-                alt="Alex and Leila Hormozi"
+                src="/images/joeabassfounder.jpg"
+                alt="Joe Abass Bangura Founder"
                 className="w-full h-auto rounded-lg border-4 border-gray-900 shadow-lg"
               />
             </div>
