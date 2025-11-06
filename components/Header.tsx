@@ -29,7 +29,7 @@ export function Header() {
             </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 flex-wrap justify-center flex-1 mx-4 text-black">
+          <nav className="hidden lg:flex items-end gap-6 xl:gap-8 flex-wrap justify-end flex-1 mx-4 text-black">
             <Link href="/workshops" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Workshops
             </Link>
