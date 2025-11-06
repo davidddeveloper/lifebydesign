@@ -76,7 +76,7 @@ export function WorkshopFaq() {
 
   return (
     <>
-      <section className="bg-white py-16 md:py-24">
+      <section className="bg-white py-8 md:py-16">
         <h2 className="mx-auto text-3xl w-[250px mb-10 text-center">FAQs</h2>
         <div className="container mx-auto px-4 max-w-4xl">
           {/* FAQ Items */}

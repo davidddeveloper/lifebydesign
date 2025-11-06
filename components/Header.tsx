@@ -7,7 +7,7 @@ import Image from "next/image"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [coursesOpen, setCoursesOpen] = useState(false)
+  //const [coursesOpen, setCoursesOpen] = useState(false)
   const [mediaOpen, setMediaOpen] = useState(false)
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false)
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)

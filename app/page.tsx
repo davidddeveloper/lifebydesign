@@ -2,11 +2,11 @@
 
 import { useState } from "react"
 import { Header } from "@/components/Header"
-import { AnnouncementBanner } from "@/components/announcement-banner"
+//import { AnnouncementBanner } from "@/components/announcement-banner"
 import { HeroSection } from "@/components/hero-section"
 import { FreeTrainingSection } from "@/components/free-training-section"
 import { ScaleFormModal } from "@/components/scale-form-modal"
-import { FAQSection } from "@/components/faq-section"
+import { WorkshopFaq } from "@/components/workshop-faq"
 import { FoundersSection } from "@/components/founders-section"
 import { Footer } from "@/components/Footer"
 
@@ -18,7 +18,8 @@ export default function Home() {
       <Header />
       <main>
         <HeroSection onOpenForm={() => setFormModalOpen(true)} />
-        <FreeTrainingSection />
+        {/*<FreeTrainingSection />*/}
+        <WorkshopFaq />
         <FoundersSection />
       </main>
 
