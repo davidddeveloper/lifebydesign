@@ -30,6 +30,7 @@ interface FormData {
   businessSnapshot: string
   whatYouSell: string
   targetCustomers: string
+  numberOfEmployees: string
   monthlyRevenue: string
   volumeIssueRating: number
   conversionIssueRating: number
@@ -59,6 +60,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
     businessSnapshot: "",
     whatYouSell: "",
     targetCustomers: "",
+    numberOfEmployees: "",
     monthlyRevenue: "",
     volumeIssueRating: 0,
     conversionIssueRating: 0,
@@ -102,6 +104,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
     if (!formData.businessSnapshot.trim()) newErrors.businessSnapshot = "Business snapshot is required"
     if (!formData.whatYouSell.trim()) newErrors.whatYouSell = "This field is required"
     if (!formData.targetCustomers.trim()) newErrors.targetCustomers = "This field is required"
+    if (!formData.numberOfEmployees) newErrors.numberOfEmployees = "Please select your team size"
     if (!formData.monthlyRevenue) newErrors.monthlyRevenue = "Please select your revenue range"
     if (
       formData.volumeIssueRating === 0 &&
@@ -160,6 +163,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
         updatedData.businessSnapshot &&
         updatedData.whatYouSell &&
         updatedData.targetCustomers &&
+        updatedData.numberOfEmployees &&
         updatedData.monthlyRevenue &&
         (updatedData.volumeIssueRating > 0 ||
           updatedData.conversionIssueRating > 0 ||
@@ -201,6 +205,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
           businessSnapshot: formData.businessSnapshot,
           whatYouSell: formData.whatYouSell,
           targetCustomers: formData.targetCustomers,
+          numberOfEmployees: formData.numberOfEmployees,
           monthlyRevenue: formData.monthlyRevenue,
           volumeIssueRating: formData.volumeIssueRating,
           conversionIssueRating: formData.conversionIssueRating,
@@ -232,6 +237,8 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
             businessSnapshot: "",
             whatYouSell: "",
             targetCustomers: "",
+            // reset numberOfEmployees
+            numberOfEmployees: "",
             monthlyRevenue: "",
             volumeIssueRating: 0,
             conversionIssueRating: 0,
@@ -452,6 +459,8 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                             formData.businessSnapshot &&
                             formData.whatYouSell &&
                             formData.targetCustomers &&
+                            // check for numberOfEmployees in completion logic
+                            formData.numberOfEmployees &&
                             formData.monthlyRevenue &&
                             (
                               formData.volumeIssueRating > 0 ||
@@ -468,6 +477,8 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           formData.businessSnapshot &&
                           formData.whatYouSell &&
                           formData.targetCustomers &&
+                          // check for numberOfEmployees in completion logic
+                          formData.numberOfEmployees &&
                           formData.monthlyRevenue &&
                           (formData.volumeIssueRating > 0 ||
                             formData.conversionIssueRating > 0 ||
@@ -556,6 +567,41 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                         )}
                       </div>
 
+                      <div>
+                        <Label htmlFor="numberOfEmployees" className="text-gray-700 font-semibold">
+                          # of full time employees *
+                        </Label>
+                        <select
+                          id="numberOfEmployees"
+                          value={formData.numberOfEmployees}
+                          onChange={(e) => handleFieldChange("numberOfEmployees", e.target.value)}
+                          className={`w-full mt-1 px-4 py-2 border-2 rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${
+                            errors.numberOfEmployees ? "border-red-500" : "border-[#7c3aed] hover:border-[#6d28d9]"
+                          } focus:outline-none focus:border-[#6d28d9] appearance-none`}
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "right 0.75rem center",
+                            backgroundSize: "1.5em 1.5em",
+                            paddingRight: "2.5rem",
+                          }}
+                        >
+                          <option value="">Select team size...</option>
+                          <option value="Just me, no revenue">Just me, no revenue</option>
+                          <option value="Just me, some revenue">Just me, some revenue</option>
+                          <option value="Me and vendors">Me and vendors</option>
+                          <option value="2 to 4">2 to 4</option>
+                          <option value="5 to 9">5 to 9</option>
+                          <option value="10 to 19">10 to 19</option>
+                          <option value="20 to 49">20 to 49</option>
+                          <option value="50 to 99">50 to 99</option>
+                          <option value="100+">100+</option>
+                        </select>
+                        {errors.numberOfEmployees && (
+                          <p className="text-red-500 text-sm mt-1">{errors.numberOfEmployees}</p>
+                        )}
+                      </div>
+                      
                       <div>
                         <Label className="text-gray-700 font-semibold mb-3 block">Current monthly revenue *</Label>
                         <RadioGroup
