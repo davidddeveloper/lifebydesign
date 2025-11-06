@@ -71,7 +71,7 @@ const faqs = [
 ]
 
 export function WorkshopFaq() {
-  const [openIndex, setOpenIndex] = useState<number | null>(1)
+  const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   return (
