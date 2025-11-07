@@ -77,7 +77,7 @@ export function WorkshopFaq() {
   return (
     <>
       <section className="bg-white py-8 md:py-16">
-        <h2 className="mx-auto text-3xl w-[250px mb-10 text-center">FAQs</h2>
+        <h2 className="mx-auto text-3xl w-[250px mb-10 text-center text-gray-900 font-black">FAQs</h2>
         <div className="container mx-auto px-4 max-w-4xl">
           {/* FAQ Items */}
           <div className="space-y-4 mb-12">
@@ -87,7 +87,7 @@ export function WorkshopFaq() {
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
                   className="w-full bg-[#1e293b] hover:bg-[#2d3b52] text-white px-6 py-6 rounded-lg flex items-center justify-between transition-colors"
                 >
-                  <span className="text-lg md:text-xl font-bold text-left">{faq.question}</span>
+                  <span className="text-base md:text-md font-bold text-left">{faq.question}</span>
                   {openIndex === index ? (
                     <X className="w-6 h-6 flex-shrink-0 ml-4" />
                   ) : (
@@ -98,7 +98,7 @@ export function WorkshopFaq() {
                 {openIndex === index && (
                   <div className="px-6 py-6 bg-gray-50 rounded-b-lg">
                     {Array.isArray(faq.answer) ? (
-                      <div className="space-y-4 text-gray-700 text-lg leading-relaxed">
+                      <div className="space-y-4 text-gray-700 text-base leading-relaxed">
                         {faq.answer.map((line, i) => (
                           <p key={i}>{line}</p>
                         ))}
@@ -115,9 +115,9 @@ export function WorkshopFaq() {
           {/* CTA Button */}
           <div className="text-center">
             <Button
-              size="lg"
+              size="default"
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto"
+              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
             >
               I'M READY TO SCALE
             </Button>

@@ -13,23 +13,23 @@ export function Header() {
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)
 
   return (
-    <header className="bg-[#fff] text-white sticky top-0 z-40"> {/** bg-[#74c0fc] #177fc9*/}
+    <header className="bg-[#177fc9] text-white sticky top-0 z-40"> {/** bg-[#74c0fc] #177fc9 bg-[#177fc9]*/}
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16 md:h-20" title="Life By Design | Home">
+        <div className="flex items-center justify-center h-16 md:h-20" title="Life By Design | Home">
           {/* Logo */}
             <Link href="/" className="flex items-center gap-2">
               {/*<svg className="h-8 w-8" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M20 5L5 15L10 25L20 20L30 25L35 15L20 5Z" fill="white" />
                 <path d="M10 25L15 35L20 32.5L25 35L30 25L20 30L10 25Z" fill="white" />
               </svg>*/}
-              <Image src={"/images/startupbodyshoplogo.png"} alt="Life By Design" width={120} height={120}></Image>
+              <Image src={"/images/startupbodyshopwhite.png"} alt="Life By Design" width={120} height={120}></Image>
               {/*<span className="text-xl font-bold">
                 LBD<span className="text-white">.GROUP</span>
               </span>*/}
             </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-end gap-6 xl:gap-8 flex-wrap justify-end flex-1 mx-4 text-black">
+          <nav className="hidden lg:flex items-end gap-6 xl:gap-8 flex-wrap justify-end flex-1 mx-4 text-white">
             <Link href="/workshops" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Workshops
             </Link>
@@ -104,13 +104,13 @@ export function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="h-5 w-5 text-black md:h-6 md:w-6" /> : <Menu className="h-5 w-5 text-black md:h-6 md:w-6" />}
+            {mobileMenuOpen ? <X className="h-5 w-5 text-white md:h-6 md:w-6" /> : <Menu className="h-5 w-5 text-white md:h-6 md:w-6" />}
           </button>
         </div>
 
         {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t border-gray-700 bg-[#fff] text-black">
+          <nav className="lg:hidden py-4 border-t border-white bg-[#177fc9] text-white">
             <div className="flex flex-col gap-4">
               <Link
                 href="/workshops"
