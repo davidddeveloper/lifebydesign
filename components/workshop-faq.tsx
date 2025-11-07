@@ -43,30 +43,32 @@ const faqs = [
   },
   {
     question: "How does the Scaling Blueprint work?",
-    answer:
-      `The Scaling Blueprint follows a three-step, hands-on process:
-      1. Diagnose - A structured 8-function audit covering Product, Marketing, Sales, Customer Service, IT, HR, Recruitment, and Finance.
-      2. Workshop (DIY Path) - A practical Scaling Workshop focused on the key constraint with frameworks, checklists, and a 90-day breakthrough plan.
-      3. Done-With-You (DWY Path) - For faster implementation, LBD consultants work directly with teams to install systems and track growth.`
+    answer: [
+    "The Scaling Blueprint follows a three-step, hands-on process:",
+    "1. Diagnose - A structured 8-function audit covering Product, Marketing, Sales, Customer Service, IT, HR, Recruitment, and Finance.",
+    "2. Workshop (DIY Path) - A practical Scaling Workshop focused on the key constraint with frameworks, checklists, and a 90-day breakthrough plan.",
+    "3. Done-With-You (DWY Path) - For faster implementation, LBD consultants work directly with teams to install systems and track growth."
+  ]
   },
   {
     question: "What are the key benefits of implementing the Scaling Blueprint?",
-    answer:
-      `Businesses that apply the Scaling Blueprint experience:
-• Improved clarity on where to focus resources
-• Increased sales conversion and profit margins
-• Stronger team accountability and systemization
-• Enhanced cash flow management
-• Predictable, sustainable business growth`,
+    answer: [
+      "Businesses that apply the Scaling Blueprint experience:",
+      "• Improved clarity on where to focus resources",
+      "• Increased sales conversion and profit margins",
+      "• Stronger team accountability and systemization",
+      "• Enhanced cash flow management",
+      "• Predictable, sustainable business growth",
+    ]
   },
   {
-    question: "How is LBD different from other business support programs?",
+    question: "How is LBD Startup Bodyshop different from other business support programs?",
     answer:
       "LBD Startup Bodyshop's approach is diagnostic, data-driven, and implementation-focused. The Scaling Blueprint focuses on one key constraint at a time, ensuring measurable progress with strategy, systems, and accountability.",
   },
   {
     question: "What is LBD Startup Bodyshop's broader vision?",
-    answer: "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through his work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth."
+    answer: "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through its work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth."
   }
 ]
 
