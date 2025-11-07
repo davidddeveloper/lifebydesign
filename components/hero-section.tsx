@@ -9,7 +9,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ onOpenForm }: HeroSectionProps) {
   return (
-    <section className="bg-gray-100 py-24 md:py-16 lg:py-24 relative overflow-hidden "> {/*bg-gray-100*/}
+    <section className="bg-gray-100 py-24 md:py-16 lg:py-16 relative overflow-hidden "> {/*bg-gray-100*/}
       <div className="container mx-auto px-4">
         <div className="items-center gap-8 grid lg:grid-cols-[300px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
