@@ -11,7 +11,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
   return (
     <section className="bg-gray-100 py-24 md:py-16 lg:py-24 relative overflow-hidden "> {/*bg-gray-100*/}
       <div className="container mx-auto px-4">
-        <div className="items-center gap-8 grid lg:grid-cols-[300px_1fr_100px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
+        <div className="items-center gap-8 grid lg:grid-cols-[300px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
           <div className="hidden lg:block">
             <img
@@ -22,12 +22,15 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
           </div>
 
           {/* Center Content */}
-          <div className="text-center max-w-5xl mx-auto">
-            <h1 className="text-2xl md:text-3xl lg:text-5xl font-black text-gray-900 mb-6 leading-tight text-balance">
+          <div className="text-center max-w-5xl md:pr-2 md:min-w-[650px] lg:max-w-5xl mx-auto"> {/** border-2 border-[#177fc9] rounded-lg p-8 */}
+            <h1 className="text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-black text-gray-900 mb-6 leading-tight text-balance">
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
-            <p className="text-lg md:text-xl text-gray-700 mb-8 leading-relaxed">
-              Learn from the team that has scaled businesses to $1.5M+ in annual revenue. <br />Check whether you qualify for our free business diagnostics.
+            <p className="text-lg md:text-xl lg:text-lg xl:text-2xl text-gray-700 leading-relaxed lg:text-nowrap">
+              Learn from the team that has scaled businesses to $1.5M+ in annual revenue.
+            </p>
+            <p className="text-lg md:text-xl lg:text-lg xl:text-2xl text-gray-700 mb-8 leading-relaxed">
+              Check whether you qualify for our free business diagnostics.
             </p>
             <Button
                 onClick={onOpenForm}
