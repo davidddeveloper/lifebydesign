@@ -21,8 +21,7 @@ export function FoundersSection() {
           {/* Founders Content */}
           <div className="space-y-4 px-4 md:px-0 text-gray-900">
             <p className="text-md leading-relaxed">
-              <strong>Joe Abass Bangura</strong> is the Founder and CEO of The Startup Bodyshop and creator of Life By Design — Sierra Leone's first and largest personal development platform and leading business acceleration hub.
-
+              <strong>Joe Abass Bangura</strong> is the Founder & CEO of the Life By Design Startup Bodyshop a leading Entreprenurship Organisation.
             </p>
 
             <p className="text-md leading-relaxed">
@@ -31,9 +30,9 @@ export function FoundersSection() {
             <p className="text-md leading-relaxed">
               Before The Startup Bodyshop, Joe helped grow ACTB Bank from a small microfinance startup to a nationwide bank with a $4.5M loan portfolio and 9 branches — creating jobs and access to capital for thousands of entrepreneurs.
             </p>
-            <p className="text-md leading-relaxed">
+            {/*<p className="text-md leading-relaxed">
               Through The Startup Bodyshop, his team has supported over 3,000 entrepreneurs, channeled more than US $3 million in investments to SMEs and startups, and helped dozens of founders systemize, scale, and attract capital.
-            </p>
+            </p>*/}
             {/*<p className="text-lg leading-relaxed">
                 He currently serves as Chief of Corporate Affairs at Africell Sierra Leone, CEO of Life By Design Group, Founding CEO & Non-Executive Director of ACTB Savings & Loans, and Non-Executive Director at SMEDA. Joe holds fellowships with the Chartered Association of Certified Accountants (FCCA UK) and the Institute of Chartered Accountants Sierra Leone (FCA SL), and has received numerous awards, including Hubert Humphrey Fellow (2010) and US State Department Alumni of the Month (2014).
 
