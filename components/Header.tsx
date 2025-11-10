@@ -9,8 +9,10 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   //const [coursesOpen, setCoursesOpen] = useState(false)
   const [mediaOpen, setMediaOpen] = useState(false)
+  const [productOpen, setProductOpen] = useState(false)
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false)
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)
+  const [mobileProductOpen, setMobileProductOpen] = useState(false)
 
   return (
     <header className="bg-[#177fc9] text-white sticky top-0 z-40"> {/** bg-[#74c0fc] #177fc9 bg-[#177fc9]*/}
@@ -65,6 +67,25 @@ export function Header() {
             {/* <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Books
             </Link> */}
+            <div className="relative" onMouseEnter={() => setProductOpen(true)} onMouseLeave={() => setProductOpen(false)}>
+              <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
+                Products
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              {productOpen && (
+                <div className="absolute top-full left-0 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                  {/*<Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Podcast
+                  </Link>*/}
+                  <Link href="/products/scaling-blueprint" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Scaling Blueprint
+                  </Link>
+                  <Link href="/products/finance-freedom-systems" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Finance Freedom Systems
+                  </Link>
+                </div>
+              )}
+            </div>
             <div className="relative" onMouseEnter={() => setMediaOpen(true)} onMouseLeave={() => setMediaOpen(false)}>
               <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
                 Media
@@ -119,7 +140,7 @@ export function Header() {
               >
                 Workshops
               </Link>
-              <div>
+              {/*<div>
                 <button
                   className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
                   onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}
@@ -159,14 +180,41 @@ export function Header() {
                     </Link>
                   </div>
                 )}
-              </div>
-              <Link
+              </div>*/}
+              {/*<Link
                 href="/books"
                 className="py-2 hover:text-gray-300 transition-colors text-sm"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Books
-              </Link>
+              </Link>*/}
+              <div>
+                <button
+                  className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
+                  onClick={() => setMobileProductOpen(!mobileProductOpen)}
+                >
+                  Products
+                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileProductOpen ? "rotate-180" : ""}`} />
+                </button>
+                {mobileProductOpen && (
+                  <div className="pl-4 flex flex-col gap-2 mt-2">
+                    <Link
+                      href="/products/Scaling-Blueprint"
+                      className="py-2 hover:text-gray-300 transition-colors text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Scaling Blueprint
+                    </Link>
+                    <Link
+                      href="/products/finance-freedom-systems"
+                      className="py-2 hover:text-gray-300 transition-colors text-sm"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Finance Freedom Systems
+                    </Link>
+                  </div>
+                )}
+              </div>
               <div>
                 <button
                   className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
@@ -191,13 +239,6 @@ export function Header() {
                     >
                       YouTube
                     </Link>
-                    <Link
-                      href="/media/blog"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Blog
-                    </Link>
                   </div>
                 )}
               </div>
@@ -221,13 +262,6 @@ export function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Careers
-              </Link>
-              <Link
-                href="/ventures"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Ventures
               </Link>
             </div>
           </nav>

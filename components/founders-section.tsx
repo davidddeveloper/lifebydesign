@@ -21,14 +21,14 @@ export function FoundersSection() {
           {/* Founders Content */}
           <div className="space-y-4 px-4 md:px-0 text-gray-900">
             <p className="text-md leading-relaxed">
-              <strong>Joe Abass Bangura</strong> is the Founder & CEO of the Life By Design Startup Bodyshop a leading Entreprenurship Organisation.
+              <strong>Joe Abass Bangura</strong> is the Founder & CEO of Life By Design - The Startup Bodyshop, a leading entrepreneurship organization in Sierra Leone.
             </p>
 
             <p className="text-md leading-relaxed">
-              Through The Startup Bodyshop, he's supported over 3,000 businesses and channeled more than $3M in investments into startups and SMEs. He has incubated and accelerated multiple ventures to between $500K and $1.5M in annual revenue, all bootstrapped.
+              Through The Startup Bodyshop, he has supported over 3,000 businesses and facilitated more than $3M in investments into startups and SMEs. He has incubated and accelerated multiple ventures to between $500K and $1.5M in annual revenue — most of them bootstrapped.
             </p>
             <p className="text-md leading-relaxed">
-              Before The Startup Bodyshop, Joe helped grow ACTB Bank from a small microfinance startup to a nationwide bank with a $4.5M loan portfolio and 9 branches — creating jobs and access to capital for thousands of entrepreneurs.
+              Before The Startup Bodyshop, Joe helped grow ACTB Bank from a small microfinance startup into a nationwide institution with a $4.5M loan portfolio and 9 branches, creating jobs and expanding access to capital for thousands of businesses.
             </p>
             {/*<p className="text-md leading-relaxed">
               Through The Startup Bodyshop, his team has supported over 3,000 entrepreneurs, channeled more than US $3 million in investments to SMEs and startups, and helped dozens of founders systemize, scale, and attract capital.
