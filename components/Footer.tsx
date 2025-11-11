@@ -11,6 +11,8 @@ export function Footer() {
   const [mediaOpen, setMediaOpen] = useState(false)
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false)
   const [mobileMediaOpen, setMobileMediaOpen] = useState(false)
+  const [productOpen, setProductOpen] = useState(false)
+  const [mobileProductOpen, setMobileProductOpen] = useState(false)
   return (
     <footer className="bg-[#177fc9] text-white py-12">
       {/*<div className="container mx-auto px-4 pt-10 pb-5">*/}
@@ -135,6 +137,25 @@ export function Footer() {
             {/* <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Books
             </Link> */}
+            <div className="relative" onMouseEnter={() => setProductOpen(true)} onMouseLeave={() => setProductOpen(false)}>
+              <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
+                Products
+                <ChevronDown className="h-4 w-4" />
+              </button>
+              {productOpen && (
+                <div className="absolute top-full left-0 w-56 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                  {/*<Link href="/media/podcast" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Podcast
+                  </Link>*/}
+                  <Link href="/products/scaling-blueprint" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Scaling Blueprint
+                  </Link>
+                  <Link href="/products/finance-freedom-systems" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Finance Freedom Systems
+                  </Link>
+                </div>
+              )}
+            </div>
             <div className="relative" onMouseEnter={() => setMediaOpen(true)} onMouseLeave={() => setMediaOpen(false)}>
               <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
                 Media
