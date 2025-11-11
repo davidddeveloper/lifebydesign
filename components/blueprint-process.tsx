@@ -1,10 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion, type Variants } from "framer-motion"
 import { CheckCircle2, BarChart3, Zap } from "lucide-react"
 
 export function BlueprintProcess() {
-  const stepVariants = {
+  const stepVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: (i: number) => ({
       opacity: 1,
