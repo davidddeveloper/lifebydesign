@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 const benefits = [
   {
@@ -67,13 +68,15 @@ export function BenefitsSection() {
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
-          >
-            View Job Openings
-          </motion.button>
+          <Link href="/careers/jobs">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
+            >
+              View Job Openings
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
