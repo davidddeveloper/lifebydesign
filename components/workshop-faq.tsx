@@ -1,11 +1,13 @@
 "use client"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Plus, X } from "lucide-react"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 
-{/*{
+const faqs = [
+  {
     question: "What actually happens during the 2 days?",
     answer:
       "You'll participate in intensive workshops, receive personalized coaching from our directors, learn our proven scaling frameworks, and have direct access to Alex Hormozi for Q&A sessions.",
@@ -33,9 +35,7 @@ import { ScaleFormModal } from "@/components/scale-form-modal"
     question: "How to register for a workshop",
     answer:
       'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
-  },*/}
-
-const faqs = [
+  },
   {
     question: "What is the Scaling Blueprint?",
     answer:
@@ -44,11 +44,11 @@ const faqs = [
   {
     question: "How does the Scaling Blueprint work?",
     answer: [
-    "The Scaling Blueprint follows a three-step, hands-on process:",
-    "1. Diagnose - A structured 8-function audit covering Product, Marketing, Sales, Customer Service, IT, HR, Recruitment, and Finance.",
-    "2. Workshop (DIY Path) - A practical Scaling Workshop focused on the key constraint with frameworks, checklists, and a 90-day breakthrough plan.",
-    "3. Done-With-You (DWY Path) - For faster implementation, LBD consultants work directly with teams to install systems and track growth."
-  ]
+      "The Scaling Blueprint follows a three-step, hands-on process:",
+      "1. Diagnose - A structured 8-function audit covering Product, Marketing, Sales, Customer Service, IT, HR, Recruitment, and Finance.",
+      "2. Workshop (DIY Path) - A practical Scaling Workshop focused on the key constraint with frameworks, checklists, and a 90-day breakthrough plan.",
+      "3. Done-With-You (DWY Path) - For faster implementation, LBD consultants work directly with teams to install systems and track growth.",
+    ],
   },
   {
     question: "What are the key benefits of implementing the Scaling Blueprint?",
@@ -59,7 +59,7 @@ const faqs = [
       "• Stronger team accountability and systemization",
       "• Enhanced cash flow management",
       "• Predictable, sustainable business growth",
-    ]
+    ],
   },
   {
     question: "How is LBD Startup Bodyshop different from other business support programs?",
@@ -68,8 +68,9 @@ const faqs = [
   },
   {
     question: "What is LBD Startup Bodyshop's broader vision?",
-    answer: "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through its work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth."
-  }
+    answer:
+      "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through its work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth.",
+  },
 ]
 
 export function WorkshopFaq() {
@@ -90,14 +91,21 @@ export function WorkshopFaq() {
                   className="w-full bg-[#1e293b] hover:bg-[#2d3b52] text-white px-6 py-6 rounded-lg flex items-center justify-between transition-colors"
                 >
                   <span className="text-base md:text-md font-bold text-left">{faq.question}</span>
-                  {openIndex === index ? (
-                    <X className="w-6 h-6 flex-shrink-0 ml-4" />
-                  ) : (
-                    <Plus className="w-6 h-6 flex-shrink-0 ml-4" />
-                  )}
+                  <motion.div animate={{ rotate: openIndex === index ? 45 : 0 }} transition={{ duration: 0.3 }}>
+                    {openIndex === index ? (
+                      <X className="w-6 h-6 flex-shrink-0 ml-4" />
+                    ) : (
+                      <Plus className="w-6 h-6 flex-shrink-0 ml-4" />
+                    )}
+                  </motion.div>
                 </button>
 
-                {openIndex === index && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: openIndex === index ? "auto" : 0, opacity: openIndex === index ? 1 : 0 }}
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
                   <div className="px-6 py-6 bg-gray-50 rounded-b-lg">
                     {Array.isArray(faq.answer) ? (
                       <div className="space-y-4 text-gray-700 text-base leading-relaxed">
@@ -109,7 +117,7 @@ export function WorkshopFaq() {
                       <p className="text-gray-700 text-lg leading-relaxed">{faq.answer}</p>
                     )}
                   </div>
-                )}
+                </motion.div>
               </div>
             ))}
           </div>
