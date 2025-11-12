@@ -111,6 +111,14 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
+.transition-height {
+  transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

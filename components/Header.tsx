@@ -80,8 +80,8 @@ export function Header() {
                   <Link href="/products/scaling-blueprint" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Scaling Blueprint
                   </Link>
-                  <Link href="/products/finance-freedom-systems" className="block px-4 py-2 hover:bg-gray-100 text-sm">
-                    Finance Freedom Systems
+                  <Link href="/products/finance-freedom" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Finance Freedom System™
                   </Link>
                 </div>
               )}
@@ -130,64 +130,19 @@ export function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden py-4 border-t border-white bg-[#177fc9] text-white">
+        <div
+        className={`lg:hidden overflow-hidden transition-height ${
+          mobileMenuOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
+        } border-t border-white bg-[#177fc9] text-white`}
+      >
+          <nav className="py-4">
             <div className="flex flex-col gap-4">
-              <Link
-                href="/workshops"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              {/* Menu Items */}
+              <Link href="/workshops" className="py-2 hover:text-gray-300 transition-colors text-sm">
                 Workshops
               </Link>
-              {/*<div>
-                <button
-                  className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
-                  onClick={() => setMobileCoursesOpen(!mobileCoursesOpen)}
-                >
-                  Courses
-                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileCoursesOpen ? "rotate-180" : ""}`} />
-                </button>
-                {mobileCoursesOpen && (
-                  <div className="pl-4 flex flex-col gap-2 mt-2">
-                    <Link
-                      href="/courses/scaling"
-                      className="py-2 text-purple-400 hover:text-purple-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Scaling Course
-                    </Link>
-                    <Link
-                      href="/courses/offers"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Offers Course
-                    </Link>
-                    <Link
-                      href="/courses/leads"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Leads Course
-                    </Link>
-                    <Link
-                      href="/courses/money-models"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Money Models Course
-                    </Link>
-                  </div>
-                )}
-              </div>*/}
-              {/*<Link
-                href="/books"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Books
-              </Link>*/}
+
+              {/* Products submenu */}
               <div>
                 <button
                   className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
@@ -196,25 +151,21 @@ export function Header() {
                   Products
                   <ChevronDown className={`h-4 w-4 transition-transform ${mobileProductOpen ? "rotate-180" : ""}`} />
                 </button>
-                {mobileProductOpen && (
-                  <div className="pl-4 flex flex-col gap-2 mt-2">
-                    <Link
-                      href="/products/Scaling-Blueprint"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Scaling Blueprint
-                    </Link>
-                    <Link
-                      href="/products/finance-freedom-systems"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Finance Freedom Systems
-                    </Link>
-                  </div>
-                )}
+                <div
+                  className={`pl-4 transition-height ${
+                    mobileProductOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  } flex flex-col gap-2 mt-2`}
+                >
+                  <Link href="/products/scaling-blueprint" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Scaling Blueprint
+                  </Link>
+                  <Link href="/products/finance-freedom" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Finance Freedom System™
+                  </Link>
+                </div>
               </div>
+
+              {/* Media submenu */}
               <div>
                 <button
                   className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
@@ -223,49 +174,33 @@ export function Header() {
                   Media
                   <ChevronDown className={`h-4 w-4 transition-transform ${mobileMediaOpen ? "rotate-180" : ""}`} />
                 </button>
-                {mobileMediaOpen && (
-                  <div className="pl-4 flex flex-col gap-2 mt-2">
-                    <Link
-                      href="/media/podcast"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Podcast
-                    </Link>
-                    <Link
-                      href="/media/youtube"
-                      className="py-2 hover:text-gray-300 transition-colors text-sm"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      YouTube
-                    </Link>
-                  </div>
-                )}
+                <div
+                  className={`pl-4 transition-height ${
+                    mobileMediaOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                  } flex flex-col gap-2 mt-2`}
+                >
+                  <Link href="/media/podcast" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Podcast
+                  </Link>
+                  <Link href="/media/youtube" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    YouTube
+                  </Link>
+                </div>
               </div>
-              <Link
-                href="/partner"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+
+              <Link href="/partner" className="py-2 hover:text-gray-300 transition-colors text-sm">
                 Partner With Us
               </Link>
-              <Link
-                href="/about"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link href="/about" className="py-2 hover:text-gray-300 transition-colors text-sm">
                 About the Firm
               </Link>
-              <Link
-                href="/careers"
-                className="py-2 hover:text-gray-300 transition-colors text-sm"
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link href="/careers" className="py-2 hover:text-gray-300 transition-colors text-sm">
                 Careers
               </Link>
             </div>
           </nav>
-        )}
+        </div>
+
       </div>
     </header>
   )

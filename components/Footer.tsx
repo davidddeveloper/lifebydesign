@@ -150,8 +150,8 @@ export function Footer() {
                   <Link href="/products/scaling-blueprint" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Scaling Blueprint
                   </Link>
-                  <Link href="/products/finance-freedom-systems" className="block px-4 py-2 hover:bg-gray-100 text-sm">
-                    Finance Freedom Systems
+                  <Link href="/products/finance-freedom" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Finance Freedom System™
                   </Link>
                 </div>
               )}
