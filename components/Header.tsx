@@ -4,10 +4,10 @@ import { useState } from "react"
 import { Menu, X, ChevronDown } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { motion, AnimatePresence } from "framer-motion"
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  //const [coursesOpen, setCoursesOpen] = useState(false)
   const [mediaOpen, setMediaOpen] = useState(false)
   const [productOpen, setProductOpen] = useState(false)
   const [mobileCoursesOpen, setMobileCoursesOpen] = useState(false)
@@ -15,20 +15,15 @@ export function Header() {
   const [mobileProductOpen, setMobileProductOpen] = useState(false)
 
   return (
-    <header className="bg-[#177fc9] text-white sticky top-0 z-40"> {/** bg-[#74c0fc] #177fc9 bg-[#177fc9]*/}
+    <header className="bg-[#177fc9] text-white sticky top-0 z-40">
+      {" "}
+      {/** bg-[#74c0fc] #177fc9 bg-[#177fc9]*/}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center h-16 md:h-20" title="Life By Design | Home">
           {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
-              {/*<svg className="h-8 w-8" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 5L5 15L10 25L20 20L30 25L35 15L20 5Z" fill="white" />
-                <path d="M10 25L15 35L20 32.5L25 35L30 25L20 30L10 25Z" fill="white" />
-              </svg>*/}
-              <Image src={"/images/startupbodyshopwhite.png"} alt="Life By Design" width={120} height={120}></Image>
-              {/*<span className="text-xl font-bold">
-                LBD<span className="text-white">.GROUP</span>
-              </span>*/}
-            </Link>
+          <Link href="/" className="flex items-center gap-2">
+            <Image src={"/images/startupbodyshopwhite.png"} alt="Life By Design" width={120} height={120}></Image>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-end gap-6 xl:gap-8 flex-wrap justify-end flex-1 mx-4 text-white">
@@ -67,7 +62,11 @@ export function Header() {
             {/* <Link href="/books" className="hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
               Books
             </Link> */}
-            <div className="relative" onMouseEnter={() => setProductOpen(true)} onMouseLeave={() => setProductOpen(false)}>
+            <div
+              className="relative"
+              onMouseEnter={() => setProductOpen(true)}
+              onMouseLeave={() => setProductOpen(false)}
+            >
               <button className="flex items-center gap-1 hover:text-gray-300 transition-colors text-sm whitespace-nowrap">
                 Products
                 <ChevronDown className="h-4 w-4" />
@@ -125,82 +124,113 @@ export function Header() {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
-            {mobileMenuOpen ? <X className="h-5 w-5 text-white md:h-6 md:w-6" /> : <Menu className="h-5 w-5 text-white md:h-6 md:w-6" />}
+            {mobileMenuOpen ? (
+              <X className="h-5 w-5 text-white md:h-6 md:w-6" />
+            ) : (
+              <Menu className="h-5 w-5 text-white md:h-6 md:w-6" />
+            )}
           </button>
         </div>
 
         {/* Mobile Navigation */}
-        <div
-        className={`lg:hidden overflow-hidden transition-height ${
-          mobileMenuOpen ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"
-        } border-t border-white bg-[#177fc9] text-white`}
-      >
-          <nav className="py-4">
-            <div className="flex flex-col gap-4">
-              {/* Menu Items */}
-              <Link href="/workshops" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                Workshops
-              </Link>
-
-              {/* Products submenu */}
-              <div>
-                <button
-                  className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
-                  onClick={() => setMobileProductOpen(!mobileProductOpen)}
-                >
-                  Products
-                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileProductOpen ? "rotate-180" : ""}`} />
-                </button>
-                <div
-                  className={`pl-4 transition-height ${
-                    mobileProductOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                  } flex flex-col gap-2 mt-2`}
-                >
-                  <Link href="/products/scaling-blueprint" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                    Scaling Blueprint
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="lg:hidden overflow-hidden border-t border-white bg-[#177fc9] text-white"
+            >
+              <nav className="py-4">
+                <div className="flex flex-col gap-4">
+                  {/* Menu Items */}
+                  <Link href="/workshops" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Workshops
                   </Link>
-                  <Link href="/products/finance-freedom" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                    Finance Freedom System™
+
+                  {/* Products submenu */}
+                  <div>
+                    <button
+                      className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
+                      onClick={() => setMobileProductOpen(!mobileProductOpen)}
+                    >
+                      Products
+                      <motion.div animate={{ rotate: mobileProductOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronDown className="h-4 w-4" />
+                      </motion.div>
+                    </button>
+                    <AnimatePresence>
+                      {mobileProductOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="pl-4 overflow-hidden flex flex-col gap-2 mt-2"
+                        >
+                          <Link
+                            href="/products/scaling-blueprint"
+                            className="py-2 hover:text-gray-300 transition-colors text-sm"
+                          >
+                            Scaling Blueprint
+                          </Link>
+                          <Link
+                            href="/products/finance-freedom"
+                            className="py-2 hover:text-gray-300 transition-colors text-sm"
+                          >
+                            Finance Freedom System™
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Media submenu */}
+                  <div>
+                    <button
+                      className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
+                      onClick={() => setMobileMediaOpen(!mobileMediaOpen)}
+                    >
+                      Media
+                      <motion.div animate={{ rotate: mobileMediaOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+                        <ChevronDown className="h-4 w-4" />
+                      </motion.div>
+                    </button>
+                    <AnimatePresence>
+                      {mobileMediaOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          className="pl-4 overflow-hidden flex flex-col gap-2 mt-2"
+                        >
+                          <Link href="/media/podcast" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                            Podcast
+                          </Link>
+                          <Link href="/media/youtube" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                            YouTube
+                          </Link>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  <Link href="/partner" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Partner With Us
+                  </Link>
+                  <Link href="/about" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    About the Firm
+                  </Link>
+                  <Link href="/careers" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                    Careers
                   </Link>
                 </div>
-              </div>
-
-              {/* Media submenu */}
-              <div>
-                <button
-                  className="flex items-center justify-between py-2 hover:text-gray-300 transition-colors text-left w-full text-sm"
-                  onClick={() => setMobileMediaOpen(!mobileMediaOpen)}
-                >
-                  Media
-                  <ChevronDown className={`h-4 w-4 transition-transform ${mobileMediaOpen ? "rotate-180" : ""}`} />
-                </button>
-                <div
-                  className={`pl-4 transition-height ${
-                    mobileMediaOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
-                  } flex flex-col gap-2 mt-2`}
-                >
-                  <Link href="/media/podcast" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                    Podcast
-                  </Link>
-                  <Link href="/media/youtube" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                    YouTube
-                  </Link>
-                </div>
-              </div>
-
-              <Link href="/partner" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                Partner With Us
-              </Link>
-              <Link href="/about" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                About the Firm
-              </Link>
-              <Link href="/careers" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                Careers
-              </Link>
-            </div>
-          </nav>
-        </div>
-
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   )
