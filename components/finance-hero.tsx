@@ -73,7 +73,7 @@ export function FinanceHero({ onOpenForm }: FinanceHeroProps) {
               >
                 Get Started
               </button>
-              <Link href="#fit-for-you" className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
+              <Link href="#our-promise" className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
                 Learn More
               </Link>
             </motion.div>

@@ -32,7 +32,7 @@ export function FinanceValueProposition() {
   ]
 
   return (
-    <section className="py-20 md:py-28 bg-white">
+    <section id="our-promise" className="py-20 md:py-28 bg-white">
       <div className="container mx-auto px-4">
         <motion.div
           className="max-w-3xl mx-auto"

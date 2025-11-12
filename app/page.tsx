@@ -29,31 +29,31 @@ export default function Home() {
         <WorkshopFaq />
         <FoundersSection />
 
-        {/*<InfiniteSlider gap={24} reverse>
+        <InfiniteSlider gap={24} reverse>
           <img
             src='/images/partners/sierraleonelogo.png'
             alt='Sierra Leone logo'
-            className='h-[70px] w-auto'
+            className='h-[70px] w-auto object-contain'
           />
           <img
             src='/images/partners/world-bank-group.png'
             alt='World Bank Group logo'
-            className='h-[70px] w-auto'
+            className='h-[70px] w-auto object-contain'
           />
           <img
             src='/images/partners/rcbank.png'
             alt='Rokel Commercial Bank logo'
-            className='h-[70px] w-auto'
+            className='h-[70px] w-auto object-contain'
           />
           <img
             src='/images/partners/sledp.jpg'
             alt='Sierra Leone Economic Diversification Project logo'
-            className='h-[70px] w-auto'
+            className='h-[70px] w-auto object-contain'
           />
           <img
             src='/images/partners/itc.webp'
             alt='International Trade Centre'
-            className='h-[70px] w-auto'
+            className='h-[70px] w-auto object-contain'
           />
           <img
             src='/images/partners/smeda.png'
@@ -90,8 +90,8 @@ export default function Home() {
             alt='UNDP logo'
             className='h-[70px] w-auto'
           />
-        </InfiniteSlider>*/}
-        <div className='relative w-full max-w-lg container mx-auto'>
+        </InfiniteSlider>
+        {/*<div className='relative w-full max-w-lg container mx-auto'>
           <Carousel>
             <CarouselContent className="gap-10">
               <CarouselItem className='basis-1/3'>
@@ -181,7 +181,7 @@ export default function Home() {
             </CarouselContent>
             <CarouselNavigation />
           </Carousel>
-        </div>
+        </div>*/}
       </main>
 
       <Footer />

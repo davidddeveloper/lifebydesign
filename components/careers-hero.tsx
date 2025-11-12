@@ -1,6 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 export function CareersHero() {
   return (
@@ -20,13 +21,15 @@ export function CareersHero() {
             <p className="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed">
               We're seeking teammates who lead with trust, work with discipline, and play to win as a team.
             </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
-            >
-              View Job Openings
-            </motion.button>
+            <Link href="/careers/jobs">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
+              >
+                View Job Openings
+              </motion.button>
+            </Link>
           </motion.div>
 
           {/* Right side - Image */}

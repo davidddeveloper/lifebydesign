@@ -85,16 +85,16 @@ export function FinanceComponents() {
                   <div className="">
                     <AccordionItem value={service}>
                       <AccordionTrigger className="flex gap-4 justify-center">
-                        <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#177fc9] bg-opacity-10 flex items-center justify-center">
-                          {index === 0 && <PiggyBankIcon className="w-8 h-8" />}
-                          {index === 1 && <CalendarIcon className="w-8 h-8" />}
-                          {index === 2 && <BarcodeIcon className="w-8 h-8" />}
-                          {index === 3 && <BookTextIcon className="w-8 h-8" />}
-                          {index === 4 && <ShieldIcon className="w-8 h-8" />}
-                          {index === 5 && <FileIcon className="w-8 h-8" />}
-                          {index === 6 && <DollarSignIcon className="w-8 h-8" />}
-                          {index === 7 && <HelpingHandIcon className="w-8 h-8" />}
-                          {index === 8 && <PhoneIcon className="w-8 h-8" />}
+                        <div className="flex-shrink-0 w-10 h-10 rounded-xs bg-[#177fc9] bg-opacity-10 flex items-center justify-center">
+                          {index === 0 && <PiggyBankIcon className="w-8 h-8 text-white" />}
+                          {index === 1 && <CalendarIcon className="w-8 h-8 text-white" />}
+                          {index === 2 && <BarcodeIcon className="w-8 h-8 text-white" />}
+                          {index === 3 && <BookTextIcon className="w-8 h-8 text-white" />}
+                          {index === 4 && <ShieldIcon className="w-8 h-8 text-white" />}
+                          {index === 5 && <FileIcon className="w-8 h-8 text-white" />}
+                          {index === 6 && <DollarSignIcon className="w-8 h-8 text-white" />}
+                          {index === 7 && <HelpingHandIcon className="w-8 h-8 text-white" />}
+                          {index === 8 && <PhoneIcon className="w-8 h-8 text-white" />}
                           
                         </div>
                           <p className="text-gray-700 font-medium">{service}</p>
