@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Plus, X } from "lucide-react"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 
-const faqs = [
-  {
+{/*{
     question: "What actually happens during the 2 days?",
     answer:
       "You'll participate in intensive workshops, receive personalized coaching from our directors, learn our proven scaling frameworks, and have direct access to Alex Hormozi for Q&A sessions.",
@@ -35,7 +34,8 @@ const faqs = [
     question: "How to register for a workshop",
     answer:
       'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
-  },
+  },*/}
+const faqs = [
   {
     question: "What is the Scaling Blueprint?",
     answer:
