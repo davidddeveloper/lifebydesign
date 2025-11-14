@@ -107,7 +107,7 @@ export function PartnerFormModal({ isOpen, onClose }: PartnerFormModalProps) {
     setSubmitStatus("idle")
 
     try {
-      const response = await fetch("/api/submit-form", {
+      const response = await fetch("/api/portfolio", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
