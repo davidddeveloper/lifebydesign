@@ -31,6 +31,7 @@ interface FormData {
   whatYouSell: string
   targetCustomers: string
   numberOfEmployees: string
+  yearsOfOperations: string
   monthlyRevenue: string
   volumeIssueRating: number
   conversionIssueRating: number
@@ -61,6 +62,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
     whatYouSell: "",
     targetCustomers: "",
     numberOfEmployees: "",
+    yearsOfOperations: "",
     monthlyRevenue: "",
     volumeIssueRating: 0,
     conversionIssueRating: 0,
@@ -79,7 +81,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
   const validateStep1 = () => {
     const newErrors: Partial<FormData> = {}
     if (!formData.firstName.trim()) newErrors.firstName = "First name is required"
-    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"
+    /*if (!formData.lastName.trim()) newErrors.lastName = "Last name is required"*/
     if (!formData.personalEmail.trim() && !formData.businessEmail.trim()) {
       newErrors.personalEmail = "At least one email is required"
       newErrors.businessEmail = "At least one email is required"
@@ -100,11 +102,12 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
   const validateStep2 = () => {
     const newErrors: Partial<FormData> = {}
     if (!formData.businessName.trim()) newErrors.businessName = "Business name is required"
-    if (!formData.websiteLink.trim()) newErrors.websiteLink = "At least one link is required"
+    /*if (!formData.websiteLink.trim()) newErrors.websiteLink = "At least one link is required"
     if (!formData.businessSnapshot.trim()) newErrors.businessSnapshot = "Business snapshot is required"
     if (!formData.whatYouSell.trim()) newErrors.whatYouSell = "This field is required"
-    if (!formData.targetCustomers.trim()) newErrors.targetCustomers = "This field is required"
+    if (!formData.targetCustomers.trim()) newErrors.targetCustomers = "This field is required"*/
     if (!formData.numberOfEmployees) newErrors.numberOfEmployees = "Please select your team size"
+    if (!formData.yearsOfOperations) newErrors.yearsOfOperations = "Please select your years of operation"
     if (!formData.monthlyRevenue) newErrors.monthlyRevenue = "Please select your revenue range"
     if (
       formData.volumeIssueRating === 0 &&
@@ -121,19 +124,19 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
   const validateStep3 = () => {
     const newErrors: Partial<FormData> = {}
     if (!formData.businessGoal.trim()) newErrors.businessGoal = "This field is required"
-    if (!formData.scaleHelp.trim()) newErrors.scaleHelp = "This field is required"
-    if (!formData.previousCoaching.trim()) newErrors.previousCoaching = "This field is required"
+    /*if (!formData.scaleHelp.trim()) newErrors.scaleHelp = "This field is required"
+    if (!formData.previousCoaching.trim()) newErrors.previousCoaching = "This field is required"*/
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
 
   const validateStep4 = () => {
     const newErrors: Partial<FormData> = {}
-    if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms" as unknown as boolean
+    /*if (!formData.termsAccepted) newErrors.termsAccepted = "You must accept the terms" as unknown as boolean
     if (!formData.hearAboutUs) newErrors.hearAboutUs = "Please select how you heard about us"
     if (formData.hearAboutUs === "Other" && !formData.otherSource.trim()) {
       newErrors.otherSource = "Please specify your source"
-    }
+    }*/
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -150,7 +153,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
     if (currentStep === 1) {
       if (
         updatedData.firstName &&
-        updatedData.lastName &&
+        //updatedData.lastName &&
         (updatedData.personalEmail || updatedData.businessEmail) &&
         updatedData.phone
       ) {
@@ -159,21 +162,22 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
     } else if (currentStep === 2) {
       if (
         updatedData.businessName &&
-        updatedData.websiteLink &&
+        /*updatedData.websiteLink &&
         updatedData.businessSnapshot &&
         updatedData.whatYouSell &&
-        updatedData.targetCustomers &&
+        updatedData.targetCustomers &&*/
         updatedData.numberOfEmployees &&
-        updatedData.monthlyRevenue &&
+        updatedData.yearsOfOperations &&
+        updatedData.monthlyRevenue /*&&
         (updatedData.volumeIssueRating > 0 ||
           updatedData.conversionIssueRating > 0 ||
           updatedData.economicsIssueRating > 0 ||
-          updatedData.capacityIssueRating > 0)
+          updatedData.capacityIssueRating > 0)*/
       ) {
         setTimeout(() => setCurrentStep(3), 300)
       }
     } else if (currentStep === 3) {
-      if (updatedData.businessGoal && updatedData.scaleHelp && updatedData.previousCoaching) {
+      if (updatedData.businessGoal /*&& updatedData.scaleHelp && updatedData.previousCoaching*/) {
         setTimeout(() => setCurrentStep(4), 300)
       }
     }
@@ -206,6 +210,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
           whatYouSell: formData.whatYouSell,
           targetCustomers: formData.targetCustomers,
           numberOfEmployees: formData.numberOfEmployees,
+          yearsOfOperations: formData.yearsOfOperations,
           monthlyRevenue: formData.monthlyRevenue,
           volumeIssueRating: formData.volumeIssueRating,
           conversionIssueRating: formData.conversionIssueRating,
@@ -239,6 +244,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
             targetCustomers: "",
             // reset numberOfEmployees
             numberOfEmployees: "",
+            yearsOfOperations: "",
             monthlyRevenue: "",
             volumeIssueRating: 0,
             conversionIssueRating: 0,
@@ -461,6 +467,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                             formData.targetCustomers &&
                             // check for numberOfEmployees in completion logic
                             formData.numberOfEmployees &&
+                            formData.yearsOfOperations &&
                             formData.monthlyRevenue &&
                             (
                               formData.volumeIssueRating > 0 ||
@@ -479,6 +486,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           formData.targetCustomers &&
                           // check for numberOfEmployees in completion logic
                           formData.numberOfEmployees &&
+                          formData.yearsOfOperations &&
                           formData.monthlyRevenue &&
                           (formData.volumeIssueRating > 0 ||
                             formData.conversionIssueRating > 0 ||
@@ -522,7 +530,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="businessSnapshot" className="text-gray-700 font-semibold">
-                          Business Snapshot *
+                          Business Snapshot
                         </Label>
                         <Textarea
                           id="businessSnapshot"
@@ -539,7 +547,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="whatYouSell" className="text-gray-700 font-semibold">
-                          What does your business sell? *
+                          What does your business sell?
                         </Label>
                         <Input
                           id="whatYouSell"
@@ -553,7 +561,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="targetCustomers" className="text-gray-700 font-semibold">
-                          Who are your target customers? *
+                          Who are your target customers?
                         </Label>
                         <Input
                           id="targetCustomers"
@@ -588,6 +596,40 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                         >
                           <option value="">Select team size...</option>
                           <option value="Just me, no revenue">Just me, no revenue</option>
+                          <option value="Just me, some revenue">Just me, some revenue</option>
+                          <option value="Me and vendors">Me and vendors</option>
+                          <option value="2 to 4">2 to 4</option>
+                          <option value="5 to 9">5 to 9</option>
+                          <option value="10 to 19">10 to 19</option>
+                          <option value="20 to 49">20 to 49</option>
+                          <option value="50 to 99">50 to 99</option>
+                          <option value="100+">100+</option>
+                        </select>
+                        {errors.numberOfEmployees && (
+                          <p className="text-red-500 text-sm mt-1">{errors.numberOfEmployees}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label htmlFor="numberOfEmployees" className="text-gray-700 font-semibold">
+                          # Years of Operations *
+                        </Label>
+                        <select
+                          id="yearsOfOperations"
+                          value={formData.yearsOfOperations}
+                          onChange={(e) => handleFieldChange("yearsOfOperations", e.target.value)}
+                          className={`w-full mt-1 px-4 py-2 border-2 rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${
+                            errors.yearsOfOperations ? "border-red-500" : "border-[#7c3aed] hover:border-[#6d28d9]"
+                          } focus:outline-none focus:border-[#6d28d9] appearance-none`}
+                          style={{
+                            backgroundImage: `url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c3aed' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e")`,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "right 0.75rem center",
+                            backgroundSize: "1.5em 1.5em",
+                            paddingRight: "2.5rem",
+                          }}
+                        >
+                          <option value="">Select years of operations...</option>
+                          <option value="Just me, no revenue">Under 1 Year</option>
                           <option value="Just me, some revenue">Just me, some revenue</option>
                           <option value="Me and vendors">Me and vendors</option>
                           <option value="2 to 4">2 to 4</option>

@@ -24,7 +24,7 @@ export function AboutCTA({ onOpenForm }: AboutCTAProps) {
           </h2>
 
           <p className="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Let's explore if your business is a fit for Startup Bodyshop. Apply today to connect with our team.
+            Let's explore if your business is a fit for Startup Bodyshop Venture Studios. Apply today to connect with our team.
           </p>
 
           <motion.div

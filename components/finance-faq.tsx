@@ -3,6 +3,17 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
+
+{/*
+  question: "How does the onboarding process work?",
+  answer:
+    "Onboarding happens in four phases over 30 days: Phase I (Data Collection & Audit) ensures clarity on your current state, Phase II (System Configuration) establishes your professional structure, Phase III (Record Import & Reconciliation) organizes your books, and Phase IV (Final Reporting & Roadmap) delivers your first comprehensive financial report and growth strategy.",
+},
+{
+  question: "What is included in each pricing tier?",
+  answer:
+    "Starter ($100/month) includes monthly bookkeeping, financial statements, and basic support. Growth ($200/month) adds loan-approval packs, profit audits, and training. VIP CFO ($450/month) includes everything plus payroll support, cash flow forecasting, monthly advisory calls, and a dedicated accountant.",
+*/}
 export function FinanceFaq() {
   const [openIndex, setOpenIndex] = useState(0)
 
@@ -16,16 +27,6 @@ export function FinanceFaq() {
       question: "Who is this service for?",
       answer:
         "This service is designed for small business owners in Sierra Leone who need proper financial systems without hiring a full-time accountant. It's ideal for founders who want credit and investor readiness, freedom from manual record-keeping, and professional financial management.",
-    },
-    {
-      question: "How does the onboarding process work?",
-      answer:
-        "Onboarding happens in four phases over 30 days: Phase I (Data Collection & Audit) ensures clarity on your current state, Phase II (System Configuration) establishes your professional structure, Phase III (Record Import & Reconciliation) organizes your books, and Phase IV (Final Reporting & Roadmap) delivers your first comprehensive financial report and growth strategy.",
-    },
-    {
-      question: "What is included in each pricing tier?",
-      answer:
-        "Starter ($100/month) includes monthly bookkeeping, financial statements, and basic support. Growth ($200/month) adds loan-approval packs, profit audits, and training. VIP CFO ($450/month) includes everything plus payroll support, cash flow forecasting, monthly advisory calls, and a dedicated accountant.",
     },
     {
       question: "Can I upgrade or downgrade my plan?",

@@ -320,7 +320,7 @@ export function PartnerFormModal({ isOpen, onClose }: PartnerFormModalProps) {
 
                       <div>
                         <Label className="text-gray-700 font-semibold mb-3 block">
-                          Where did you FIRST hear of Acquisition.com? *
+                          Where did you FIRST hear of startupbodyshop.com? *
                         </Label>
                         <RadioGroup
                           value={formData.heardAbout}

@@ -9,6 +9,7 @@ import { FinanceValueProposition } from "@/components/finance-value-proposition"
 import { FinanceComponents } from "@/components/finance-components"
 import { FinanceWorkflow } from "@/components/finance-workflow"
 import { FinanceFaq } from "@/components/finance-faq"
+import { FinancePricing } from "@/components/finance-pricing"
 
 export default function FinanceFreedomPage() {
   const [formModalOpen, setFormModalOpen] = useState(false)
@@ -21,7 +22,7 @@ export default function FinanceFreedomPage() {
         <FinanceValueProposition />
         <FinanceComponents />
         <FinanceWorkflow />
-        {/*<FinancePricing onOpenForm={() => setFormModalOpen(true)} />*/}
+        <FinancePricing onOpenForm={() => setFormModalOpen(true)} />
         <FinanceFaq />
       </main>
       <Footer />
