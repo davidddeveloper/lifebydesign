@@ -66,7 +66,7 @@ export default function Home() {
             className='h-[70px] w-auto'
           />
           <img
-            src='/images/partners/afrimoney.jpg'
+            src='/images/partners/afrimoney.png'
             alt='Afrimoney logo'
             className='h-[70px] w-auto'
           />
@@ -86,7 +86,7 @@ export default function Home() {
             className='h-[70px] w-auto'
           />
           <img
-            src='/images/partners/undp.webp'
+            src='/images/partners/undp.png'
             alt='UNDP logo'
             className='h-[70px] w-auto'
           />
