@@ -50,9 +50,9 @@ export function BlueprintValueLadder({ onOpenForm }: BlueprintValueLadderProps) 
         "Community access",
         "Results guarantee",
       ],
-      cta: "You get Invited after the Workshop",
+      cta: "Invite only after the Workshop",
       highlighted: false,
-      price: "Invitation only - discuss pricing with our team",
+      price: "Discuss pricing with our team",
     },
   ]
 
