@@ -29,7 +29,7 @@ export default function Home() {
         <WorkshopFaq />
         <FoundersSection />
 
-        <InfiniteSlider gap={24} reverse>
+        <InfiniteSlider gap={50} reverse>
           <img
             src='/images/partners/sierraleonelogo.png'
             alt='Sierra Leone logo'
@@ -71,7 +71,7 @@ export default function Home() {
             className='h-[70px] w-auto'
           />
           <img
-            src='/images/partners/africell.jpeg'
+            src='/images/partners/africell.png'
             alt='Africell Sierra Leone'
             className='h-[70px] w-auto'
           />
@@ -81,7 +81,7 @@ export default function Home() {
             className='h-[70px] w-auto'
           />
           <img
-            src='/images/partners/iom.webp'
+            src='/images/partners/iom.png'
             alt='IOM logo'
             className='h-[70px] w-auto'
           />
