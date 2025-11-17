@@ -177,7 +177,9 @@ export function PartnerFormModal({ isOpen, onClose }: PartnerFormModalProps) {
               <div className="bg-[#1e293b] px-6 py-5 flex items-center justify-between">
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">Partner Application</h2>
-                  <p className="text-white/70 text-sm mt-1">Step {currentStep} of 4</p>
+                  <p className="text-white/70 text-sm mt-1 mb-2">By filling this form you agree to become a portfolio company under startupbodyshop.com. This means we'll sign an MoU or equity agreement with you.</p>
+                  
+                  <p className="text-white text-sm mt-1">Step {currentStep} of 4</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -261,6 +263,7 @@ export function PartnerFormModal({ isOpen, onClose }: PartnerFormModalProps) {
                           className={`mt-2 ${errors.businessDescription ? "border-red-500" : ""}`}
                           placeholder="Describe your business..."
                           rows={3}
+                          maxLength={500}
                         />
                         {errors.businessDescription && (
                           <p className="text-red-500 text-sm mt-1">{errors.businessDescription}</p>

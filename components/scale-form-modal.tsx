@@ -539,6 +539,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           className={`mt-1 ${errors.businessSnapshot ? "border-red-500" : ""}`}
                           placeholder="Brief overview of your business..."
                           rows={3}
+                          maxLength={1000}
                         />
                         {errors.businessSnapshot && (
                           <p className="text-red-500 text-sm mt-1">{errors.businessSnapshot}</p>
@@ -555,6 +556,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           onChange={(e) => handleFieldChange("whatYouSell", e.target.value)}
                           className={`mt-1 ${errors.whatYouSell ? "border-red-500" : ""}`}
                           placeholder="Products, services, etc."
+                          maxLength={300}
                         />
                         {errors.whatYouSell && <p className="text-red-500 text-sm mt-1">{errors.whatYouSell}</p>}
                       </div>
@@ -569,6 +571,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           onChange={(e) => handleFieldChange("targetCustomers", e.target.value)}
                           className={`mt-1 ${errors.targetCustomers ? "border-red-500" : ""}`}
                           placeholder="Describe your ideal customer"
+                          maxLength={300}
                         />
                         {errors.targetCustomers && (
                           <p className="text-red-500 text-sm mt-1">{errors.targetCustomers}</p>
@@ -746,6 +749,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           className={`mt-1 ${errors.businessGoal ? "border-red-500" : ""}`}
                           placeholder="Describe your primary goal..."
                           rows={3}
+                          maxLength={500}
                         />
                         {errors.businessGoal && <p className="text-red-500 text-sm mt-1">{errors.businessGoal}</p>}
                       </div>
@@ -761,6 +765,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           className={`mt-1 ${errors.scaleHelp ? "border-red-500" : ""}`}
                           placeholder="What specific help are you looking for..."
                           rows={3}
+                          maxLength={500}
                         />
                         {errors.scaleHelp && <p className="text-red-500 text-sm mt-1">{errors.scaleHelp}</p>}
                       </div>
@@ -776,6 +781,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           className={`mt-1 ${errors.previousCoaching ? "border-red-500" : ""}`}
                           placeholder="Yes/No and details if applicable..."
                           rows={2}
+                          maxLength={500}
                         />
                         {errors.previousCoaching && (
                           <p className="text-red-500 text-sm mt-1">{errors.previousCoaching}</p>
@@ -807,6 +813,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                           className="mt-1"
                           placeholder="Any additional information you'd like to share..."
                           rows={3}
+                          maxLength={300}
                         />
                       </div>
 
