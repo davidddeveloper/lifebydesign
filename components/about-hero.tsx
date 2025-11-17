@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export function AboutHero() {
   return (
-    <section className="bg-gradient-to-b from-white to-gray-50 py-20 md:py-32">
+    <section className="bg-gradient-to-b from-white to-gray-50 py-20">
       <div className="container mx-auto px-4 max-w-4xl">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

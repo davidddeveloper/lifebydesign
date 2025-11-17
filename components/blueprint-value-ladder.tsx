@@ -36,14 +36,14 @@ export function BlueprintValueLadder({ onOpenForm }: BlueprintValueLadderProps) 
       ],
       cta: "Enroll in Workshop",
       highlighted: true,
-      price: "SLE 1,000",
+      price: "SLE 5,000",
     },
     {
       stage: "Stage 3",
       name: "Done-With-You",
       description: "We implement alongside your team",
       features: [
-        "12 weeks of guided implementation",
+        "24 weeks of guided implementation",
         "Weekly 1:1 coaching calls",
         "Complete SOP library",
         "Accountability system",
@@ -52,12 +52,12 @@ export function BlueprintValueLadder({ onOpenForm }: BlueprintValueLadderProps) 
       ],
       cta: "You get Invited after the Workshop",
       highlighted: false,
-      price: "SLE 5,000 - SLE 10,000",
+      price: "Invitation only - discuss pricing with our team",
     },
   ]
 
   return (
-    <section className="py-12 md:py-14 bg-white">
+    <section className="py-20 md:py-24 bg-white">
       <div className="max-w-6xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

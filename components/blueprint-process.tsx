@@ -85,8 +85,8 @@ export function BlueprintProcess() {
         >
           <p className="text-lg text-gray-900">
             <span className="font-black">Key Insight:</span> We only solve that stage's constraint — nothing else. When
-            you fix it, you graduate to the next level of scale. This focused approach is why 87% of our participants
-            hit their 90-day breakthrough.
+            you fix it, you graduate to the next level of scale. {/*This focused approach is why 87% of our participants
+            hit their 90-day breakthrough.*/}
           </p>
         </motion.div>
       </div>

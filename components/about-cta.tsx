@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 interface AboutCTAProps {
   onOpenForm: () => void
@@ -32,6 +33,7 @@ export function AboutCTA({ onOpenForm }: AboutCTAProps) {
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 400, damping: 15 }}
           >
+            <Link href="/partner">
             <Button
               onClick={onOpenForm}
               className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold py-6 px-16 rounded-full text-lg inline-flex items-center gap-3 transition-colors"
@@ -39,6 +41,7 @@ export function AboutCTA({ onOpenForm }: AboutCTAProps) {
               Apply Now
               <ArrowRight className="h-5 w-5" />
             </Button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>

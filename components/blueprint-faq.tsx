@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 
 export function BlueprintFAQ() {
-  const [expandedIndex, setExpandedIndex] = useState<number | null>(0)
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(-1)
 
   const faqs = [
     {
@@ -31,7 +31,7 @@ export function BlueprintFAQ() {
     {
       question: "How long does it take to see results?",
       answer:
-        "Our core program is 90 days, broken into three phases: Foundation (Weeks 1-4), Traction (Weeks 5-8), and Acceleration (Weeks 9-12). Most participants see measurable improvement by Week 8 and hit their breakthrough milestone by Day 90.",
+        "Our core program is 6 months, broken into three phases: Foundation (Months 1-2), Traction (Months 3-4), and Acceleration (Months 5-6). Most participants see measurable improvement by Month 4 and hit their breakthrough milestone by Month 6. ",
     },
     {
       question: "Is this right for my business?",
@@ -39,9 +39,9 @@ export function BlueprintFAQ() {
         "The Scaling Blueprint is designed for founders in three stages: Product-Market Fit Seekers (have a product but can't sell it), Chaotic Operators (making money but drowning in operations), and Overwhelmed Founders (business depends entirely on them). If you recognize yourself, it's worth exploring.",
     },
   ]
-
+//"Our core program is 90 days, broken into three phases: Foundation (Weeks 1-4), Traction (Weeks 5-8), and Acceleration (Weeks 9-12). Most participants see measurable improvement by Week 8 and hit their breakthrough milestone by Day 90.",
   return (
-    <section className="pt-14 pb-4 md:pt-16 md:pb-5 bg-white">
+    <section className="py-20 lg:py-24 bg-white">
       <div className="max-w-3xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -60,7 +60,7 @@ export function BlueprintFAQ() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05, duration: 0.4 }}
               viewport={{ once: true }}
-              className="border border-gray-200 rounded-lg overflow-hidden hover:border-purple-300 transition-colors"
+              className="border border-gray-200 rounded-lg overflow-hidden hover:border-[#177fc9] transition-colors"
             >
               <button
                 onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}

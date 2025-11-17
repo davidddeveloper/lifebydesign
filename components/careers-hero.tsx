@@ -5,7 +5,7 @@ import Link from "next/link"
 
 export function CareersHero() {
   return (
-    <section className="bg-white py-16 md:py-24 lg:py-32">
+    <section className="bg-white py-16 md:py-20 lg:py-24">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left side - Text content */}
@@ -15,7 +15,7 @@ export function CareersHero() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-8 text-balance">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-8 text-balance">
               Join The <span className="text-[#177fc9]">Startup Bodyshop</span> Team
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed">

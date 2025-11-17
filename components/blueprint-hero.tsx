@@ -22,7 +22,7 @@ export function BlueprintHero({ onOpenForm }: BlueprintHeroProps) {
   }
 
   return (
-    <section className="relative bg-gradient-to-b from-[#177fc9] to-[#fff] pt-14 pb-5 md:pt-16 md:pb-4"> {/** to-[#8dc8f1]  */}
+    <section className="relative bg-gradient-to-b from-[#177fc9] to-[#fff] py-20 lg:py-32"> {/** to-[#8dc8f1]  */}
       <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.div variants={containerVariants} initial="hidden" animate="visible">
           {/*<motion.div variants={itemVariants} className="mb-6">
@@ -62,7 +62,7 @@ export function BlueprintHero({ onOpenForm }: BlueprintHeroProps) {
             </Link>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 md:gap-8">
+          {/*<motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 md:gap-8">
             <div className="text-center">
               <p className="text-3xl md:text-4xl font-black text-gray-900">$1.5M+</p>
               <p className="text-gray-600 mt-2">Portfolio Annual Revenue</p>
@@ -75,7 +75,7 @@ export function BlueprintHero({ onOpenForm }: BlueprintHeroProps) {
               <p className="text-3xl md:text-4xl font-black text-gray-900">90 Days</p>
               <p className="text-gray-600 mt-2">To Breakthrough</p>
             </div>
-          </motion.div>
+          </motion.div>*/}
         </motion.div>
       </div>
     </section>

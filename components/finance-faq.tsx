@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from "framer-motion"
     "Starter ($100/month) includes monthly bookkeeping, financial statements, and basic support. Growth ($200/month) adds loan-approval packs, profit audits, and training. VIP CFO ($450/month) includes everything plus payroll support, cash flow forecasting, monthly advisory calls, and a dedicated accountant.",
 */}
 export function FinanceFaq() {
-  const [openIndex, setOpenIndex] = useState(0)
+  const [openIndex, setOpenIndex] = useState(-1)
 
   const faqs = [
     {

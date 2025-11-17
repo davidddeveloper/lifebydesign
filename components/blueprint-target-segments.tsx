@@ -25,7 +25,7 @@ export function BlueprintTargetSegments() {
   ]
 
   return (
-    <section className="pt-14 pb-4 md:pt-16 md:pb-5 bg-gray-50">
+    <section className="py-20 lg:py-24 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -32,11 +32,11 @@ export function FinanceComponents() {
   }
 
   const services = [
-    "Zoho Books setup & configuration",
+    /*"Zoho Books setup & configuration",*/
     "Monthly bookkeeping & reconciliation",
     "Sales, expenses, and inventory setup",
     "Monthly financial statements (P&L, Balance Sheet, Cash Flow)",
-    "Tax & compliance support",
+    "Loan Application Pack Preparation",
     "Loan-approval pack preparation",
     "Dedicated accountant + WhatsApp support",
     "Monthly financial review & advisory call",
@@ -44,11 +44,11 @@ export function FinanceComponents() {
   ]
 
   const serviceDescriptions = [
-    "Configure Zoho Books according to your business needs, including chart of accounts, customer and supplier setup, and initial transaction setup.",
+    /*"Configure Zoho Books according to your business needs, including chart of accounts, customer and supplier setup, and initial transaction setup.",*/
     "Our team of accountants will reconcile your financials on a monthly basis, ensuring accuracy and compliance with regulatory requirements.",
     "Configure sales, expenses, and inventory tracking in Zoho Books, ensuring accurate financial reporting and compliance with regulatory requirements.",
     "Our team of accountants will prepare your monthly financial statements, including profit and loss, balance sheet, and cash flow statements.",
-    "Our team of accountants will provide tax and compliance support, including preparation of tax returns and ensuring compliance with regulatory requirements.",
+    "Our team of accountants will provide support with loan application pack preparation, including preparation of financial statements and projections, to support your loan application.",
     "Our team of accountants will prepare a loan-approval pack, including financial statements and projections, to support your loan application.",
     "Dedicated accountant support via WhatsApp, including responses to ad-hoc queries and support with financial management.",
     "Monthly financial review and advisory call with our team of accountants, including review of financial performance and provision of strategic advice.",

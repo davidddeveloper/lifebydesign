@@ -24,7 +24,7 @@ export function FinanceValueProposition() {
 
   const benefits = [
     "Professional setup and managed monthly execution",
-    "Automated accounting using Zoho Books",
+    /*"Automated accounting using Zoho Books",*/
     "Credit-ready financial statements",
     "Real-time visibility into profits and cash flow",
     "Full compliance support",
