@@ -4,12 +4,12 @@ import { useState } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { ScaleFormModal } from "@/components/scale-form-modal"
-import { FinanceHero } from "@/components/finance-hero"
-import { FinanceValueProposition } from "@/components/finance-value-proposition"
-import { FinanceComponents } from "@/components/finance-components"
-import { FinanceWorkflow } from "@/components/finance-workflow"
-import { FinanceFaq } from "@/components/finance-faq"
-import { FinancePricing } from "@/components/finance-pricing"
+import { FinanceHero } from "@/components/kolatbooks-hero"
+import { FinanceValueProposition } from "@/components/kolatbooks-value-proposition"
+import { FinanceComponents } from "@/components/kolatbooks-components"
+import { FinanceWorkflow } from "@/components/kolatbooks-workflow"
+import { FinanceFaq } from "@/components/kolatbooks-faq"
+import { FinancePricing } from "@/components/kolatbooks-pricing"
 
 export default function FinanceFreedomPage() {
   const [formModalOpen, setFormModalOpen] = useState(false)

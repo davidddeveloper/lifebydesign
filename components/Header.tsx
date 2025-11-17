@@ -79,8 +79,8 @@ export function Header() {
                   <Link href="/products/scaling-blueprint" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Scaling Blueprint
                   </Link>
-                  <Link href="/products/finance-freedom" className="block px-4 py-2 hover:bg-gray-100 text-sm">
-                    Finance Freedom System™
+                  <Link href="/products/kolat-books" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Kolat Books™
                   </Link>
                 </div>
               )}
@@ -176,10 +176,10 @@ export function Header() {
                             Scaling Blueprint
                           </Link>
                           <Link
-                            href="/products/finance-freedom"
+                            href="/products/kolat-books"
                             className="py-2 hover:text-gray-300 transition-colors text-sm"
                           >
-                            Finance Freedom System™
+                            Kolat Books™
                           </Link>
                         </motion.div>
                       )}

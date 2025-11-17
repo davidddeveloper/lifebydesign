@@ -19,9 +19,9 @@ export function FinanceFaq() {
 
   const faqs = [
     {
-      question: "What is the Finance Freedom System™?",
+      question: "What is the Kolat Books™?",
       answer:
-        "The Finance Freedom System™ is a Done-For-You Smart Accounting and Credit Ready Books service for SMEs in Sierra Leone. We professionally set up and manage your monthly financial systems, automate your accounting, and make you credit-ready so you can access capital and grow with confidence.",
+        "The Kolat Books™ is a Done-For-You Smart Accounting and Credit Ready Books service for SMEs in Sierra Leone. We professionally set up and manage your monthly financial systems, automate your accounting, and make you credit-ready so you can access capital and grow with confidence.",
     },
     {
       question: "Who is this service for?",
@@ -36,7 +36,7 @@ export function FinanceFaq() {
     {
       question: "What if I need help beyond accounting?",
       answer:
-        "If you need business scaling support or strategy sessions, you can combine Finance Freedom System™ with our Scaling Blueprint program. This gives you both financial clarity and business growth guidance for a comprehensive business transformation.",
+        "If you need business scaling support or strategy sessions, you can combine Kolat Books™ with our Scaling Blueprint program. This gives you both financial clarity and business growth guidance for a comprehensive business transformation.",
     },
   ]
 
