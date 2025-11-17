@@ -30,8 +30,8 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
     {
       name: "Starter",
       focus: "Bookkeeping + reports + basic support",
-      monthlyPrice: "SLL 2,000",
-      yearlyPrice: "SLL 24,000",
+      monthlyPrice: "SLL 2,500",
+      yearlyPrice: "SLL 30,000",
       features: [
         "Monthly bookkeeping & reconciliation",
         "Financial statements (P&L, Balance Sheet, Cash Flow)",
@@ -42,8 +42,8 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
     {
       name: "Growth",
       focus: "Starter + loan pack + profit audits + training",
-      monthlyPrice: "SLL 4,000",
-      yearlyPrice: "SLL 48,000",
+      monthlyPrice: "SLL 5,000",
+      yearlyPrice: "SLL 60,000",
       highlighted: true,
       features: [
         "Everything in Starter",
@@ -56,8 +56,8 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
     {
       name: "VIP CFO",
       focus: "Growth + payroll + forecasting + monthly advisory",
-      monthlyPrice: "SLL 6,050",
-      yearlyPrice: "SLL 72,600",
+      monthlyPrice: "Subject to Negotiation",
+      yearlyPrice: "",
       features: [
         "Everything in Growth",
         "Payroll support",

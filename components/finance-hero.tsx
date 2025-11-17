@@ -29,7 +29,7 @@ export function FinanceHero({ onOpenForm }: FinanceHeroProps) {
   }
 
   return (
-    <div className="min-h-[80vh] w-full bg-white relative">
+    <div className="min-h-[85vh] w-full bg-white relative">
       {/* Diagonal Stripes Background */}
       <div
         className="absolute inset-0 -z-0"

@@ -44,9 +44,10 @@ export function FinanceComponents() {
   ]
 
   const serviceDescriptions = [
+    /* in zoho books */
     /*"Configure Zoho Books according to your business needs, including chart of accounts, customer and supplier setup, and initial transaction setup.",*/
     "Our team of accountants will reconcile your financials on a monthly basis, ensuring accuracy and compliance with regulatory requirements.",
-    "Configure sales, expenses, and inventory tracking in Zoho Books, ensuring accurate financial reporting and compliance with regulatory requirements.",
+    "Configure sales, expenses, and inventory tracking using professional accounting software, ensuring accurate financial reporting and compliance with regulatory requirements.",
     "Our team of accountants will prepare your monthly financial statements, including profit and loss, balance sheet, and cash flow statements.",
     "Our team of accountants will provide support with loan application pack preparation, including preparation of financial statements and projections, to support your loan application.",
     "Our team of accountants will prepare a loan-approval pack, including financial statements and projections, to support your loan application.",

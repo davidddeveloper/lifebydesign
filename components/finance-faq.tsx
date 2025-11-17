@@ -21,7 +21,7 @@ export function FinanceFaq() {
     {
       question: "What is the Finance Freedom System™?",
       answer:
-        "The Finance Freedom System™ is a Done-For-You Smart Accounting and Credit Ready Books service for SMEs in Sierra Leone. We professionally set up and manage your monthly financial systems using Zoho Books, automate your accounting, and make you credit-ready so you can access capital and grow with confidence.",
+        "The Finance Freedom System™ is a Done-For-You Smart Accounting and Credit Ready Books service for SMEs in Sierra Leone. We professionally set up and manage your monthly financial systems, automate your accounting, and make you credit-ready so you can access capital and grow with confidence.",
     },
     {
       question: "Who is this service for?",

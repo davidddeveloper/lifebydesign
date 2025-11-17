@@ -35,7 +35,7 @@ export function FinanceWorkflow() {
       title: "System Configuration",
       timeframe: "Days 8-15",
       action:
-        "Create a Zoho Books account and set the Chart of Accounts. Begin connecting Essential Bank and Mobile Money accounts.",
+        "Create a new account on a professional accounting software and set the Chart of Accounts. Begin connecting Essential Bank and Mobile Money accounts.",
       result: "System foundation and professional structure established.",
     },
     {
