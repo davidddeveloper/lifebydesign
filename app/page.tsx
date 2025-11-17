@@ -46,7 +46,7 @@ export default function Home() {
             className='h-[70px] w-auto object-contain'
           />
           <img
-            src='/images/partners/sledp.jpg'
+            src='/images/partners/SLEDP.jpg'
             alt='Sierra Leone Economic Diversification Project logo'
             className='h-[70px] w-auto object-contain'
           />
