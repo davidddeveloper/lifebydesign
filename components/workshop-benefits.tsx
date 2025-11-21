@@ -31,10 +31,10 @@ export function WorkshopBenefits() {
           </div>
 
           {/* Benefit 2 */}
-          <div className="text-center">
+          <div className="text-center h-[500px]">
             <h3 className="text-2xl md:text-3xl font-black mb-6">#2: Learn How We Scale Companies Past $1M</h3>
-            <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-              <img src="/images/joeabasspresentation.jpg" alt="Scaling presentation" className="w-full h-auto" />
+            <div className="mb-6 rounded-lg overflow-hidden shadow-lg h-64">
+              <img src="/images/workshop.jpg" alt="Scaling presentation" className="w-full h-full object-cover" />
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
               We break down how we think, operate, and scale our <span className="font-bold">$1M/yr portfolio.</span>{" "}
@@ -43,10 +43,10 @@ export function WorkshopBenefits() {
           </div>
 
           {/* Benefit 3 */}
-          <div className="text-center">
+          <div className="text-center h-[500px]">
             <h3 className="text-2xl md:text-3xl font-black mb-6">#3: Q&A with Joe</h3>
-            <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-              <img src="/images/joeabassq&a.jpg" alt="Q&A session" className="w-full h-auto" />
+            <div className="mb-6 rounded-lg overflow-hidden shadow-lg h-64">
+              <img src="/images/joeabassq&a.jpg" alt="Q&A session" className="w-full h-full object-cover" />
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
               Have the opportunity to ask your <span className="font-bold">questions directly to Joe.</span>

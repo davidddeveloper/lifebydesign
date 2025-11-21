@@ -64,7 +64,7 @@ export function WorkshopValue() {
             <Button
               size="lg"
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#74c0fc] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto"
+              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
             >
               I'M READY TO SCALE
             </Button>

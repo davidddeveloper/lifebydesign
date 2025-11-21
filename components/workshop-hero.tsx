@@ -36,7 +36,7 @@ export function WorkshopHero() {
             <Button
               size="lg"
               onClick={() => setIsModalOpen(true)}
-              className="bg-[#74c0fc] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-6 rounded-full h-auto mt-5"
+              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
             >{/** #7c3aed hover: #6d28d9 */}
               I'M READY TO SCALE
             </Button>
