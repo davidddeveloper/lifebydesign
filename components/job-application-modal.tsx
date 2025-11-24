@@ -85,7 +85,7 @@ export function JobApplicationModal({ isOpen, onClose, job }: JobApplicationModa
     setSubmitStatus("idle")
 
     try {
-      const response = await fetch("/api/submit-form", {
+      const response = await fetch("/api/job-application", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

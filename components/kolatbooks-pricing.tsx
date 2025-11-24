@@ -56,7 +56,7 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
     {
       name: "VIP CFO",
       focus: "Growth + payroll + forecasting + monthly advisory",
-      monthlyPrice: "Discuss pricing with our team.",
+      monthlyPrice: "Discuss pricing with our team",
       yearlyPrice: "",
       features: [
         "Everything in Growth",

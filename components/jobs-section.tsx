@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { JobApplicationModal } from "@/components/job-application-modal"
 
 interface Job {
@@ -73,6 +73,13 @@ export function JobsSection() {
   const [selectedJob, setSelectedJob] = useState<Job | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  // store expanded jobs
+  const [expandedJobs, setExpandedJobs] = useState<Record<string, boolean>>({})
+
+  const toggleExpand = (id: string) => {
+    setExpandedJobs((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
+
   const handleApplyClick = (job: Job) => {
     setSelectedJob(job)
     setIsModalOpen(true)
@@ -82,20 +89,13 @@ export function JobsSection() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
     },
   }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   }
 
   return (
@@ -120,57 +120,91 @@ export function JobsSection() {
 
           {/* Jobs List */}
           <motion.div variants={containerVariants} initial="hidden" animate="visible" className="space-y-6">
-            {jobs.map((job) => (
-              <motion.div
-                key={job.id}
-                variants={itemVariants}
-                className="border-2 border-gray-200 rounded-xl p-6 md:p-8 hover:border-[#42adff] hover:shadow-lg transition-all duration-300"
-              >
-                <div className="relative flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="bg-[#177fc9] text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        {job.department}
-                      </span>
-                      <span className="text-gray-600 text-sm font-medium">{job.type}</span>
-                    </div>
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{job.title}</h2>
-                    <p className="text-gray-600 text-lg leading-relaxed mb-4">{job.description}</p>
+            {jobs.map((job) => {
+              const isExpanded = expandedJobs[job.id] || false
 
-                    {/* Key Highlights */}
-                    <div className="space-y-3 mb-6">
-                      <h3 className="font-bold text-gray-900">What You'll Do:</h3>
-                      <ul className="space-y-2">
-                        {job.keyResponsibilities.slice(0, 3).map((resp, idx) => (
-                          <li key={idx} className="text-gray-600 flex items-start gap-2">
-                            <span className="text-[#177fc9] font-bold mt-1">•</span>
-                            <span>{resp}</span>
-                          </li>
-                        ))}
-                      </ul>
+              return (
+                <motion.div
+                  key={job.id}
+                  variants={itemVariants}
+                  className="border-2 border-gray-200 rounded-xl p-6 md:p-8 hover:border-[#42adff] hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="relative flex flex-col md:flex-row md:items-start md:justify-between gap-6">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <span className="bg-[#177fc9] text-white px-3 py-1 rounded-full text-sm font-semibold">
+                          {job.department}
+                        </span>
+                        <span className="text-gray-600 text-sm font-medium">{job.type}</span>
+                      </div>
+
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">{job.title}</h2>
+                      <p className="text-gray-600 text-lg leading-relaxed mb-4">{job.description}</p>
+
+                      {/* Key Responsibilities */}
+                      <div className="space-y-3 mb-2">
+                        <h3 className="font-bold text-gray-900">What You'll Do:</h3>
+
+                        {/* always show first 3 */}
+                        <ul className="space-y-2">
+                          {job.keyResponsibilities.slice(0, 3).map((resp, idx) => (
+                            <li key={idx} className="text-gray-600 flex items-start gap-2">
+                              <span className="text-[#177fc9] font-bold mt-1">•</span>
+                              <span>{resp}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* Expandable extra responsibilities */}
+                        <AnimatePresence initial={false}>
+                          {isExpanded && (
+                            <motion.ul
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.35 }}
+                              className="overflow-hidden space-y-2"
+                            >
+                              {job.keyResponsibilities.slice(3).map((resp, idx) => (
+                                <li key={idx} className="text-gray-600 flex items-start gap-2">
+                                  <span className="text-[#177fc9] font-bold mt-1">•</span>
+                                  <span>{resp}</span>
+                                </li>
+                              ))}
+                            </motion.ul>
+                          )}
+                        </AnimatePresence>
+
+                        {/* Toggle Button */}
+                        {job.keyResponsibilities.length > 3 && (
+                          <button
+                            onClick={() => toggleExpand(job.id)}
+                            className="text-sm text-[#177fc9] font-semibold hover:underline mt-2"
+                          >
+                            {isExpanded
+                              ? "Show less"
+                              : `+ ${job.keyResponsibilities.length - 3} more responsibilities`}
+                          </button>
+                        )}
+                      </div>
                     </div>
 
-                    <p className="text-sm text-gray-500 italic">
-                      {job.keyResponsibilities.length > 3 &&
-                        `+ ${job.keyResponsibilities.length - 3} more responsibilities`}
-                    </p>
+                    {/* Apply Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleApplyClick(job)}
+                      className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold py-3 px-8 rounded-full whitespace-nowrap transition-colors md:absolute md:right-0"
+                    >
+                      Apply Now
+                    </motion.button>
                   </div>
-
-                  {/* Apply Button */}
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => handleApplyClick(job)}
-                    className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold py-3 px-8 rounded-full whitespace-nowrap transition-colors md:absolute md:right-0"
-                  >
-                    Apply Now
-                  </motion.button>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              )
+            })}
           </motion.div>
 
-          {/* CTA Section */}
+          {/* CTA */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -202,3 +236,5 @@ export function JobsSection() {
     </>
   )
 }
+
+export default JobsSection
