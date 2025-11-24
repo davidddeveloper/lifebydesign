@@ -43,7 +43,7 @@ export const categoriesQuery = groq`*[_type == "category"] | order(name asc){
   description,
 }`;
 
-export const recommendedPostsQuery = groq`*[_type == "post"] | order(_createdAt desc) {
+export const recommendedPostsQuery = groq`*[_type == "post"] | order(_createdAt desc) [0...6] {
   _id,
   _createdAt,
   publishedAt,

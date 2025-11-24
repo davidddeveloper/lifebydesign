@@ -206,8 +206,8 @@ export function Header() {
                           transition={{ duration: 0.3, ease: "easeInOut" }}
                           className="pl-4 overflow-hidden flex flex-col gap-2 mt-2"
                         >
-                          <Link href="/media/podcast" className="py-2 hover:text-gray-300 transition-colors text-sm">
-                            Podcast
+                          <Link href="/media/blog" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                            Blog
                           </Link>
                           <Link href="/media/youtube" className="py-2 hover:text-gray-300 transition-colors text-sm">
                             YouTube

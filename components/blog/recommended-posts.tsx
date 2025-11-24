@@ -32,7 +32,7 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
           {posts.map((post: BlogPost) => (
             <Link
               key={post._id}
-              href={`/blog/${post.slug.current}`}
+              href={`/media/blog/${post.slug.current}`}
               className="group rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all"
             >
               <div className="relative aspect-video overflow-hidden bg-muted">

@@ -5,7 +5,7 @@ import { PortableTextComponents } from "@portabletext/react"
 import Image from "next/image"
 import imageUrlBuilder from "@sanity/image-url"
 import { client } from "@/sanity/lib/client"
-import { he } from "date-fns/locale"
+//import { he } from "date-fns/locale"
 
 const builder = imageUrlBuilder(client)
 
@@ -82,13 +82,39 @@ export const portableTextComponents: PortableTextComponents = {
   },
 
   block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bold mt-8 mb-4">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-3xl font-bold mt-6 mb-3">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl font-bold mt-5 mb-2">{children}</h3>,
-    blockquote: ({ children }) => (
+    h2: ({ children }: any) => {
+      const text = Array.isArray(children) ? children.join('') : children
+      const id = text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim()
+      return (
+        <h2 id={id} className="text-3xl font-bold mt-6 mb-3 scroll-mt-24">
+          {children}
+        </h2>
+      )
+    },
+    h3: ({ children }: any) => {
+      const text = Array.isArray(children) ? children.join('') : children
+      const id = text
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim()
+      return (
+        <h3 id={id} className="text-2xl font-bold mt-5 mb-2 scroll-mt-22">
+          {children}
+        </h3>
+      )
+    },
+    h1: ({ children }: any) => <h1 className="text-4xl font-bold mt-8 mb-4 scroll-mt-24">{children}</h1>,
+    blockquote: ({ children }: any) => (
       <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 italic text-muted-foreground">{children}</blockquote>
     ),
-    normal: ({ children }) => <p className="my-4 leading-relaxed text-[#4a4a4a]">{children}</p>,
+    normal: ({ children }: any) => <p className="my-4 leading-relaxed text-[#4a4a4a]">{children}</p>,
   },
 
   list: {

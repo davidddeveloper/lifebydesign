@@ -29,7 +29,9 @@ export interface BlogPost {
 
 const PostPage = async ({ params }: { params: any }) => {
   const post = await sanityFetch<SanityDocument>({ query: postQuery, params })
-  const recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+  let recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+  // Filter out the current post
+  recommendedPosts = recommendedPosts.filter((p) => p._id !== post._id)
   return (
     <>
       <Header />

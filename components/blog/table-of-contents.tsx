@@ -42,15 +42,20 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
   if (headings.length === 0) return null
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
     setIsOpen(false)
   }
+
 
   return (
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-24 right-4 z-40 p-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
+        className="lg:hidden fixed top-24 right-4 z-20 p-2 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors"
         aria-label="Toggle table of contents"
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -63,6 +68,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
             {headings.map((heading, index) => (
               <a
                 key={index}
+                onClick={() => handleLinkClick(heading.id)}
                 href={`#${heading.id}`}
                 className={`block text-sm transition-colors hover:text-primary ${
                   heading.level === 3 ? "ml-4 text-muted-foreground" : "text-foreground"
@@ -71,6 +77,7 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                 {heading.text}
               </a>
             ))}
+
           </nav>
         </div>
       </aside>
@@ -103,8 +110,8 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
                   {headings.map((heading, index) => (
                     <motion.a
                       key={index}
+                      onClick={() => handleLinkClick(heading.id)}
                       href={`#${heading.id}`}
-                      onClick={handleLinkClick}
                       initial={{ opacity: 0, x: 10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
