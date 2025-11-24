@@ -1,11 +1,11 @@
 import type { SanityDocument } from "@sanity/client";
 import BlogGrid from "@/components/blog/blog-grid";
 
-const Posts = ({ posts = [] }: { posts: SanityDocument[] }) => {
+const Posts = ({ posts = [], categories = [], searchQuery }: { posts: SanityDocument[], categories: SanityDocument[], searchQuery: string }) => {
 
   return (
     <>
-      <BlogGrid posts={posts}/>
+      <BlogGrid posts={posts} categories={categories} searchQuery={searchQuery}/>
     </>
   )
 }

@@ -1,8 +1,8 @@
 "use client"
 
 import { SanityDocument } from "@sanity/client";
-import { urlFor } from "@/lib/sanity"
-import { PortableText } from "@portabletext/react";
+//import { urlFor } from "@/lib/sanity"
+//import { PortableText } from "@portabletext/react";
 import { client } from "@/sanity/lib/client";
 import imageUrlBuilder from "@sanity/image-url";
 import Image from "next/image";
