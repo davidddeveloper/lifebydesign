@@ -77,7 +77,7 @@ export async function getAllCategories() {
   )
 }
 
-export async function searchBlogPosts(query: string) {
+{/*export async function searchBlogPosts(query: string) {
   return client.fetch(
     `*[_type == "blog" && published == true && (title match $query || description match $query)] | order(publishedAt desc) {
       _id,
@@ -91,7 +91,7 @@ export async function searchBlogPosts(query: string) {
     }`,
     { query: `${query}*` },
   )
-}
+}*/}
 
 export async function getRecommendedPosts(currentSlug: string, limit = 3) {
   return client.fetch(
