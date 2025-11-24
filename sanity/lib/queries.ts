@@ -35,6 +35,29 @@ export const postQuery = groq`*[_type == "post" && slug.current == $slug][0]{
   }
 }`;
 
+// Get all categories
+export const categoriesQuery = groq`*[_type == "category"] | order(name asc){
+  _id,
+  title,
+  slug,
+  description,
+}`;
+
+export const recommendedPostsQuery = groq`*[_type == "post"] | order(_createdAt desc) {
+  _id,
+  _createdAt,
+  publishedAt,
+  title,
+  description,
+  slug,
+  mainImage,
+  author->{name, image, bio},
+  categories[]->{
+    _id,
+    title,
+    slug
+  }
+}`
 
 // Get all post slugs
 export const postPathsQuery = groq`*[_type == "post" && defined(slug.current)][]{

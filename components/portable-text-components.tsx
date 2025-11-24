@@ -88,7 +88,7 @@ export const portableTextComponents: PortableTextComponents = {
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-primary pl-4 py-2 my-4 italic text-muted-foreground">{children}</blockquote>
     ),
-    normal: ({ children }) => <p className="my-4 leading-relaxed">{children}</p>,
+    normal: ({ children }) => <p className="my-4 leading-relaxed text-[#4a4a4a]">{children}</p>,
   },
 
   list: {

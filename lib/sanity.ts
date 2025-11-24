@@ -28,7 +28,7 @@ export async function getAllBlogPosts() {
       publishedAt,
       image,
       description,
-      category,
+      category->{name, slug},
     }`,
   )
 }
@@ -44,15 +44,15 @@ export async function getBlogPostBySlug(slug: string) {
       image,
       description,
       content,
-      category,
+      category->{name, slug},
     }`,
     { slug },
   )
 }
 
-export async function getBlogPostsByCategory(category: string) {
+export async function getBlogPostsByCategory(categorySlug: string) {
   return client.fetch(
-    `*[_type == "blog" && category == $category && published == true] | order(publishedAt desc) {
+    `*[_type == "blog" && category->slug.current == $categorySlug && published == true] | order(publishedAt desc) {
       _id,
       title,
       slug,
@@ -60,9 +60,52 @@ export async function getBlogPostsByCategory(category: string) {
       publishedAt,
       image,
       description,
-      category,
+      category->{name, slug},
     }`,
-    { category },
+    { categorySlug },
+  )
+}
+
+export async function getAllCategories() {
+  return client.fetch(
+    `*[_type == "category"] | order(name asc) {
+      _id,
+      name,
+      slug,
+      description,
+    }`,
+  )
+}
+
+export async function searchBlogPosts(query: string) {
+  return client.fetch(
+    `*[_type == "blog" && published == true && (title match $query || description match $query)] | order(publishedAt desc) {
+      _id,
+      title,
+      slug,
+      author->{name, image},
+      publishedAt,
+      image,
+      description,
+      category->{name, slug},
+    }`,
+    { query: `${query}*` },
+  )
+}
+
+export async function getRecommendedPosts(currentSlug: string, limit = 3) {
+  return client.fetch(
+    `*[_type == "blog" && published == true && slug.current != $slug] | order(publishedAt desc)[0..${limit - 1}] {
+      _id,
+      title,
+      slug,
+      author->{name, image},
+      publishedAt,
+      image,
+      description,
+      category->{name, slug},
+    }`,
+    { slug: currentSlug },
   )
 }
 

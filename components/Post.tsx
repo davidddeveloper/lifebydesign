@@ -7,6 +7,7 @@ import { client } from "@/sanity/lib/client";
 import imageUrlBuilder from "@sanity/image-url";
 import Image from "next/image";
 import BlogPostContent from "@/components/blog/blog-post-content";
+import TableOfContents from "@/components/blog/table-of-contents"
 
 const builder = imageUrlBuilder(client);
 
@@ -61,8 +62,9 @@ const Post = ({ post }: { post: SanityDocument }) => {
         <div className="absolute inset-0 bg-[#177fc9]/30 mix-blend-overlay" />
       </section>
 
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Content */}
-        <article className="max-w-3xl mx-auto px-4 py-16">
+        <article className="max-w-3xl mx-auto px-4 py-16 lg:col-span-3">
           {/* Header */}
           <div className="mb-8">
             {post.categories && (
@@ -91,10 +93,16 @@ const Post = ({ post }: { post: SanityDocument }) => {
             </div>
           </div>
 
-          <div className="prose prose-invert max-w-none">
+          <div className="prose prose-invert max-w-none mb-16">
             <BlogPostContent content={post.body} />
           </div>
         </article>
+
+        {/* Table of Contents (Sidebar) */}
+        <aside className="relative col-span-1 mt-10">
+          <TableOfContents content={post.body} />
+        </aside>
+      </div>
     </>
   )
 }

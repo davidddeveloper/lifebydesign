@@ -1,11 +1,13 @@
 import { SanityDocument } from "@sanity/client";
-import { postPathsQuery, postQuery } from "@/sanity/lib/queries";
+import { postPathsQuery, postQuery, recommendedPostsQuery } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { client } from "@/sanity/lib/client";
 import Post from "@/components/Post";
 
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+
+import RecommendedPosts from "@/components/blog/recommended-posts"
 
 export const revalidate = 60;
 
@@ -14,12 +16,28 @@ export async function generateStaticParams() {
   return posts
 }
 
+export interface BlogPost {
+  _id: string
+  title: string
+  slug: { current: string }
+  author?: { name: string; image?: any }
+  publishedAt: string
+  image?: any
+  description: string
+  category?: { name: string; slug: { current: string } }
+}
+
 const PostPage = async ({ params }: { params: any }) => {
   const post = await sanityFetch<SanityDocument>({ query: postQuery, params })
+  const recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
   return (
     <>
       <Header />
       <Post post={post} />
+      {/* Recommended Posts */}
+      <div className="max-w-7xl mx-auto px-4">
+        <RecommendedPosts posts={recommendedPosts} />
+      </div>
       <Footer />
     </>
   )
