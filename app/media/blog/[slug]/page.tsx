@@ -55,7 +55,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
 }
 
-const PostPage = async ({ params }: { params: any }) => {
+const BlogPostPage = async ({ params }: { params: any }) => {
   const post = await sanityFetch<SanityDocument>({ query: postQuery, params })
   let recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
   // Filter out the current post
@@ -73,4 +73,4 @@ const PostPage = async ({ params }: { params: any }) => {
   )
 }
 
-export default PostPage
+export default BlogPostPage
