@@ -31,7 +31,7 @@ export async function generateStaticParams() {
   return posts
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: Awaited<{ params: { slug: string } }>) {
   const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: params.slug } })
 
   if (!post) {
