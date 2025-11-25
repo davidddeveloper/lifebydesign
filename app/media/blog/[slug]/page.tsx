@@ -28,15 +28,16 @@ export interface BlogPost {
 
 export async function generateStaticParams() {
   const posts = await client.fetch(postPathsQuery);
-  return posts
+  return posts.map((post: any) => ({
+    slug: post.slug.current
+  }));
 }
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } } | { params: Promise<{ slug: string }> }
+  { params }: { params: { slug: string } }
 ) {
-  const resolved = await params;
 
-  const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: resolved.slug } })
+  const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: params.slug } })
 
   if (!post) {
     return {}
