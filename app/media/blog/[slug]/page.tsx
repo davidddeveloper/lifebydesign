@@ -29,7 +29,7 @@ export interface BlogPost {
 export async function generateStaticParams() {
   const posts = await client.fetch(postPathsQuery);
   return posts.map((post: { slug: { current: any; }; }) => ({
-    slug: post.slug.current,
+    slug: post.slug?.current,
   }))
 }
 
@@ -46,7 +46,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return generateSEOMetadata({
     title: post.title,
     description: post.description,
-    path: `/blog/${post.slug.current}`,
+    path: `/blog/${post.slug?.current}`,
     image: imageUrl,
     type: "article",
     author: post.author?.name,
