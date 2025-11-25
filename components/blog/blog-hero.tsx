@@ -24,7 +24,7 @@ export default function BlogHero({ onSearch }: BlogHeroProps) {
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-4 text-balance">Insights & Stories</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto text-balance">
-            Explore our latest thoughts on business strategy, entrepreneurship, design, and building a life by design.
+            Explore our latest thoughts on business strategy, entrepreneurship, startups in Africa, and building a life by design.
           </p>
         </div>
 
