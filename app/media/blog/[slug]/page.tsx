@@ -1,7 +1,9 @@
+import { generateMetadata as generateSEOMetadata, siteConfig } from "@/lib/seo"
 import { SanityDocument } from "@sanity/client";
 import { postPathsQuery, postQuery, recommendedPostsQuery } from "@/sanity/lib/queries";
 import { sanityFetch } from "@/sanity/lib/fetch";
 import { client } from "@/sanity/lib/client";
+import imageUrlBuilder from "@sanity/image-url";
 import Post from "@/components/Post";
 
 import { Header } from "@/components/Header";
@@ -9,12 +11,9 @@ import { Footer } from "@/components/Footer";
 
 import RecommendedPosts from "@/components/blog/recommended-posts"
 
-export const revalidate = 60;
+const builder = imageUrlBuilder(client);
 
-export async function generateStaticParams() {
-  const posts = await client.fetch(postPathsQuery);
-  return posts
-}
+export const revalidate = 60;
 
 export interface BlogPost {
   _id: string
@@ -22,9 +21,35 @@ export interface BlogPost {
   slug: { current: string }
   author?: { name: string; image?: any }
   publishedAt: string
-  image?: any
+  mainImage?: any
   description: string
   category?: { name: string; slug: { current: string } }
+}
+
+export async function generateStaticParams() {
+  const posts = await client.fetch(postPathsQuery);
+  return posts
+}
+
+export async function generateMetadata({ params }: { params: { slug: string } }) {
+  const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: params.slug } })
+
+  if (!post) {
+    return {}
+  }
+
+  const imageUrl = post.mainImage ? builder.image(post.mainImage).url() : `${siteConfig.baseUrl}/images/og-image.png`
+
+  return generateSEOMetadata({
+    title: post.title,
+    description: post.description,
+    path: `/blog/${post.slug.current}`,
+    image: imageUrl,
+    type: "article",
+    author: post.author?.name,
+    publishedDate: new Date(post.publishedAt),
+    tags: [post.category?.name, "business", "entrepreneurship", "insights"].filter(Boolean) as string[],
+  })
 }
 
 const PostPage = async ({ params }: { params: any }) => {

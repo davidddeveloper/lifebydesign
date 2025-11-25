@@ -6,10 +6,14 @@ import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import BlogClientContent from "@/components/blog/blog-client-component"
 
-export const metadata = {
-  title: "Blog - LBD Startup Bodyshop",
-  description: "Stories | Insights on business strategy, entrepreneurship, and howtos from LBD Startup Bodyshop.",
-}
+import { generateMetadata, pageMetadata } from "@/lib/seo"
+
+export const metadata = generateMetadata({
+  title: pageMetadata.blog.title,
+  description: pageMetadata.blog.description,
+  path: "/blog",
+  tags: pageMetadata.blog.tags,
+})
 
 export default async function BlogPage() {
   const [posts, categories] = await Promise.all([
