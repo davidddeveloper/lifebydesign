@@ -61,5 +61,5 @@ export const recommendedPostsQuery = groq`*[_type == "post"] | order(_createdAt 
 
 // Get all post slugs
 export const postPathsQuery = groq`*[_type == "post" && defined(slug.current)][]{
-    "params": { "slug": slug.current }
+    "params": { "slug": slug?.current }
   }`;
