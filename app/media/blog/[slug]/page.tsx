@@ -28,9 +28,9 @@ export interface BlogPost {
 
 export async function generateStaticParams() {
   const posts = await client.fetch(postPathsQuery);
-  return posts.map((post: { slug: { current: any; }; }) => ({
-    slug: post.slug?.current,
-  }))
+  return posts.map((post: { slug: { current: string } }) => ({
+    slug: post.slug.current,
+  }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
