@@ -28,8 +28,8 @@ export interface BlogPost {
 
 export async function generateStaticParams() {
   const posts = await client.fetch(postPathsQuery);
-  return posts.map((post: { slug: { current: string } }) => ({
-    slug: post.slug.current,
+  return posts.map((post: { slug: string }) => ({
+    slug: post.slug,
   }));
 }
 
