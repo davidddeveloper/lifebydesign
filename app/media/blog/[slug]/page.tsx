@@ -26,13 +26,6 @@ export interface BlogPost {
   category?: { name: string; slug: { current: string } }
 }
 
-export async function generateStaticParams() {
-  const posts = await client.fetch(postPathsQuery);
-  return posts.map((post: { slug: string }) => ({
-    slug: post.slug,
-  }));
-}
-
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: slug } })
