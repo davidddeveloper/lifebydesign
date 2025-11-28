@@ -9,16 +9,19 @@ interface HeroSectionProps {
 
 export function HeroSection({ onOpenForm }: HeroSectionProps) {
   return (
-    <section className="bg-gray-100 py-24 md:py-16 lg:py-16 relative overflow-hidden "> {/*bg-gray-100*/}
-      <div className="container mx-auto px-4">
-        <div className="items-center gap-8 grid lg:grid-cols-[250px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
+    <section className="bg-gray-100 pt-24 md:py-16 lg:py-16 relative overflow-hidden "> {/*bg-gray-100*/}
+      <div className="container mx-auto px-4 z-10">
+        <div className="items-center gap-8 grid lg:grid-cols-[220px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
-          <div className="hidden lg:block">
+          <div className="hidden absolute bottom-0 lg:block">
             <img
-              src="/images/joeabasshero2.png"
+              src="/images/joeabass.png"
               alt="Team member"
-              className="w-full h-auto object-cover"
+              className="w-[50%] h-auto object-cover"
             />
+          </div>
+          <div className="hidden lg:block">
+            
           </div>
 
           {/* Center Content */}
@@ -26,8 +29,8 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
             <h1 className="text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-black text-gray-900 mb-6 leading-tight text-balance">
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
-            <p className="text-lg md:text-xl lg:text-lg xl:text-[22px] text-gray-700 leading-relaxed lg:text-nowrap">
-              Learn from the team that has scaled businesses to multimillion US dollars in annual revenue.
+            <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 leading-relaxed lg:text-nowrap">
+              Learn from the team that has scaled businesses to 1.5M+ in annual revenue.
             </p>
             <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 mb-8 leading-relaxed">
               Check whether you qualify for our free business diagnostics.
@@ -52,19 +55,19 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
         </div>
 
         {/* Mobile Images */}
-        <div className="lg:hidden w-[300px] mx-auto gap-4 mt-8">
+      </div>
+        <div className="lg:hidden z-0 max-w-[300px] mx-auto gap-4 mt-8 flex justify-center">
           {/*<img
             src="/images/willsmithmeme.png"
             alt="Team member"
             className="w-full h-auto object-cover rounded-lg"
           />*/}
           <img
-            src="/images/joeabasshero.png"
+            src="/images/joeabass.png"
             alt="Team member"
-            className="w-full h-auto object-cover rounded-lg"
+            className="w-[80%] h-auto object-top object-cover rounded-lg"
           />
         </div>
-      </div>
     </section>
   )
 }

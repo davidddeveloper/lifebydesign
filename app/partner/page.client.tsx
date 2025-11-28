@@ -12,10 +12,10 @@ export default function PartnerPageClient() {
   return (
     <div className="min-h-screen">
       <Header />
-      <main className="min-h-[60vh] bg-gradient-to-b from-white to-gray-50 py-20 md:py-32 flex items-center justify-center">
+      <main className="min-h-[60vh] bg-linear-to-b from-white to-gray-50 py-20 md:py-32 flex items-center justify-center">
         <div className="container mx-auto px-4 max-w-3xl text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6">
-            Become a <span className="text-[#177fc9]">Portfolio Company</span>
+            Become a <span className="text-[#177fc9]"><br/>Portfolio Company</span>
           </h1>
           <p className="text-lg md:text-xl text-gray-700 mb-8">
             Join our ecosystem and scale your business with expert support, capital, and proven systems.
