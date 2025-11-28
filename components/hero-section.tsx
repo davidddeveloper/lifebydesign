@@ -29,7 +29,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
             <h1 className="text-2xl md:text-3xl lg:text-5xl xl:text-5xl font-black text-gray-900 mb-6 leading-tight text-balance">
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
-            <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 leading-relaxed lg:text-nowrap">
+            <p className="text-lg md:text-xl lg:text-[17px] xl:text-xl text-gray-700 leading-relaxed lg:text-nowrap">
               Learn from the team that has scaled businesses to multimillion US Dollars in annual revenue.
             </p>
             <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 mb-8 leading-relaxed">
