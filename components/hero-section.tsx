@@ -30,7 +30,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
               ARE YOU READY TO SCALE YOUR BUSINESS?
             </h1>
             <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 leading-relaxed lg:text-nowrap">
-              Learn from the team that has scaled businesses to 1.5M+ in annual revenue.
+              Learn from the team that has scaled businesses to multimillion US Dollars in annual revenue.
             </p>
             <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 mb-8 leading-relaxed">
               Check whether you qualify for our free business diagnostics.
