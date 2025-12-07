@@ -15,7 +15,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
           {/* Left Person Image */}
           <div className="hidden absolute bottom-0 lg:block">
             <img
-              src="/images/joeabass.png"
+              src="/images/joeabasshero22.png"
               alt="Team member"
               className="w-[50%] h-auto object-cover"
             />
@@ -63,7 +63,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
             className="w-full h-auto object-cover rounded-lg"
           />*/}
           <img
-            src="/images/joeabass.png"
+            src="/images/joeabasshero.png"
             alt="Team member"
             className="w-[80%] h-auto object-top object-cover rounded-lg"
           />
