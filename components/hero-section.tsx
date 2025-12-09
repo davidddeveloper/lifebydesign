@@ -13,7 +13,7 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
       <div className="container mx-auto px-4 z-10">
         <div className="items-center gap-8 grid lg:grid-cols-[220px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
-          <div className="hidden absolute bottom-0 lg:block">
+          <div className="hidden mt-10 absolute bottom-0 lg:block">
             <img
               src="/images/joeabasshero22.png"
               alt="Team member"
