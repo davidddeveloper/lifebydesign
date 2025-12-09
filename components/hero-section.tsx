@@ -10,14 +10,14 @@ interface HeroSectionProps {
 export function HeroSection({ onOpenForm }: HeroSectionProps) {
   return (
     <section className="bg-gray-100 pt-24 md:py-16 lg:py-16 relative overflow-hidden "> {/*bg-gray-100*/}
-      <div className="container mx-auto px-4 z-10">
+      <div className="container mx-auto px-10 z-10">
         <div className="items-center gap-8 grid lg:grid-cols-[220px_1fr_0px]"> {/* grid lg:grid-cols-[300px_1fr_100px] */}
           {/* Left Person Image */}
           <div className="hidden mt-10 absolute bottom-0 lg:block">
             <img
               src="/images/joeabasshero22.png"
               alt="Team member"
-              className="w-[50%] h-auto object-cover"
+              className="w-[60%] h-auto object-cover"
             />
           </div>
           <div className="hidden lg:block">
