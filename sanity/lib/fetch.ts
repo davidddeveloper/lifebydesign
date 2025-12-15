@@ -32,7 +32,7 @@ export async function sanityFetch<QueryResponse>({
       cache: isDevelopment || isDraftMode ? undefined : "force-cache",
       ...(isDraftMode && {
         token: token,
-        perspective: "previewDrafts",
+        perspective: (await draftMode()).isEnabled ? "previewDrafts" : "published",
       }),
       next: {
         ...(isDraftMode && { revalidate: 30 }),
