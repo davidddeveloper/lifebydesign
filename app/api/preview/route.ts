@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
 import crypto from "crypto"
 
-const PREVIEW_SECRET = process.env.SANITY_PREVIEW_SECRET || "your-preview-secret"
+const PREVIEW_SECRET = process.env.NEXT_PUBLIC_SANITY_PREVIEW_SECRET || "your-preview-secret"
 
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get("slug") || ""

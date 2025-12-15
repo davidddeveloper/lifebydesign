@@ -52,10 +52,13 @@ const BlogPostPage = async ({params,}: {params: Promise<{ slug: string }>}) => {
   const { slug } = await params 
 
   const post = await sanityFetch<SanityDocument>({ query: postQuery, params: {slug} })
-  
-  let recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+  let recommendedPosts: any[] = []
+  try {
+    recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+
+    recommendedPosts = recommendedPosts.filter((p) => p._id !== post._id)
+  } catch {}
   // Filter out the current post
-  recommendedPosts = recommendedPosts.filter((p) => p._id !== post._id)
   return (
     <>
       <Header />

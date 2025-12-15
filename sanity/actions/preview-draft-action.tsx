@@ -17,7 +17,7 @@ const PreviewDraftAction: DocumentActionComponent = (props: DocumentActionProps)
   }
 
   const getPreviewUrl = () => {
-    const baseUrl = process.env.SANITY_BASE_URL || "http://localhost:3000/media"
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000/"
     const slug = document.slug.current
     const docType = document._type
     const token = generatePreviewToken(slug, docType)

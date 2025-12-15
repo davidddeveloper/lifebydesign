@@ -11,10 +11,8 @@ const ViewLiveAction: DocumentActionComponent = (props: DocumentActionProps) => 
   }
 
   const getUrl = () => {
-    const baseUrl = process.env.SANITY_BASE_URL || "http://localhost:3000/media"
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL + '/media' || "http://localhost:3000/media"
     const slug = document.slug.current
-
-    console.log('this is the slug lol')
 
     switch (document._type) {
       case "post":
