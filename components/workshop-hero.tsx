@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 
 export function WorkshopHero() {
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(true)
 
   return (
     <>

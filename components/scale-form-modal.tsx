@@ -123,7 +123,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
   const validateStep3 = () => {
     const newErrors: Partial<FormData> = {}
-    if (!formData.businessGoal.trim()) newErrors.businessGoal = "This field is required"
+    /*if (!formData.businessGoal.trim()) newErrors.businessGoal = "This field is required"*/
     /*if (!formData.scaleHelp.trim()) newErrors.scaleHelp = "This field is required"
     if (!formData.previousCoaching.trim()) newErrors.previousCoaching = "This field is required"*/
     setErrors(newErrors)
@@ -174,7 +174,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
           updatedData.economicsIssueRating > 0 ||
           updatedData.capacityIssueRating > 0)*/
       ) {
-        setTimeout(() => setCurrentStep(3), 300)
+        setTimeout(() => setCurrentStep(4), 300)
       }
     } else if (currentStep === 3) {
       if (updatedData.businessGoal /*&& updatedData.scaleHelp && updatedData.previousCoaching*/) {
@@ -320,7 +320,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
               <div className="bg-[#1e293b] px-6 py-5 flex items-center justify-between"> {/**1e293b */}
                 <div className="flex-1">
                   <h2 className="text-2xl font-bold text-white">Ready to Scale Your Business?</h2>
-                  <p className="text-white/70 text-sm mt-1">Complete this form for a free business diagnostic</p>
+                  <p className="text-white/70 text-sm mt-1">Find out if you qualify for our free business diagnostic and scaling workshop.</p>
                 </div>
                 <button
                   onClick={onClose}
@@ -419,7 +419,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="businessEmail" className="text-gray-700 font-semibold">
-                          Business Email {!formData.personalEmail && "*"}
+                          Business Email {!formData.personalEmail}
                         </Label>
                         <Input
                           id="businessEmail"
@@ -516,7 +516,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="websiteLink" className="text-gray-700 font-semibold">
-                          Website / Instagram / Facebook Link *
+                          Website / Instagram / Facebook Link
                         </Label>
                         <Input
                           id="websiteLink"
@@ -674,7 +674,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
                       {/* Replaced radio group with star rating for challenges */}
                       <div>
                         <Label className="text-gray-700 font-semibold mb-4 block">
-                          On a scale of 1-5, rate how these challenges affect your business *
+                          On a scale of 1-5, rate how these challenges affect your business
                         </Label>
                         <div className="space-y-4">
                           <div>
@@ -740,7 +740,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="businessGoal" className="text-gray-700 font-semibold">
-                          What is your #1 business goal for the next 90 days? *
+                          What is your #1 business goal for the next 90 days?
                         </Label>
                         <Textarea
                           id="businessGoal"
@@ -756,7 +756,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="scaleHelp" className="text-gray-700 font-semibold">
-                          What do you hope Joe Abass & the team will help you with? *
+                          What do you hope Joe Abass & the team will help you with?
                         </Label>
                         <Textarea
                           id="scaleHelp"
@@ -772,7 +772,7 @@ export function ScaleFormModal({ isOpen, onClose }: ScaleFormModalProps) {
 
                       <div>
                         <Label htmlFor="previousCoaching" className="text-gray-700 font-semibold">
-                          Have you received business coaching or accelerator support before? *
+                          Have you received business coaching or accelerator support before?
                         </Label>
                         <Textarea
                           id="previousCoaching"
