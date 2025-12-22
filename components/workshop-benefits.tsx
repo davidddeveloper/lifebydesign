@@ -20,10 +20,10 @@ export function WorkshopBenefits() {
         {/* Three Column Benefits */}
         <div className="grid md:grid-cols-3 gap-8 lg:gap-12">
           {/* Benefit 1 */}
-          <div className="text-center">
+          <div className="text-center h-[500px]">
             <h3 className="text-2xl md:text-3xl font-black mb-6">#1: Access To Our Directors</h3>
             <div className="mb-6 rounded-lg overflow-hidden shadow-lg">
-              <img src="/images/joeabass-hands-on.jpg" alt="Directors presentation" className="w-full h-auto" />
+              <img src="/images/joeabass-hands-on.jpg" alt="Directors presentation" className="w-full object-cover h-[260px]" />
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
               You'll meet with our directors to get personalized help. Everything from marketing to operations.
@@ -44,7 +44,7 @@ export function WorkshopBenefits() {
 
           {/* Benefit 3 */}
           <div className="text-center h-[500px]">
-            <h3 className="text-2xl md:text-3xl font-black mb-6">#3: Q&A with Joe</h3>
+            <h3 className="text-2xl md:text-3xl font-black mb-6">#3: Q&A with Joe<br/><br/></h3>
             <div className="mb-6 rounded-lg overflow-hidden shadow-lg h-64">
               <img src="/images/joeabassq&a.jpg" alt="Q&A session" className="w-full h-full object-cover" />
             </div>
