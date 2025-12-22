@@ -4,6 +4,7 @@ import { WorkshopBenefits } from "@/components/workshop-benefits"
 import { WorkshopValue } from "@/components/workshop-value"
 import { WorkshopFaq } from "@/components/workshop-faq"
 import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
 
 export const metadata = generateMetadata({
   title: pageMetadata.workshops.title,
@@ -21,6 +22,7 @@ export default function WorkshopPage() {
       <WorkshopBenefits />
       <WorkshopValue />
       <WorkshopFaq />
+      <Footer />
     </main>
   )
 }
