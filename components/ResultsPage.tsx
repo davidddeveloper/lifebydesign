@@ -21,6 +21,8 @@ import {
   BarElement,
 } from "chart.js"
 
+import {Footer} from '@/components/Footer'
+
 ChartJS.register(
   RadialLinearScale,
   PointElement,
@@ -321,7 +323,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 year: "numeric",
               })}
             </p>
-            <motion.button
+            {/*<motion.button
               onClick={handleDownloadPDF}
               disabled={isGeneratingPDF}
               className="mt-6 px-6 py-3 bg-white text-[#177fc9] font-bold rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2 mx-auto"
@@ -330,7 +332,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             >
               <Download className="w-5 h-5" />
               {isGeneratingPDF ? "Generating PDF..." : "Download Results as PDF"}
-            </motion.button>
+            </motion.button>*/}
           </motion.div>
         </div>
       </header>
@@ -681,7 +683,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
           transition={{ delay: 2.7 }}
           className="max-w-5xl mx-auto"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-2xl p-12 text-center text-white relative overflow-hidden">
+          {/*<div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-2xl shadow-2xl p-12 text-center text-white relative overflow-hidden">
             <div className="absolute inset-0 opacity-10">
               <div
                 className="absolute inset-0"
@@ -758,14 +760,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
                     <span className="font-semibold">joe@10na.city</span>
-                  </a>*/}
+                  </a>
                 </div>
               </div>
             </div>
-          </div>
+          </div>*/}
         </motion.div>
 
-        <footer className="mt-16 text-center text-gray-600">
+        {/*<footer className="mt-16 text-center text-gray-600">
           <div className="max-w-2xl mx-auto">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 3 }}>
               <div className="mb-4">
@@ -801,12 +803,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 </a>
               </div>
               <p className="text-xs text-gray-400 mt-6">
-                © {new Date().getFullYear()} Tenacity Ventures Limited. All rights reserved.
+                © {new Date().getFullYear()} Startup. All rights reserved.
               </p>
             </motion.div>
           </div>
-        </footer>
+        </footer>*/}
       </div>
+        <Footer />
     </div>
   )
 }
