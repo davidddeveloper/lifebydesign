@@ -253,7 +253,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             }
           })
         },
-      })
+      } as any)
 
       const pdf = new jsPDF("p", "mm", "a4")
       const pdfWidth = pdf.internal.pageSize.getWidth()
