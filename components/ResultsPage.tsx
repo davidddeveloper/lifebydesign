@@ -206,17 +206,11 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
     try {
       const canvas = await html2canvas(resultsRef.current, {
-        scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
         onclone: (clonedDoc) => {
           const allElements = clonedDoc.querySelectorAll("*")
-          const colorMap: Record<string, string> = {
-            oklch: "#177fc9",
-            lab: "#177fc9",
-            lch: "#177fc9",
-          }
 
           const convertToHex = (colorValue: string): string => {
             if (colorValue.includes("oklch") || colorValue.includes("lab") || colorValue.includes("lch")) {
@@ -326,7 +320,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 year: "numeric",
               })}
             </p>
-            <motion.button
+            {/*<motion.button
               onClick={handleDownloadPDF}
               disabled={isGeneratingPDF}
               className="mt-6 px-6 py-3 bg-white text-[#177fc9] font-bold rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2 mx-auto"
@@ -335,7 +329,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             >
               <Download className="w-5 h-5" />
               {isGeneratingPDF ? "Generating PDF..." : "Download Results as PDF"}
-            </motion.button>
+            </motion.button>*/}
           </motion.div>
         </div>
       </header>
@@ -718,25 +712,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   Email Me My Roadmap
                 </a>
 
-                <a
-                  href="https://calendly.com/joe-tenacity/audit-results"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center justify-center bg-blue-700 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-blue-800 transition-all transform hover:scale-105 shadow-lg border-2 border-white"
-                >
-                  <svg
-                    className="w-6 h-6 mr-2 group-hover:rotate-12 transition-transform"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Book Strategy Session
-                </a>
               </div>
 
               <div className="border-t border-white/30 pt-6 mt-6">
@@ -755,15 +730,15 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   </a>
                   <span className="text-blue-200">•</span>
 
-                  {/*<a href={`mailto:joe@10na.city?subject=Audit Results - ${data.business_name}`}
+                  <a href={`mailto:joeabass@lbd.sl?subject=Audit Results - ${data.business_name}`}
                     className="inline-flex items-center text-white hover:text-blue-100 transition-colors"
                   >
                     <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                       <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                     </svg>
-                    <span className="font-semibold">joe@10na.city</span>
-                  </a>*/}
+                    <span className="font-semibold">joeabass@lbd.sl</span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -806,7 +781,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 </a>
               </div>
               <p className="text-xs text-gray-400 mt-6">
-                © {new Date().getFullYear()} Tenacity Ventures Limited. All rights reserved.
+                © {new Date().getFullYear()} Startup Bodyshop. All rights reserved.
               </p>
             </motion.div>
           </div>
