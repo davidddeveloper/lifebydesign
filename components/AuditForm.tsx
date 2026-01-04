@@ -323,6 +323,14 @@ function BasicInfoStep({ formData, onChange }: any) {
           required
         />
         <FormField
+          label="Number of Customers"
+          type="number"
+          value={formData.numberOfCustomers}
+          onChange={(v: any) => onChange('numberOfCustomers', v)}
+          placeholder="e.g., 5"
+          required
+        />
+        <FormField
           label="Monthly Revenue (Leones)"
           type="number"
           value={formData.monthlyRevenue}
