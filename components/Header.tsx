@@ -185,6 +185,9 @@ export function Header() {
                           >
                             Kolat Books™
                           </Link>
+                          <Link href="/constraint-audit" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                            Constraint Audit
+                          </Link>
                         </motion.div>
                       )}
                     </AnimatePresence>
