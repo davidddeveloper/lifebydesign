@@ -1,6 +1,7 @@
 // components/AuditForm.tsx
 "use client"
 
+import Link from "next/link"
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -91,6 +92,16 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     { title: "Final Questions", fields: "final" },
   ]
 
+  const stepDescriptions: Record<string, string> = {
+    basic: "Share your business basics—contact info, industry, revenue, and team size—so the audit is tailored to you.",
+    who: "Clarify who you serve and how well they convert to uncover positioning and targeting gaps.",
+    what: "Describe the problem you solve, your offer, pricing, and proof to gauge value strength.",
+    sell: "Explain your sales process, scripts, and follow-up so we can spot where deals stall.",
+    traffic: "Outline how people find you, which channels work, and lead flow to assess predictability.",
+    deliver: "Detail operations, delegation, and repeat purchases to surface delivery bottlenecks.",
+    final: "Call out your top challenge and 12-month goal so recommendations can be prioritized.",
+  }
+
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
@@ -109,6 +120,11 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     }
   }
 
+  const handleGoToStep = (index: number) => {
+    setCurrentStep(index)
+    window.scrollTo(0, 0)
+  }
+
   const handleSubmit = () => {
     onSubmit(formData)
   }
@@ -118,6 +134,15 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-12 px-4">
       <div className="max-w-3xl mx-auto">
+        <div className="flex justify-end mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#177fc9] hover:text-[#0f5b90] transition-colors"
+          >
+            <span aria-hidden>←</span>
+            Back home
+          </Link>
+        </div>
         {/* Header */}
         <div className="text-center mb-8">
           <motion.h1
@@ -152,12 +177,22 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
           </div>
           <div className="flex justify-between mt-2">
             {steps.map((step, index) => (
-              <div
+              <button
                 key={index}
-                className={`text-xs ${index <= currentStep ? "text-[#177fc9] font-semibold" : "text-gray-400"}`}
+                type="button"
+                onClick={() => handleGoToStep(index)}
+                className={`text-xs text-left transition-colors cursor-pointer ${
+                  index === currentStep
+                    ? "text-[#177fc9] font-semibold"
+                    : index < currentStep
+                      ? "text-[#0f5b90]"
+                      : "text-gray-400 hover:text-gray-600"
+                }`}
+                title={stepDescriptions[step.fields] ?? step.title}
+                aria-current={index === currentStep ? "step" : undefined}
               >
                 {step.title}
-              </div>
+              </button>
             ))}
           </div>
         </div>
