@@ -86,9 +86,9 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     { title: "Basic Info", fields: "basic" },
     { title: "Your Market (WHO)", fields: "who" },
     { title: "Your Offer (WHAT)", fields: "what" },
-    { title: "Your Sales (HOW YOU SELL)", fields: "sell" },
-    { title: "Your Traffic (HOW THEY FIND YOU)", fields: "traffic" },
-    { title: "Your Operations (HOW YOU DELIVER)", fields: "deliver" },
+    { title: "Your Sales (CONVERSION)", fields: "sell" },
+    { title: "Your Traffic (LEADS)", fields: "traffic" },
+    { title: "Your Operations (DELIVER)", fields: "deliver" },
     { title: "Final Questions", fields: "final" },
   ]
 
@@ -125,6 +125,82 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     window.scrollTo(0, 0)
   }
 
+  const isFormValid = () => {
+    // Check Basic Info - at least one field filled
+    const hasBasicInfo =
+      formData.businessName ||
+      formData.ownerName ||
+      formData.phone ||
+      formData.email ||
+      formData.industry ||
+      formData.yearsInBusiness ||
+      formData.monthlyRevenue ||
+      formData.numberOfCustomers ||
+      formData.teamSize
+
+    // Check WHO - at least one field filled
+    const hasWhoInfo =
+      formData.idealCustomer ||
+      formData.customerTypes ||
+      formData.newCustomersLastMonth ||
+      formData.conversionRate ||
+      formData.biggestProblem ||
+      formData.turnDownBadFits
+
+    // Check WHAT - at least one field filled
+    const hasWhatInfo =
+      formData.mainProblemSolved ||
+      formData.solution ||
+      formData.avgTransactionValue ||
+      formData.pricingVsCompetitors ||
+      formData.customerSatisfaction ||
+      formData.referralFrequency ||
+      formData.doublePriceScenario ||
+      formData.proofLevel
+
+    // Check HOW YOU SELL - at least one field filled
+    const hasSellInfo =
+      formData.closingMethod.length > 0 ||
+      formData.hasSalesScript ||
+      formData.salesConversations ||
+      formData.conversionToCustomer ||
+      formData.timeToClose ||
+      formData.reasonsNotBuying ||
+      formData.followUpSystem
+
+    // Check HOW THEY FIND YOU - at least one field filled
+    const hasTrafficInfo =
+      formData.trafficReferrals ||
+      formData.trafficSocial ||
+      formData.trafficAds ||
+      formData.trafficPartnerships ||
+      formData.trafficWalkIns ||
+      formData.trafficOther ||
+      formData.primarySocialPlatform ||
+      formData.postingFrequency ||
+      formData.weeklyReach ||
+      formData.monthlyLeads ||
+      formData.leadPredictability ||
+      formData.hasLeadMagnet
+
+    // Check HOW YOU DELIVER - at least one field filled
+    const hasDeliverInfo =
+      formData.businessWithoutYou ||
+      formData.writtenProcedures ||
+      formData.canDelegateEasily ||
+      formData.repeatPurchases ||
+      formData.hasUpsells ||
+      formData.trackNumbers ||
+      formData.profitMargin ||
+      formData.hoursPerWeek ||
+      formData.timeOnVsIn
+
+    // Check Final Questions - at least one field filled
+    const hasFinalInfo = formData.topChallenge || formData.oneThingToFix || formData.twelveMonthGoal
+
+    return hasBasicInfo && hasWhoInfo && hasWhatInfo && hasSellInfo && hasTrafficInfo && hasDeliverInfo && hasFinalInfo
+  }
+
   const handleSubmit = () => {
     onSubmit(formData)
   }
@@ -154,7 +230,7 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             <span className="text-[#177fc9]">Business Audit</span>
           </motion.h1>
           <p className="text-xl text-gray-600 mb-2">
-            Identify the ONE thing holding you back from Le 125M ($50K) monthly revenue
+            Identify the ONE thing holding you back from a more substantial monthly revenue
           </p>
           <p className="text-gray-500">⏱️ Takes 15 minutes • 🎯 Get instant results</p>
         </div>
@@ -237,7 +313,12 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             {currentStep === steps.length - 1 ? (
               <button
                 onClick={handleSubmit}
-                className="px-8 py-3 bg-gradient-to-r from-[#177fc9] to-[#42adff] text-white rounded-lg font-bold text-lg hover:from-[#42adff] hover:to-[#177fc9] transition-all transform hover:scale-105 shadow-lg"
+                disabled={!isFormValid()}
+                className={`px-8 py-3 rounded-lg font-bold text-lg transition-all ${
+                  isFormValid()
+                    ? "bg-gradient-to-r from-[#177fc9] to-[#42adff] text-white hover:from-[#42adff] hover:to-[#177fc9] transform hover:scale-105 shadow-lg cursor-pointer"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
               >
                 🎯 Get My Results
               </button>
@@ -281,7 +362,7 @@ function BasicInfoStep({ formData, onChange }: any) {
         label="Your Name"
         value={formData.ownerName}
         onChange={(v: any) => onChange("ownerName", v)}
-        placeholder="e.g., Joe Pratt"
+        placeholder="e.g., Joe Abass"
         required
       />
       <div className="grid md:grid-cols-2 gap-6">
@@ -289,7 +370,7 @@ function BasicInfoStep({ formData, onChange }: any) {
           label="Phone/WhatsApp"
           value={formData.phone}
           onChange={(v: any) => onChange("phone", v)}
-          placeholder="+232 30 600 800"
+          placeholder="+232 30 600 600"
           required
         />
         <FormField
@@ -502,6 +583,19 @@ function WhatStep({ formData, onChange }: any) {
         ]}
         required
       />
+        <FormRadio
+          label="If you doubled your prices tomorrow, what would happen?"
+          value={formData.doublePriceScenario}
+          onChange={(v: any) => onChange("doublePriceScenario", v)}
+          options={[
+            { value: "lose_all", label: "We'd lose all our customers" },
+            { value: "lose_most", label: "We'd lose most customers" },
+            { value: "lose_some", label: "We'd lose some, but keep core clients" },
+            { value: "nothing", label: "Nothing - we're worth it" },
+            { value: "still_value", label: "Customers would still see it as good value" },
+          ]}
+          required
+        />
       <FormRadio
         label="Do you have proof your solution works? (testimonials, case studies, results)"
         value={formData.proofLevel}
@@ -596,7 +690,9 @@ function SellStep({ formData, onChange }: any) {
 function TrafficStep({ formData, onChange }: any) {
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
+      <p className="text-sm font-bold">What percentage of your customers come from each source? *</p>
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+        
         <p className="text-sm text-gray-700">
           <strong>Note:</strong> The percentages below should add up to 100%
         </p>
@@ -645,6 +741,22 @@ function TrafficStep({ formData, onChange }: any) {
           placeholder="e.g., 0"
         />
       </div>
+      
+      <FormRadio
+        label="Which social media platform do you use most for business?"
+        value={formData.primarySocialPlatform}
+        onChange={(v: any) => onChange("primarySocialPlatform", v)}
+        options={[
+          { value: "linkedin", label: "LinkedIn" },
+          { value: "facebook", label: "Facebook" },
+          { value: "instagram", label: "Instagram" },
+          { value: "whatsapp", label: "WhatsApp Status" },
+          { value: "twitter", label: "Twitter/X" },
+          { value: "none", label: "None" },
+        ]}
+        required
+      />
+              
       <FormRadio
         label="How often do you post content about your business?"
         value={formData.postingFrequency}
@@ -739,6 +851,18 @@ function DeliverStep({ formData, onChange }: any) {
         ]}
         required
       />
+        <FormRadio
+          label="Could someone new use your procedures to deliver your service without asking you questions?"
+          value={formData.canDelegateEasily}
+          onChange={(v: any) => onChange("canDelegateEasily", v)}
+          options={[
+            { value: "no_way", label: "No way" },
+            { value: "lots_questions", label: "With lots of questions" },
+            { value: "minimal_questions", label: "With minimal questions" },
+            { value: "yes_completely", label: "Yes, completely" },
+          ]}
+          required
+        />
       <FormRadio
         label="How many times does the average customer buy from you?"
         value={formData.repeatPurchases}
@@ -865,10 +989,6 @@ function FinalStep({ formData, onChange }: any) {
           <li className="flex items-start">
             <span className="mr-2">✅</span>
             <span>A quick win you can implement today</span>
-          </li>
-          <li className="flex items-start">
-            <span className="mr-2">✅</span>
-            <span>Your personalized 90-day roadmap</span>
           </li>
         </ul>
       </div>

@@ -153,6 +153,9 @@ export function Footer() {
                   <Link href="/products/kolat-books" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Kolat Books™
                   </Link>
+                  <Link href="/constraint-audit" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Constraint Audit
+                  </Link>
                 </div>
               )}
             </div>

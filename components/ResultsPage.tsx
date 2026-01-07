@@ -284,6 +284,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100">
+      {/* Back Arrow */}
+      <div className="absolute top-10 left-10 z-50">
+        <a href="/" className="flex items-center text-white hover:text-blue-200 font-semibold text-lg transition-colors" title='Home'>
+          <svg className="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+          </svg>
+        </a>
+      </div>
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50">
           {[...Array(50)].map((_, i) => (
