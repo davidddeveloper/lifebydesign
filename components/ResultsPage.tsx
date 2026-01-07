@@ -2,6 +2,111 @@
 // @ts-nocheck
 "use client"
 
+// --- Personalized Solution CTA ---
+import { useCallback } from "react"
+
+function AnimatedCheckmark({ show }: { show: boolean }) {
+  // Animate both the circle and the check, with a gradient and a pop effect
+  return (
+    <span className="inline-flex items-center justify-center">
+      <svg
+        width="44"
+        height="44"
+        viewBox="0 0 44 44"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className={`transition-all duration-500 ${show ? 'opacity-100 scale-110' : 'opacity-0 scale-75'}`}
+        style={{ filter: show ? 'drop-shadow(0 0 8px #22d3ee88)' : 'none' }}
+      >
+        <defs>
+          <linearGradient id="checkmark-gradient" x1="0" y1="0" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+            <stop stopColor="#22d3ee" />
+            <stop offset="1" stopColor="#22c55e" />
+          </linearGradient>
+        </defs>
+        <circle
+          cx="22"
+          cy="22"
+          r="20"
+          stroke="url(#checkmark-gradient)"
+          strokeWidth="4"
+          fill="#f0fdfa"
+          style={{
+            strokeDasharray: 126,
+            strokeDashoffset: show ? 0 : 126,
+            transition: 'stroke-dashoffset 0.7s cubic-bezier(.4,2,.6,1)',
+          }}
+        />
+        <path
+          d="M13 23L20 30L32 16"
+          stroke="url(#checkmark-gradient)"
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          style={{
+            strokeDasharray: 36,
+            strokeDashoffset: show ? 0 : 36,
+            transition: 'stroke-dashoffset 0.5s 0.25s cubic-bezier(.4,2,.6,1)',
+          }}
+        />
+        <circle
+          cx="22"
+          cy="22"
+          r="20"
+          fill="none"
+          stroke="#fff"
+          strokeWidth="2"
+          opacity={show ? 0.25 : 0}
+          style={{
+            transformOrigin: 'center',
+            transform: show ? 'scale(1.15)' : 'scale(0.9)',
+            transition: 'opacity 0.3s 0.5s, transform 0.3s 0.5s',
+          }}
+        />
+      </svg>
+    </span>
+  )
+}
+
+function PersonalizedSolutionCTA() {
+  const [clicked, setClicked] = useState(false)
+  const [showCheck, setShowCheck] = useState(false)
+
+  const handleClick = useCallback(() => {
+    setClicked(true)
+    setTimeout(() => setShowCheck(true), 200)
+    setTimeout(() => {
+      setShowCheck(false)
+      setClicked(false)
+    }, 1800)
+  }, [])
+
+  return (
+    <div className="flex flex-col items-center my-8">
+      <button
+        onClick={handleClick}
+        disabled={clicked}
+        className={`relative px-8 py-5 rounded-xl text-xl font-extrabold transition-all duration-300 shadow-2xl bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-105 focus:outline-none focus:ring-4 focus:ring-green-300 ${clicked ? 'opacity-80' : ''}`}
+        style={{ minWidth: 260, minHeight: 64 }}
+      >
+        <span className="flex items-center justify-center gap-3">
+          {showCheck ? <AnimatedCheckmark show={showCheck} /> : <span className="text-2xl">🚀</span>}
+          <span className="ml-1 text-lg md:text-xl font-bold">
+            {showCheck ? 'Request Sent!' : 'Get a Personalized Solution'}
+          </span>
+        </span>
+        <span className="absolute -top-3 -right-3 animate-pulse pointer-events-none" aria-hidden="true">
+          {!clicked && <span className="inline-block w-6 h-6 bg-green-400 rounded-full blur-sm opacity-60" />}
+        </span>
+      </button>
+      <p className="mt-4 text-gray-700 max-w-md text-center text-base md:text-lg">
+        Want expert help to solve this constraint? Click above and our team will reach out with a tailored solution just for you.
+      </p>
+    </div>
+  )
+}
+
 import { useEffect, useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Radar } from "react-chartjs-2"
@@ -613,8 +718,16 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 </motion.div>
               </div>
             </div>
+            
+            <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl shadow-xl p-8 border-l-8 border-green-500 flex flex-col items-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center">
+                <span className="mr-3">🤝</span>
+                Want a Personalized Solution?
+              </h3>
+              <PersonalizedSolutionCTA />
+            </div>
 
-            <motion.div
+            {/*<motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 2.5 }}
@@ -681,7 +794,28 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </motion.div>*/}
+            {/*<motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 2.5 }}
+              className="bg-gradient-to-br from-yellow-50 to-amber-50 rounded-xl shadow-xl p-8 border-l-8 border-amber-500 text-center"
+            >
+              <h3 className="text-2xl font-bold text-gray-900 mb-4 flex items-center justify-center">
+                <span className="mr-3">🤝</span>
+                Want a Personalized Solution?
+              </h3>
+              <p className="text-lg text-gray-700 mb-6">
+                Ready to break through your #1 constraint? Book a free strategy call with our team and get expert help tailored to your results.
+              </p>
+              <a
+                href="/partner"
+                className="inline-block px-8 py-4 bg-gradient-to-r from-[#177fc9] to-[#42adff] text-white font-bold rounded-full text-lg shadow-lg hover:from-[#42adff] hover:to-[#177fc9] transition-all"
+              >
+                Book My Free Strategy Call
+              </a>
+              <p className="text-sm text-gray-500 mt-4">No obligation. 100% free. Let's unlock your next level together!</p>
+            </motion.div>*/}
           </div>
         </motion.div>
 

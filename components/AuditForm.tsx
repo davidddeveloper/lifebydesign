@@ -128,75 +128,74 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   const isFormValid = () => {
     // Check Basic Info - at least one field filled
     const hasBasicInfo =
-      formData.businessName ||
-      formData.ownerName ||
-      formData.phone ||
-      formData.email ||
-      formData.industry ||
-      formData.yearsInBusiness ||
-      formData.monthlyRevenue ||
-      formData.numberOfCustomers ||
+      formData.businessName &&
+      formData.ownerName &&
+      formData.phone &&
+      formData.email &&
+      formData.industry &&
+      formData.yearsInBusiness &&
+      formData.monthlyRevenue &&
+      formData.numberOfCustomers &&
       formData.teamSize
 
     // Check WHO - at least one field filled
     const hasWhoInfo =
-      formData.idealCustomer ||
-      formData.customerTypes ||
-      formData.newCustomersLastMonth ||
-      formData.conversionRate ||
-      formData.biggestProblem ||
+      formData.idealCustomer &&
+      formData.customerTypes &&
+      formData.newCustomersLastMonth &&
+      formData.conversionRate &&
+      formData.biggestProblem &&
       formData.turnDownBadFits
 
     // Check WHAT - at least one field filled
     const hasWhatInfo =
-      formData.mainProblemSolved ||
-      formData.solution ||
-      formData.avgTransactionValue ||
-      formData.pricingVsCompetitors ||
-      formData.customerSatisfaction ||
-      formData.referralFrequency ||
-      formData.doublePriceScenario ||
+      formData.mainProblemSolved &&
+      formData.solution &&
+      formData.avgTransactionValue &&
+      formData.pricingVsCompetitors &&
+      formData.customerSatisfaction &&
+      formData.referralFrequency &&
+      formData.doublePriceScenario &&
       formData.proofLevel
 
     // Check HOW YOU SELL - at least one field filled
     const hasSellInfo =
-      formData.closingMethod.length > 0 ||
-      formData.hasSalesScript ||
-      formData.salesConversations ||
-      formData.conversionToCustomer ||
-      formData.timeToClose ||
-      formData.reasonsNotBuying ||
+      formData.hasSalesScript &&
+      formData.salesConversations &&
+      formData.conversionToCustomer &&
+      formData.timeToClose &&
+      formData.reasonsNotBuying &&
       formData.followUpSystem
 
     // Check HOW THEY FIND YOU - at least one field filled
     const hasTrafficInfo =
-      formData.trafficReferrals ||
-      formData.trafficSocial ||
-      formData.trafficAds ||
-      formData.trafficPartnerships ||
-      formData.trafficWalkIns ||
-      formData.trafficOther ||
-      formData.primarySocialPlatform ||
-      formData.postingFrequency ||
-      formData.weeklyReach ||
-      formData.monthlyLeads ||
-      formData.leadPredictability ||
+      formData.trafficReferrals &&
+      formData.trafficSocial &&
+      formData.trafficAds &&
+      formData.trafficPartnerships &&
+      formData.trafficWalkIns &&
+      formData.trafficOther &&
+      formData.primarySocialPlatform &&
+      formData.postingFrequency &&
+      formData.weeklyReach &&
+      formData.monthlyLeads &&
+      formData.leadPredictability &&
       formData.hasLeadMagnet
 
     // Check HOW YOU DELIVER - at least one field filled
     const hasDeliverInfo =
-      formData.businessWithoutYou ||
-      formData.writtenProcedures ||
-      formData.canDelegateEasily ||
-      formData.repeatPurchases ||
-      formData.hasUpsells ||
-      formData.trackNumbers ||
-      formData.profitMargin ||
-      formData.hoursPerWeek ||
+      formData.businessWithoutYou &&
+      formData.writtenProcedures &&
+      formData.canDelegateEasily &&
+      formData.repeatPurchases &&
+      formData.hasUpsells &&
+      formData.trackNumbers &&
+      formData.profitMargin &&
+      formData.hoursPerWeek &&
       formData.timeOnVsIn
 
     // Check Final Questions - at least one field filled
-    const hasFinalInfo = formData.topChallenge || formData.oneThingToFix || formData.twelveMonthGoal
+    const hasFinalInfo = formData.topChallenge && formData.oneThingToFix && formData.twelveMonthGoal
 
     return hasBasicInfo && hasWhoInfo && hasWhatInfo && hasSellInfo && hasTrafficInfo && hasDeliverInfo && hasFinalInfo
   }
