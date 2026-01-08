@@ -83,13 +83,13 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   })
 
   const steps = [
-    { title: "Basic Info", fields: "basic" },
-    { title: "Your Market (WHO)", fields: "who" },
-    { title: "Your Offer (WHAT)", fields: "what" },
-    { title: "Your Sales (CONVERSION)", fields: "sell" },
-    { title: "Your Traffic (LEADS)", fields: "traffic" },
-    { title: "Your Operations (DELIVER)", fields: "deliver" },
-    { title: "Final Questions", fields: "final" },
+    { title: "Basic Info", short: "Info", fields: "basic" },
+    { title: "Your Market (WHO)", short: "Market", fields: "who" },
+    { title: "Your Offer (WHAT)", short: "Offer", fields: "what" },
+    { title: "Your Traffic (LEADS)", short: "Traffic", fields: "traffic" },
+    { title: "Your Sales (CONVERSION)", short: "Sales", fields: "sell" },
+    { title: "Your Operations (DELIVERY)", short: "Ops", fields: "deliver" },
+    { title: "Final Questions", short: "Final", fields: "final" },
   ]
 
   const stepDescriptions: Record<string, string> = {
@@ -266,7 +266,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
                 title={stepDescriptions[step.fields] ?? step.title}
                 aria-current={index === currentStep ? "step" : undefined}
               >
-                {step.title}
+                <span className="block md:hidden">{step.short}</span>
+                <span className="hidden md:block">{step.title}</span>
               </button>
             ))}
           </div>
