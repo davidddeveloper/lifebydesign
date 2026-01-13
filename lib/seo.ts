@@ -185,10 +185,10 @@ export const pageMetadata = {
     tags: ["partnerships", "investment", "portfolio companies", "business growth"],
   },
   scalingBlueprint: {
-    title: "Scaling Blueprint - Business Scaling System | LBD Startup Bodyshop",
+    title: "Stop Guessing. Start Growing. | Scaling Blueprint - LBD Startup Bodyshop",
     description:
-      "Master the proven Scaling Blueprint system to grow your business predictably. Unlock growth through proven frameworks and expert guidance.",
-    tags: ["business scaling", "growth strategy", "business systems"],
+      "Identify your ONE constraint in 2 days, eliminate it in 90 days. The Scaling Blueprint delivers 30-50% revenue increase through the 5 Levers Framework. $100 workshop or $600 90-day program.",
+    tags: ["business scaling", "constraint elimination", "5 levers framework", "business growth", "revenue increase", "90-day program", "business coaching"],
   },
   kolatBooks: {
     title: "Kolat Books - Business Finance Mastery",

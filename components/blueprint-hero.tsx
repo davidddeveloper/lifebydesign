@@ -35,30 +35,36 @@ export function BlueprintHero({ onOpenForm }: BlueprintHeroProps) {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-black text-white mb-6 text-balance leading-tight"
           >
-            Stop Working Harder.
-            <span className="text-[#fff]"> Start Scaling Smarter.</span>
+            Stop Guessing.
+            <span className="text-[#fff]"> Start Growing.</span>
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
-            className="text-md md:text-lg text-black mb-8 max-w-2xl md:max-w-5xl mx-auto leading-relaxed text-balance"
+            className="text-md md:text-lg text-black mb-4 max-w-2xl md:max-w-5xl mx-auto leading-relaxed text-balance"
           >
-            Most founders are stuck. Busy but not growing. The Scaling Blueprint identifies and eliminates the ONE
-            constraint holding your business back — then gives you the exact system to scale it.
+            Most businesses are stuck because they're fixing the wrong problems. The Scaling Blueprint identifies your ONE constraint—then gives you the exact 90-day plan to eliminate it.
+          </motion.p>
+
+          <motion.p
+            variants={itemVariants}
+            className="text-sm md:text-base text-gray-800 font-semibold mb-8 max-w-2xl mx-auto"
+          >
+            Average result: 30-50% revenue increase in 90 days
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
             <button
               onClick={onOpenForm}
-              className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
+              className="px-6 py-3 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
             >
-              Get Started
+              Register for Next Workshop - $100
             </button>
             <Link
               href="#how-it-works"
-              className="px-4 py-2 border-2 border-gray-900 text-gray-900 font-bold rounded-full hover:bg-gray-900 hover:text-white transition-colors text-lg"
+              className="px-6 py-3 border-2 border-gray-900 text-gray-900 font-bold rounded-full hover:bg-gray-900 hover:text-white transition-colors text-lg"
             >
-              Learn More
+              See How It Works
             </Link>
           </motion.div>
 
