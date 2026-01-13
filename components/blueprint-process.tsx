@@ -16,23 +16,29 @@ export function BlueprintProcess() {
   const steps = [
     {
       number: "01",
-      title: "Diagnose",
+      title: "Attend the 2-Day Workshop",
+      subtitle: "Learn the Framework. Find Your Constraint.",
       description:
-        "We run your business through a structured 8-function audit: Product, Marketing, Sales, Customer Service, IT, Recruitment, HR, Finance. We pinpoint your growth constraint — the one thing slowing you down.",
+        "In 2 days (Friday-Saturday), you'll learn the 5 Levers Framework, score your business on each lever, identify your #1 constraint, build a 90-day plan outline, and find an accountability partner.",
+      details: ["Investment: $100", "Next Workshop: [Date & Location]"],
       icon: BarChart3,
     },
     {
       number: "02",
-      title: "Workshop (DIY Path)",
+      title: "Execute (With or Without Coaching)",
+      subtitle: "Two Paths Forward",
       description:
-        "Attend our paid workshop designed for your stage. You learn how to solve the problem yourself, get frameworks and checklists, and leave with a tactical, step-by-step 90-day plan.",
+        "DIY Path: Execute your plan alone with the framework ($100 total, 5% success rate). Done-With-You Path: Get expert coaching for 90 days ($600 pilot, 80% success rate).",
+      details: [],
       icon: CheckCircle2,
     },
     {
       number: "03",
-      title: "Done-With-You Implementation",
+      title: "Measure Results",
+      subtitle: "See Real Growth in 90 Days",
       description:
-        "We embed alongside your team, install systems, and drive implementation. Some founders want speed and certainty. We handle the execution while you run the business.",
+        "Average results: 30-50% revenue increase, constraint eliminated, working fewer hours, clear system in place.",
+      details: [],
       icon: Zap,
     },
   ]
@@ -46,8 +52,8 @@ export function BlueprintProcess() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">How The Scaling Blueprint Works</h2>
-          <p className="text-base text-gray-600 max-w-2xl mx-auto">Three simple steps from diagnosis to scaling</p>
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">The Complete Constraint-Busting System</h2>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">Three simple steps to identify and eliminate your constraint</p>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -69,8 +75,16 @@ export function BlueprintProcess() {
                   </div>
 
                   <Icon className="w-8 h-8 text-[#177fc9] mb-6 mt-4" />
-                  <h3 className="text-xl font-black text-gray-900 mb-4">{step.title}</h3>
-                  <p className="text-gray-600 leading-relaxed text-base">{step.description}</p>
+                  <h3 className="text-xl font-black text-gray-900 mb-2">{step.title}</h3>
+                  {"subtitle" in step && <p className="text-sm font-semibold text-[#177fc9] mb-4">{step.subtitle}</p>}
+                  <p className="text-gray-600 leading-relaxed text-base mb-4">{step.description}</p>
+                  {"details" in step && step.details.length > 0 && (
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      {step.details.map((detail, j) => (
+                        <p key={j} className="text-sm text-gray-700 font-semibold">{detail}</p>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )
@@ -81,12 +95,10 @@ export function BlueprintProcess() {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="mt-16 p-8 bg-[#42adff]/50 border-l-4 border-[#42adff] rounded-lg"
+          className="mt-16 p-8 bg-[#42adff]/10 border-l-4 border-[#42adff] rounded-lg"
         >
           <p className="text-lg text-gray-900">
-            <span className="font-black">Key Insight:</span> We only solve that stage's constraint — nothing else. When
-            you fix it, you graduate to the next level of scale. {/*This focused approach is why 87% of our participants
-            hit their 90-day breakthrough.*/}
+            <span className="font-black">The Done-With-You path delivers 16x better execution rate</span> (80% vs 5%) with professional coaching and accountability. Average ROI: 6-11x within 90 days.
           </p>
         </motion.div>
       </div>
