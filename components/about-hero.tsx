@@ -15,12 +15,12 @@ export function AboutHero() {
           className="text-center space-y-6"
         >
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
-            Life By Design <span className="text-[#177fc9]">Startup Bodyshop</span>
+            We want disciplined team players who trust and <span className="text-[#177fc9]">win together.</span>
           </h1>
 
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Crafting Success, Empowering Dreams. Sierra Leone's leading entrepreneurship support organization dedicated
-            to empowering MSMEs to start, grow, and scale sustainable businesses.
+            At Startup Bodyshop, we're focused on building businesses that compound over years, not months. We care about creating
+            systems that scale, making decisions that stand the test of time, and building relationships that last.
           </p>
 
           <motion.div

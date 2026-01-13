@@ -4,6 +4,7 @@ import { useState } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
 import { AboutHero } from "@/components/about-hero"
+import { LBDTeamCulture } from "@/components/lbd-team-culture"
 import { LBDMission } from "@/components/lbd-mission"
 import { LBDCoreValues } from "@/components/lbd-core-values"
 import { LBDServices } from "@/components/lbd-services"
@@ -18,8 +19,9 @@ export default function AboutPageClient() {
       <Header />
       <main>
         <AboutHero />
-        <LBDMission />
+        <LBDTeamCulture />
         <LBDCoreValues />
+        <LBDMission />
         <LBDServices />
         <LBDImpact />
         <AboutCTA onOpenForm={() => setFormModalOpen(true)} />
