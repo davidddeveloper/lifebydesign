@@ -19,7 +19,7 @@ export function CareersHero() {
               Join The <span className="text-[#177fc9]">Startup Bodyshop</span> Team
             </h1>
             <p className="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed">
-              We're seeking teammates who lead with trust, work with discipline, and play to win as a team.
+              We're building Africa's most trusted partner for scalable startups. If you're ready to help founders create real value, own outcomes, and build businesses that last — let's work together.
             </p>
             <Link href="/careers/jobs">
               <motion.button
