@@ -96,8 +96,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     basic: "Share your business basics—contact info, industry, revenue, and team size—so the audit is tailored to you.",
     who: "Clarify who you serve and how well they convert to uncover positioning and targeting gaps.",
     what: "Describe the problem you solve, your offer, pricing, and proof to gauge value strength.",
-    sell: "Explain your sales process, scripts, and follow-up so we can spot where deals stall.",
     traffic: "Outline how people find you, which channels work, and lead flow to assess predictability.",
+    sell: "Explain your sales process, scripts, and follow-up so we can spot where deals stall.",
     deliver: "Detail operations, delegation, and repeat purchases to surface delivery bottlenecks.",
     final: "Call out your top challenge and 12-month goal so recommendations can be prioritized.",
   }
