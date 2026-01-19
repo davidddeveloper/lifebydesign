@@ -343,7 +343,7 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
 }
 
 function getStepIcon(step: number) {
-  const icons = ["📋", "👥", "💎", "🤝", "📢", "⚙️", "🎯"]
+  const icons = ["📋", "👥", "💎", "📢", "🤝", "⚙️", "🎯"]
   return icons[step]
 }
 
