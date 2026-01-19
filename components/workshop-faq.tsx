@@ -39,37 +39,48 @@ const faqs = [
   {
     question: "What is the Scaling Blueprint?",
     answer:
-      "The Scaling Blueprint is LBD Startup Bodyshop's flagship business growth system. It's a diagnostic and intervention framework designed to help entrepreneurs identify and eliminate the single biggest constraint holding back their business growth. It focuses on clarity, control, and capacity — giving founders the structure and tools to scale sustainably and profitably.",
+      "The Scaling Blueprint is LBD Startup Bodyshop's flagship business growth system. It's a diagnostic and intervention framework designed to help entrepreneurs identify and eliminate the single biggest constraint holding back their business growth. It focuses on clarity, control, and capacity — giving founders the structure and tools to scale sustainably and profitably. We use the 5 Levers Framework to diagnose your business, then give you a tactical roadmap to fix your bottleneck. Average result: 30-50% revenue increase in 90-180 days.",
   },
   {
     question: "How does the Scaling Blueprint work?",
     answer: [
-      "The Scaling Blueprint follows a three-step, hands-on process:",
-      "1. Diagnose - A structured 8-function audit covering Product, Marketing, Sales, Customer Service, IT, HR, Recruitment, and Finance.",
-      "2. Workshop (DIY Path) - A practical Scaling Workshop focused on the key constraint with frameworks, checklists, and a 90-day breakthrough plan.",
-      "3. Done-With-You (DWY Path) - For faster implementation, LBD consultants work directly with teams to install systems and track growth.",
+      "Step 1: Attend the 2-day workshop. Learn the 5 Levers Framework, identify your constraint, and build your 90-day plan.",
+      "Step 2: Choose your path:",
+      "DIY: Execute the plan yourself (workshop only, $100 total)",
+      "Done-With-You: Get expert coaching for 90 days ($600 pilot). Includes deep audit, 6 coaching calls, and daily WhatsApp support.",
+      "Step 3: Eliminate your constraint in 90 days. See measurable results (average 30-50% revenue increase).",
     ],
   },
   {
     question: "What are the key benefits of implementing the Scaling Blueprint?",
     answer: [
-      "Businesses that apply the Scaling Blueprint experience:",
-      "• Improved clarity on where to focus resources",
-      "• Increased sales conversion and profit margins",
-      "• Stronger team accountability and systemization",
-      "• Enhanced cash flow management",
-      "• Predictable, sustainable business growth",
+      "Clarity: Know exactly what's holding you back—no more guessing.",
+      "Focus: Stop wasting time on problems that don't matter. Attack the ONE constraint choking your growth.",
+      "Results: Average 30-50% revenue increase in 90 - 180 days. 80% of Done-With-You participants execute fully (vs 5% DIY success rate).",
+      "System: Learn a repeatable method you can use endlessly. After fixing one constraint, you can tackle the next.",
+      
     ],
   },
   {
     question: "How is LBD Startup Bodyshop different from other business support programs?",
-    answer:
-      "LBD Startup Bodyshop's approach is diagnostic, data-driven, and implementation-focused. The Scaling Blueprint focuses on one key constraint at a time, ensuring measurable progress with strategy, systems, and accountability.",
+    answer: [
+      "Most programs give generic advice. \"Do more marketing.\" \"Improve your operations.\" \"Work on your mindset.\"",
+      "We use the Theory of Constraints to identify your specific bottleneck, then give you a constraint-specific solution.",
+      "The Difference?",
+      "We diagnose before prescribing (most programs guess)",
+      "We focus on ONE constraint at a time (most programs overwhelm you)",
+      "We track results (30-50% average increase, not vague promises)",
+      "We guarantee it (If you do the work and see zero results, we work with you until you get the results at no additional costs)",
+    ]
   },
   {
     question: "What is LBD Startup Bodyshop's broader vision?",
     answer:
-      "Life by Design Startup Bodyshop aims to build a resilient and self-sustaining entrepreneurial ecosystem by equipping founders with the mindset, systems, and tools to scale. Through its work with ACTB Savings and Loans, iDT Labs and Inkeemedia, LBD Startup Bodyshop continues to amplify the voices of entrepreneurs, strengthen innovation capacity, and drive inclusive economic growth.",
+      [
+          "To build the most successful businesses in Sierra Leone by eliminating the constraints holding them back, one business at a time.",
+          "We believe most businesses aren't stuck because they lack ideas or effort—they're stuck because they don't know which problem to solve first. The Scaling Blueprint gives them that clarity, then the tools to execute.",
+          "Our vision: A thriving Sierra Leone business ecosystem where founders stop guessing and start growing.",
+      ]
   },
 ]
 
