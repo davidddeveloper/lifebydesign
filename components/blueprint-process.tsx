@@ -18,21 +18,21 @@ export function BlueprintProcess() {
       number: "01",
       title: "Diagnose",
       description:
-        "We run your business through a structured 8-function audit: Product, Marketing, Sales, Customer Service, IT, Recruitment, HR, Finance. We pinpoint your growth constraint — the one thing slowing you down.",
+        "We run your business through the 5 Levers Framework: WHO (your market), WHAT (your offer), HOW YOU SELL (conversion), HOW THEY FIND YOU (lead generation), and HOW YOU DELIVER (operations). We score each lever 0-10 and pinpoint your growth constraint — the one thing slowing you down.",
       icon: BarChart3,
     },
     {
       number: "02",
       title: "Workshop (DIY Path)",
       description:
-        "Attend our paid workshop designed for your stage. You learn how to solve the problem yourself, get frameworks and checklists, and leave with a tactical, step-by-step 90-day plan.",
+        "Attend our 2-day workshop. You learn the framework, identify your constraint, and build a tactical 90-day plan to fix it. You leave with a complete roadmap, accountability partner, and all the tools you need to execute on your own.",
       icon: CheckCircle2,
     },
     {
       number: "03",
       title: "Done-With-You Implementation",
       description:
-        "We embed alongside your team, install systems, and drive implementation. Some founders want speed and certainty. We handle the execution while you run the business.",
+        "Join our 90-Day Program. We conduct a deep 41-question audit, give you a detailed roadmap, and coach you through implementation with 6 bi-weekly calls plus daily WhatsApp support. We handle the guidance while you run the business.",
       icon: Zap,
     },
   ]
