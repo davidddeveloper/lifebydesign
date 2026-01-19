@@ -15,12 +15,14 @@ export function AboutHero() {
           className="text-center space-y-6"
         >
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
-            Life By Design <span className="text-[#177fc9]">Startup Bodyshop</span>
+            <span className="text-[#177fc9]">STARTUP BODYSHOP</span>
           </h1>
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-700 mt-4">
+            Mission | Vision | Values
+          </h2>
 
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Crafting Success, Empowering Dreams. Sierra Leone's leading entrepreneurship support organization dedicated
-            to empowering MSMEs to start, grow, and scale sustainable businesses.
+            We help African founders build businesses that scale — by giving them the systems, skills, and accountability to grow fast, profitably, and sustainably.
           </p>
 
           <motion.div
