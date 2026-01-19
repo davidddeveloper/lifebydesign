@@ -290,8 +290,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             {currentStep === 0 && <BasicInfoStep formData={formData} onChange={handleInputChange} />}
             {currentStep === 1 && <WhoStep formData={formData} onChange={handleInputChange} />}
             {currentStep === 2 && <WhatStep formData={formData} onChange={handleInputChange} />}
-            {currentStep === 3 && <SellStep formData={formData} onChange={handleInputChange} />}
             {currentStep === 4 && <TrafficStep formData={formData} onChange={handleInputChange} />}
+            {currentStep === 3 && <SellStep formData={formData} onChange={handleInputChange} />}
             {currentStep === 5 && <DeliverStep formData={formData} onChange={handleInputChange} />}
             {currentStep === 6 && <FinalStep formData={formData} onChange={handleInputChange} />}
           </AnimatePresence>
