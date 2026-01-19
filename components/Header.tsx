@@ -82,6 +82,10 @@ export function Header() {
                   <Link href="/products/kolat-books" className="block px-4 py-2 hover:bg-gray-100 text-sm">
                     Kolat Books™
                   </Link>
+                  
+                  <Link href="/constraint-audit" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                    Constraint Audit
+                  </Link>
                 </div>
               )}
             </div>
@@ -180,6 +184,9 @@ export function Header() {
                             className="py-2 hover:text-gray-300 transition-colors text-sm"
                           >
                             Kolat Books™
+                          </Link>
+                          <Link href="/constraint-audit" className="py-2 hover:text-gray-300 transition-colors text-sm">
+                            Constraint Audit
                           </Link>
                         </motion.div>
                       )}
