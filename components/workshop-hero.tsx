@@ -13,10 +13,10 @@ export function WorkshopHero() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-8 leading-tight text-balance">
-            IT'S NOT AN EVENT, IT'S A SCALING WORKSHOP.
+            IT'S NOT AN EVENT, IT'S A CONSTRAINT-BUSTING WORKSHOP.
           </h1>
           <p className="text-xl md:text-2xl lg:text-3xl text-[#4a4a4a] leading-relaxed max-w-5xl mx-auto">
-            It's not motivational hype, It's tactical Help, solving real world business problems.
+            It's not motivational hype. It's tactical help, identifying and solving the ONE bottleneck holding your business back.
           </p>
         </div>
 
@@ -31,7 +31,7 @@ export function WorkshopHero() {
 
           <div className="text-center mt-8 mb-8 flex flex-col gap-14 justify-center items-center">
             <p className="text-lg md:text-xl text-[#4a4a4a] font-semibold max-w-5xl mx-auto">
-              It's a 2-day, interactive workshop where you'll receive personalized, actionable insights from the team that's scaled LBD.group & it's portfolio companies.
+              This is a 2-day interactive workshop where you’ll learn the exact framework we use to diagnose and eliminate growth constraints. It’s the same system that has helped businesses achieve 30–50% revenue growth within 90–180 days.
             </p>
             <Button
               size="lg"
