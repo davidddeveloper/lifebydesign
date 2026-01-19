@@ -35,16 +35,15 @@ export function BlueprintHero({ onOpenForm }: BlueprintHeroProps) {
             variants={itemVariants}
             className="text-4xl md:text-5xl font-black text-white mb-6 text-balance leading-tight"
           >
-            Stop Working Harder.
-            <span className="text-[#fff]"> Start Scaling Smarter.</span>
+            Stop Guessing.
+            <span className="text-[#fff]"> Start Growing.</span>
           </motion.h1>
 
           <motion.p
             variants={itemVariants}
             className="text-md md:text-lg text-black mb-8 max-w-2xl md:max-w-5xl mx-auto leading-relaxed text-balance"
           >
-            Most founders are stuck. Busy but not growing. The Scaling Blueprint identifies and eliminates the ONE
-            constraint holding your business back — then gives you the exact system to scale it.
+            Most businesses are stuck because they're fixing the wrong problems. The Scaling Blueprint identifies your ONE constraint—then gives you the exact 90-day plan to eliminate it.
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
