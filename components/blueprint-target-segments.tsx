@@ -5,22 +5,34 @@ import { motion } from "framer-motion"
 export function BlueprintTargetSegments() {
   const segments = [
     {
-      name: "Product-Market Fit Seeker",
-      problem: "Built something great, but can't sell it.",
-      pain: '"I have a product but no customers."',
-      constraint: "Product / Marketing / Sales",
+      name: "WHO (Market)",
+      problem: "Great product, but struggling to find the right buyers.",
+      pain: '"I have customers, but they\'re the wrong ones. High churn, constant price objections."',
+      constraint: "Market positioning, ideal customer profile, messaging that resonates.",
     },
     {
-      name: "Chaotic Operator",
-      problem: "Making money but drowning in operations",
-      pain: '"I\'m putting out fires daily."',
-      constraint: "Customer Service / IT / Finance",
+      name: "WHAT (Offer)",
+      problem: "Lots of interest but few people actually buy.",
+      pain: '"Everyone says it sounds great, but no one is willing to pay."',
+      constraint: "Offer structure, value proposition, pricing strategy, differentiation.",
     },
     {
-      name: "Overwhelmed Founder",
-      problem: "Business can't run without them",
-      pain: '"If I stop, it stops."',
-      constraint: "Recruitment / HR",
+      name: "HOW YOU SELL",
+      problem: "Getting leads but can't convert them to customers.",
+      pain: ' "I have conversations, but they don\'t close. Long sales cycles, constant objections."',
+      constraint: "Sales system, conversion process, objection handling, closing tactics.",
+    },
+    {
+      name: "HOW THEY FIND YOU",
+      problem: "Inconsistent revenue because you can't generate leads predictably.",
+      pain: '"Feast or famine. I rely on referrals and have no marketing system."',
+      constraint: "Lead generation system, marketing channels, predictable pipeline.",
+    },
+    {
+      name: "HOW YOU DELIVER",
+      problem: "Business depends entirely on you. Can't scale without burning out.",
+      pain: '"If I stop, it stops. Quality issues when I try to delegate."',
+      constraint: "Operations systems, SOPs, team structure, delivery processes.",
     },
   ]
 
@@ -35,7 +47,7 @@ export function BlueprintTargetSegments() {
         >
           <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Is This For You?</h2>
           <p className="text-base text-gray-600 max-w-2xl mx-auto">
-            The Scaling Blueprint is built for founders in three specific stages of growth chaos.
+            The Scaling Blueprint is built for businesses stuck despite working hard.
           </p>
         </motion.div>
 
