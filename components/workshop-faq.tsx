@@ -46,8 +46,8 @@ const faqs = [
     answer: [
       "Step 1: Attend the 2-day workshop. Learn the 5 Levers Framework, identify your constraint, and build your 90-day plan.",
       "Step 2: Choose your path:",
-      "DIY: Execute the plan yourself (workshop only, $100 total)",
-      "Done-With-You: Get expert coaching for 90 days ($600 pilot). Includes deep audit, 6 coaching calls, and daily WhatsApp support.",
+      "DIY: Execute the plan yourself )",
+      "Done-With-You: Get expert coaching. Includes deep audit, 6 coaching calls, and daily WhatsApp support.",
       "Step 3: Eliminate your constraint in 90 days. See measurable results (average 30-50% revenue increase).",
     ],
   },
