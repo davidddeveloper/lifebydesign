@@ -100,6 +100,8 @@ export async function POST(request: NextRequest) {
     });
     
     const n8nResults = await n8nResponse.json();
+
+    console.log('N8N RESULTS:', JSON.stringify(n8nResults, null, 2));
     
     // 3. Update Supabase with AI results
     const { data: updatedAudit, error: updateError } = await supabaseAdmin
