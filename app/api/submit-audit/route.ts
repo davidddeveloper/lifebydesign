@@ -1,6 +1,7 @@
 // app/api/submit-audit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
+import { sanityWriteClient } from '@/lib/sanity';
 
 export async function POST(request: NextRequest) {
   try {
@@ -150,8 +151,124 @@ export async function POST(request: NextRequest) {
       console.error('Update error:', updateError);
       throw updateError;
     }
-    
-    // 4. Return results to frontend
+
+    // 4. Save to Sanity for backend visibility
+    try {
+      await sanityWriteClient.create({
+        _type: 'auditSubmission',
+
+        // Basic Info
+        businessName: formData.businessName,
+        ownerName: formData.ownerName,
+        email: formData.email,
+        phone: formData.phone,
+        industry: formData.industry,
+        yearsInBusiness: parseInt(formData.yearsInBusiness) || null,
+        monthlyRevenue: parseInt(formData.monthlyRevenue) || null,
+        numberOfCustomers: parseInt(formData.numberOfCustomers) || null,
+        teamSize: parseInt(formData.teamSize) || null,
+
+        // WHO
+        idealCustomer: formData.idealCustomer,
+        customerTypes: formData.customerTypes,
+        newCustomersLastMonth: formData.newCustomersLastMonth,
+        conversionRate: formData.conversionRate,
+        biggestProblem: formData.biggestProblem,
+        turnDownBadFits: formData.turnDownBadFits,
+
+        // WHAT
+        mainProblemSolved: formData.mainProblemSolved,
+        solution: formData.solution,
+        avgTransactionValue: formData.avgTransactionValue,
+        pricingVsCompetitors: formData.pricingVsCompetitors,
+        customerSatisfaction: formData.customerSatisfaction,
+        referralFrequency: formData.referralFrequency,
+        proofLevel: formData.proofLevel,
+
+        // SELL
+        hasSalesScript: formData.hasSalesScript,
+        salesConversations: formData.salesConversations,
+        conversionToCustomer: formData.conversionToCustomer,
+        timeToClose: formData.timeToClose,
+        reasonsNotBuying: formData.reasonsNotBuying,
+        followUpSystem: formData.followUpSystem,
+
+        // TRAFFIC
+        trafficReferrals: parseInt(formData.trafficReferrals) || 0,
+        trafficSocial: parseInt(formData.trafficSocial) || 0,
+        trafficAds: parseInt(formData.trafficAds) || 0,
+        trafficPartnerships: parseInt(formData.trafficPartnerships) || 0,
+        trafficWalkIns: parseInt(formData.trafficWalkIns) || 0,
+        trafficOther: parseInt(formData.trafficOther) || 0,
+        postingFrequency: formData.postingFrequency,
+        weeklyReach: formData.weeklyReach,
+        monthlyLeads: formData.monthlyLeads,
+        leadPredictability: formData.leadPredictability,
+        hasLeadMagnet: formData.hasLeadMagnet,
+
+        // OPERATIONS
+        businessWithoutYou: formData.businessWithoutYou,
+        writtenProcedures: formData.writtenProcedures,
+        repeatPurchases: formData.repeatPurchases,
+        hasUpsells: formData.hasUpsells,
+        trackNumbers: formData.trackNumbers,
+        profitMargin: formData.profitMargin,
+        hoursPerWeek: formData.hoursPerWeek,
+        timeOnVsIn: formData.timeOnVsIn,
+
+        // FINAL
+        topChallenge: formData.topChallenge,
+        oneThingToFix: formData.oneThingToFix,
+        twelveMonthGoal: formData.twelveMonthGoal,
+
+        // N8N Results
+        scores: {
+          who: n8nResults.scores['WHO (Market)'],
+          what: n8nResults.scores['WHAT (Offer)'],
+          sell: n8nResults.scores['HOW YOU SELL (Conversion)'],
+          traffic: n8nResults.scores['HOW THEY FIND YOU (Traffic)'],
+          operations: n8nResults.scores['HOW YOU DELIVER (Operations)'],
+        },
+        primaryConstraint: n8nResults.finalConstraint,
+        primaryScore: n8nResults.primaryScore,
+        secondaryConstraint: n8nResults.secondaryConstraint,
+        secondaryScore: n8nResults.secondaryScore,
+        confidence: n8nResults.confidence,
+        reasoning: n8nResults.reasoning,
+        evidencePoints: n8nResults.evidencePoints,
+
+        revenueImpact: {
+          currentMonthly: n8nResults.revenueImpact.currentMonthly,
+          potentialMonthly: n8nResults.revenueImpact.potentialMonthly,
+          monthlyOpportunityCost: n8nResults.revenueImpact.monthlyOpportunityCost,
+          yearlyOpportunityCost: n8nResults.revenueImpact.yearlyOpportunityCost,
+          explanation: n8nResults.revenueImpact.explanation,
+        },
+
+        quickWin: {
+          action: n8nResults.quickWin.action,
+          impact: n8nResults.quickWin.impact,
+          time: n8nResults.quickWin.time,
+        },
+
+        // Status & Metadata
+        status: n8nResults.revenueImpact.monthlyOpportunityCost > 10000000
+          ? 'pending_contact'
+          : 'nurturing',
+        supabaseId: String(auditData.id),
+        dashboardId: auditData.dashboard_id,
+        submittedAt: new Date().toISOString(),
+        ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '',
+        userAgent: request.headers.get('user-agent') || '',
+        referralSource: request.headers.get('referer') || '',
+      });
+    } catch (sanityError) {
+      // Log the error but don't fail the whole request
+      // The data is already saved in Supabase
+      console.error('Sanity save error:', sanityError);
+    }
+
+    // 5. Return results to frontend
     return NextResponse.json({
       success: true,
       fields: updatedAudit,

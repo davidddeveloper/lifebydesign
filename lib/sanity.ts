@@ -11,11 +11,22 @@ if (!dataset) {
   console.error("[v0] Missing NEXT_PUBLIC_SANITY_DATASET environment variable")
 }
 
+// Read-only client with CDN for fetching public content
 export const client = createClient({
   projectId,
   dataset,
   apiVersion: "2024-01-01",
   useCdn: true,
+})
+
+// Write client for server-side mutations (creating/updating documents)
+// Requires SANITY_API_TOKEN environment variable with write permissions
+export const sanityWriteClient = createClient({
+  projectId,
+  dataset,
+  apiVersion: "2024-01-01",
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
 })
 
 export async function getAllBlogPosts() {
