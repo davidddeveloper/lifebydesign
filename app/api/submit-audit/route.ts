@@ -116,15 +116,15 @@ export async function POST(request: NextRequest) {
         scores: n8nResults.fields.scores,
         
         // Constraint
-        primary_constraint: n8nResults.fields.finalConstraint,
-        primary_score: n8nResults.fields.primaryScore,
-        secondary_constraint: n8nResults.fields.secondaryConstraint,
-        secondary_score: n8nResults.fields.secondaryScore,
+        primary_constraint: n8nResults.fields.final_constraint,
+        primary_score: n8nResults.fields.primary_score,
+        secondary_constraint: n8nResults.fields.secondary_constraint,
+        secondary_score: n8nResults.fields.secondary_score,
         
         // AI Analysis
         confidence: n8nResults.fields.confidence,
         reasoning: n8nResults.fields.reasoning,
-        evidence_points: n8nResults.fields.evidencePoints,
+        evidence_points: n8nResults.fields.evidence_points,
         
         // Revenue Impact
         current_monthly_revenue: n8nResults.fields.revenue_impact.currentMonthly,
@@ -135,13 +135,13 @@ export async function POST(request: NextRequest) {
         revenue_impact: n8nResults.fields.revenue_impact,
         
         // Quick Win
-        quick_win_action: n8nResults.fields.quickWin.action,
-        quick_win_impact: n8nResults.fields.quickWin.impact,
-        quick_win_time: n8nResults.fields.quickWin.time,
-        quick_win: n8nResults.fields.quickWin,
+        quick_win_action: n8nResults.fields.quick_win.action,
+        quick_win_impact: n8nResults.fields.quick_win.impact,
+        quick_win_time: n8nResults.fields.quick_win.time,
+        quick_win: n8nResults.fields.quick_win,
         
         // Status
-        status: n8nResults.fields.revenueImpact.monthlyOpportunityCost > 10000000 
+        status: n8nResults.fields.revenue_impact.monthlyOpportunityCost > 10000000 
           ? 'pending_contact' 
           : 'nurturing',
       })
