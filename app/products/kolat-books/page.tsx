@@ -1,4 +1,7 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
+import { sanityFetch } from "@/sanity/lib/fetch"
+import { kolatBooksPageQuery } from "@/sanity/lib/queries"
+import type { KolatBooksPage } from "@/sanity/lib/types"
 import KolatBooksPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -8,6 +11,13 @@ export const metadata = generateMetadata({
   tags: pageMetadata.kolatBooks.tags,
 })
 
-export default function KolatBooksPage() {
-  return <KolatBooksPageClient />
+export const revalidate = 60
+
+export default async function KolatBooksPageRoute() {
+  const pageData = await sanityFetch<KolatBooksPage | null>({
+    query: kolatBooksPageQuery,
+    tags: ["kolatBooksPage"],
+  })
+
+  return <KolatBooksPageClient pageData={pageData} />
 }

@@ -2,22 +2,21 @@
 
 import { useState } from "react"
 import { Header } from "@/components/Header"
+import { CareersHero } from "@/components/careers-hero"
+import { CultureSection } from "@/components/culture-section"
+import { ValuesSection } from "@/components/values-section"
+import { BenefitsSection } from "@/components/benefit-section"
+import { TestimonialsSection } from "@/components/testimonials-section"
 import { Footer } from "@/components/Footer"
-import { AboutHero } from "@/components/about-hero"
-import { LBDMission } from "@/components/lbd-mission"
-import { LBDCoreValues } from "@/components/lbd-core-values"
-import { LBDServices } from "@/components/lbd-services"
-import { LBDImpact } from "@/components/lbd-impact"
-import { AboutCTA } from "@/components/about-cta"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 import { SectionRenderer } from "@/components/sanity/SectionRenderer"
-import type { AboutPage } from "@/sanity/lib/types"
+import type { CareersPage } from "@/sanity/lib/types"
 
-interface AboutPageClientProps {
-  pageData?: AboutPage | null
+interface CareersPageClientProps {
+  pageData?: CareersPage | null
 }
 
-export default function AboutPageClient({ pageData }: AboutPageClientProps) {
+export default function CareersPageClient({ pageData }: CareersPageClientProps) {
   const [formModalOpen, setFormModalOpen] = useState(false)
 
   // If we have Sanity data, use the section renderer
@@ -36,12 +35,11 @@ export default function AboutPageClient({ pageData }: AboutPageClientProps) {
         ) : (
           // Fallback to hardcoded content
           <>
-            <AboutHero />
-            <LBDMission />
-            <LBDCoreValues />
-            <LBDServices />
-            <LBDImpact />
-            <AboutCTA onOpenForm={() => setFormModalOpen(true)} />
+            <CareersHero />
+            <CultureSection />
+            <TestimonialsSection />
+            <ValuesSection />
+            <BenefitsSection />
           </>
         )}
       </main>
