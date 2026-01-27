@@ -33,15 +33,14 @@ export function HeroSection({ onOpenForm }: HeroSectionProps) {
               Learn from the team that has scaled businesses to multimillion US Dollars in annual revenue.
             </p>
             <p className="text-lg md:text-xl lg:text-lg xl:text-xl text-gray-700 mb-8 leading-relaxed">
-              Check whether you qualify for our free business diagnostics.
+              Take our Free Business Constraint Audit
             </p>
-            <Button
-                onClick={onOpenForm}
-                size="default"
+            <Link
+                href="/constraint-audit"
                 className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
               > {/** bg-[#74c0fc] #7c3aed hover: 6d28d9*/}
                 I'M READY TO SCALE
-              </Button>
+              </Link>
           </div>
 
           {/* Right Person Image 
