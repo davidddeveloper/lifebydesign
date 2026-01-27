@@ -127,12 +127,12 @@ export async function POST(request: NextRequest) {
         evidence_points: n8nResults.fields.evidencePoints,
         
         // Revenue Impact
-        current_monthly_revenue: n8nResults.fields.revenueImpact.currentMonthly,
-        potential_monthly_revenue: n8nResults.fields.revenueImpact.potentialMonthly,
-        monthly_opportunity_cost: n8nResults.fields.revenueImpact.monthlyOpportunityCost,
-        yearly_opportunity_cost: n8nResults.fields.revenueImpact.yearlyOpportunityCost,
-        revenue_impact_explanation: n8nResults.fields.revenueImpact.explanation,
-        revenue_impact: n8nResults.fields.revenueImpact,
+        current_monthly_revenue: n8nResults.fields.revenue_impact.currentMonthly,
+        potential_monthly_revenue: n8nResults.fields.revenue_impact.potentialMonthly,
+        monthly_opportunity_cost: n8nResults.fields.revenue_impact.monthlyOpportunityCost,
+        yearly_opportunity_cost: n8nResults.fields.revenue_impact.yearlyOpportunityCost,
+        revenue_impact_explanation: n8nResults.fields.revenue_impact.explanation,
+        revenue_impact: n8nResults.fields.revenue_impact,
         
         // Quick Win
         quick_win_action: n8nResults.fields.quickWin.action,
