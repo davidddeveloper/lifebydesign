@@ -11,21 +11,41 @@ import { FinanceWorkflow } from "@/components/kolatbooks-workflow"
 import { FinanceFaq } from "@/components/kolatbooks-faq"
 import { FinancePricing } from "@/components/kolatbooks-pricing"
 import { KolatBooksFormModal } from "@/components/kolat-books-form-modal"
+import { SectionRenderer } from "@/components/sanity/SectionRenderer"
+import type { KolatBooksPage } from "@/sanity/lib/types"
 
-export default function KolatBooksPageClient() {
+interface KolatBooksPageClientProps {
+  pageData?: KolatBooksPage | null
+}
+
+export default function KolatBooksPageClient({ pageData }: KolatBooksPageClientProps) {
   const [formModalOpen, setFormModalOpen] = useState(false)
   const [kolatBooksModalOpen, setKolatBooksModalOpen] = useState(false)
+
+  // If we have Sanity data, use the section renderer
+  const hasSanityContent = pageData?.sections && pageData.sections.length > 0
 
   return (
     <div className="min-h-screen">
       <Header />
       <main>
-        <FinanceHero onOpenForm={() => setKolatBooksModalOpen(true)} />
-        <FinanceValueProposition />
-        <FinanceComponents />
-        <FinanceWorkflow />
-        <FinancePricing onOpenForm={() => setKolatBooksModalOpen(true)} />
-        <FinanceFaq />
+        {hasSanityContent ? (
+          // Render sections from Sanity
+          <SectionRenderer
+            sections={pageData.sections!}
+            onOpenForm={() => setKolatBooksModalOpen(true)}
+          />
+        ) : (
+          // Fallback to hardcoded content
+          <>
+            <FinanceHero onOpenForm={() => setKolatBooksModalOpen(true)} />
+            <FinanceValueProposition />
+            <FinanceComponents />
+            <FinanceWorkflow />
+            <FinancePricing onOpenForm={() => setKolatBooksModalOpen(true)} />
+            <FinanceFaq />
+          </>
+        )}
       </main>
       <Footer />
       <ScaleFormModal isOpen={formModalOpen} onClose={() => setFormModalOpen(false)} />

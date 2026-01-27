@@ -1,12 +1,8 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { Header } from "@/components/Header"
-import { AnnouncementBanner } from "@/components/announcement-banner"
-import { CareersHero } from "@/components/careers-hero"
-import { CultureSection } from "@/components/culture-section"
-import { ValuesSection } from "@/components/values-section"
-import { BenefitsSection } from "@/components/benefit-section"
-import { TestimonialsSection } from "@/components/testimonials-section"
-import { Footer } from "@/components/Footer"
+import { sanityFetch } from "@/sanity/lib/fetch"
+import { careersPageQuery } from "@/sanity/lib/queries"
+import type { CareersPage } from "@/sanity/lib/types"
+import CareersPageClient from "./page.client"
 
 export const metadata = generateMetadata({
   title: pageMetadata.careers.title,
@@ -15,18 +11,13 @@ export const metadata = generateMetadata({
   tags: pageMetadata.careers.tags,
 })
 
-export default function CareersPage() {
-  return (
-    <div className="min-h-screen">
-      <Header />
-      <main>
-        <CareersHero />
-        <CultureSection />
-        <TestimonialsSection />
-        <ValuesSection />
-        <BenefitsSection />
-      </main>
-      <Footer />
-    </div>
-  )
+export const revalidate = 60
+
+export default async function CareersPageRoute() {
+  const pageData = await sanityFetch<CareersPage | null>({
+    query: careersPageQuery,
+    tags: ["careersPage"],
+  })
+
+  return <CareersPageClient pageData={pageData} />
 }
