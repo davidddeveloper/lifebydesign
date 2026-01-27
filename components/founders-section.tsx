@@ -9,11 +9,11 @@ export function FoundersSection() {
         <div className="flex-col md:flex-row flex justify-center gap-20 items-center">
           {/* Founders Image */}
           <div className="flex md:flex-shrink-0 justify-center md:order-first">
-            <div className="w-full max-w-sm">
+            <div className="w-full max-w-sm md:h-[300px]">
               <img
                 src="/images/joeabasssketch.png"
                 alt="Joe Abass Bangura Founder"
-                className="w-full h-auto rounded-lg border-4 border-gray-900 shadow-lg"
+                className="w-full h-auto md:h-full object-cover rounded-lg border-4 border-gray-900 shadow-lg"
               />
             </div>
           </div>
