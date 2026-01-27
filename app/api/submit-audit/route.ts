@@ -108,40 +108,40 @@ export async function POST(request: NextRequest) {
       .from('audits')
       .update({
         // Scores
-        score_who: n8nResults.scores['WHO (Market)'],
-        score_what: n8nResults.scores['WHAT (Offer)'],
-        score_sell: n8nResults.scores['HOW YOU SELL (Conversion)'],
-        score_traffic: n8nResults.scores['HOW THEY FIND YOU (Traffic)'],
-        score_operations: n8nResults.scores['HOW YOU DELIVER (Operations)'],
-        scores: n8nResults.scores,
+        score_who: n8nResults.fields.scores['WHO (Market)'],
+        score_what: n8nResults.fields.scores['WHAT (Offer)'],
+        score_sell: n8nResults.fields.scores['HOW YOU SELL (Conversion)'],
+        score_traffic: n8nResults.fields.scores['HOW THEY FIND YOU (Traffic)'],
+        score_operations: n8nResults.fields.scores['HOW YOU DELIVER (Operations)'],
+        scores: n8nResults.fields.scores,
         
         // Constraint
-        primary_constraint: n8nResults.finalConstraint,
-        primary_score: n8nResults.primaryScore,
-        secondary_constraint: n8nResults.secondaryConstraint,
-        secondary_score: n8nResults.secondaryScore,
+        primary_constraint: n8nResults.fields.finalConstraint,
+        primary_score: n8nResults.fields.primaryScore,
+        secondary_constraint: n8nResults.fields.secondaryConstraint,
+        secondary_score: n8nResults.fields.secondaryScore,
         
         // AI Analysis
-        confidence: n8nResults.confidence,
-        reasoning: n8nResults.reasoning,
-        evidence_points: n8nResults.evidencePoints,
+        confidence: n8nResults.fields.confidence,
+        reasoning: n8nResults.fields.reasoning,
+        evidence_points: n8nResults.fields.evidencePoints,
         
         // Revenue Impact
-        current_monthly_revenue: n8nResults.revenueImpact.currentMonthly,
-        potential_monthly_revenue: n8nResults.revenueImpact.potentialMonthly,
-        monthly_opportunity_cost: n8nResults.revenueImpact.monthlyOpportunityCost,
-        yearly_opportunity_cost: n8nResults.revenueImpact.yearlyOpportunityCost,
-        revenue_impact_explanation: n8nResults.revenueImpact.explanation,
-        revenue_impact: n8nResults.revenueImpact,
+        current_monthly_revenue: n8nResults.fields.revenueImpact.currentMonthly,
+        potential_monthly_revenue: n8nResults.fields.revenueImpact.potentialMonthly,
+        monthly_opportunity_cost: n8nResults.fields.revenueImpact.monthlyOpportunityCost,
+        yearly_opportunity_cost: n8nResults.fields.revenueImpact.yearlyOpportunityCost,
+        revenue_impact_explanation: n8nResults.fields.revenueImpact.explanation,
+        revenue_impact: n8nResults.fields.revenueImpact,
         
         // Quick Win
-        quick_win_action: n8nResults.quickWin.action,
-        quick_win_impact: n8nResults.quickWin.impact,
-        quick_win_time: n8nResults.quickWin.time,
-        quick_win: n8nResults.quickWin,
+        quick_win_action: n8nResults.fields.quickWin.action,
+        quick_win_impact: n8nResults.fields.quickWin.impact,
+        quick_win_time: n8nResults.fields.quickWin.time,
+        quick_win: n8nResults.fields.quickWin,
         
         // Status
-        status: n8nResults.revenueImpact.monthlyOpportunityCost > 10000000 
+        status: n8nResults.fields.revenueImpact.monthlyOpportunityCost > 10000000 
           ? 'pending_contact' 
           : 'nurturing',
       })
