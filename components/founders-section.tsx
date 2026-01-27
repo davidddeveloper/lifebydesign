@@ -25,7 +25,7 @@ export function FoundersSection() {
             </p>
 
             <p className="text-md leading-relaxed">
-              Through The Startup Bodyshop, he has supported over 3,000 businesses and facilitated more than $3M in investments into startups and SMEs. He has incubated and accelerated multiple ventures to between $500K and $1.5M in annual revenue — most of them bootstrapped.
+              Through The Startup Bodyshop, he has supported over 3,000 businesses and facilitated more than $3M in investments into startups and SMEs. He has incubated and accelerated multiple ventures to between $500K and $1.5M in annual revenue — some of them bootstrapped.
             </p>
             <p className="text-md leading-relaxed">
               Before The Startup Bodyshop, Joe helped grow ACTB Bank from a small microfinance startup into a nationwide institution with a $4.5M loan portfolio and 9 branches, creating jobs and expanding access to capital for thousands of businesses.
