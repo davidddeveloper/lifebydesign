@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Header } from "@/components/Header"
-import { CareersHero } from "@/components/sanity/careers-hero"
+import { CareersHero } from "@/components/sanity/section/CareersHero"
 import { CultureSection } from "@/components/culture-section"
 import { ValuesSection } from "@/components/values-section"
 import { BenefitsSection } from "@/components/benefit-section"
