@@ -32,6 +32,7 @@ export default function ScalingBlueprintPageClient({ pageData }: ScalingBlueprin
           <SectionRenderer
             sections={pageData.sections!}
             onOpenForm={() => setFormModalOpen(true)}
+            page="blueprint"
           />
         ) : (
           // Fallback to hardcoded content

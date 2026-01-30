@@ -24,6 +24,8 @@ export default function KolatBooksPageClient({ pageData }: KolatBooksPageClientP
 
   // If we have Sanity data, use the section renderer
   const hasSanityContent = pageData?.sections && pageData.sections.length > 0
+  console.log(pageData)
+  console.log(hasSanityContent)
 
   return (
     <div className="min-h-screen">
@@ -34,6 +36,7 @@ export default function KolatBooksPageClient({ pageData }: KolatBooksPageClientP
           <SectionRenderer
             sections={pageData.sections!}
             onOpenForm={() => setKolatBooksModalOpen(true)}
+            page="kolat"
           />
         ) : (
           // Fallback to hardcoded content
