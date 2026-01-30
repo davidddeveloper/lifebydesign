@@ -26,7 +26,7 @@ export function FounderSectionComponent({ data }: FounderSectionProps) {
                 <img
                   src={urlFor(image).url()}
                   alt={name || "Founder"}
-                  className="w-full h-auto rounded-lg border-4 border-gray-900 shadow-lg"
+                  className="w-full h-[400px] object-cover rounded-lg border-4 border-gray-900 shadow-lg"
                 />
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { urlFor } from '@/sanity/lib/image'
+import Link from 'next/link'
 import type { HeroSection } from '@/sanity/lib/types'
 
 interface HeroSectionProps {
@@ -39,13 +40,12 @@ export function HeroSectionComponent({ data, onOpenForm }: HeroSectionProps) {
               </p>
             )}
             {primaryCta?.text && (
-              <Button
-                onClick={onOpenForm}
-                size="default"
+              <Link
+                href="/constraint-audit"
                 className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
-              >
+              > {/** bg-[#74c0fc] #7c3aed hover: 6d28d9*/}
                 {primaryCta.text}
-              </Button>
+              </Link>
             )}
           </div>
         </div>

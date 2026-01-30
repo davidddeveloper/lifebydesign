@@ -14,8 +14,8 @@ export function ProductHeroComponent({ data, onOpenForm }: ProductHeroProps) {
   const { heading, subheading, primaryCta, secondaryCta } = data
 
   return (
-    <section className="bg-gradient-to-b from-white to-gray-50 py-20">
-      <div className="container mx-auto px-4 max-w-4xl">
+    <section className="relative bg-gradient-to-b from-[#177fc9] to-[#fff] py-20 lg:py-32">
+      <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -23,13 +23,13 @@ export function ProductHeroComponent({ data, onOpenForm }: ProductHeroProps) {
           className="text-center space-y-6"
         >
           {heading && (
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
+            <h1 className="text-4xl md:text-5xl font-black text-white mb-6 text-balance leading-tight">
               {heading}
             </h1>
           )}
 
           {subheading && (
-            <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-md md:text-lg text-black mb-8 max-w-2xl md:max-w-5xl mx-auto leading-relaxed text-balance">
               {subheading}
             </p>
           )}
@@ -39,8 +39,7 @@ export function ProductHeroComponent({ data, onOpenForm }: ProductHeroProps) {
               primaryCta.url ? (
                 <Link href={primaryCta.url}>
                   <Button
-                    size="default"
-                    className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-4 rounded-full h-auto"
+                    className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
                   >
                     {primaryCta.text}
                   </Button>
@@ -48,20 +47,17 @@ export function ProductHeroComponent({ data, onOpenForm }: ProductHeroProps) {
               ) : (
                 <Button
                   onClick={onOpenForm}
-                  size="default"
-                  className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 py-4 rounded-full h-auto"
+                  className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
                 >
                   {primaryCta.text}
                 </Button>
               )
             )}
 
-            {secondaryCta?.text && secondaryCta.url && (
-              <Link href={secondaryCta.url}>
+            {secondaryCta?.text && (
+              <Link href={secondaryCta.url || "#how-it-works"}>
                 <Button
-                  variant="outline"
-                  size="default"
-                  className="border-[#177fc9] text-[#177fc9] hover:bg-[#177fc9] hover:text-white font-bold text-lg px-12 py-4 rounded-full h-auto"
+                  className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
                 >
                   {secondaryCta.text}
                 </Button>

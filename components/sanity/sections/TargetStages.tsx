@@ -15,14 +15,19 @@ export function TargetStagesComponent({ data }: TargetStagesProps) {
   }
 
   return (
-    <section className="bg-gray-50 py-20 md:py-32">
-      <div className="container mx-auto px-4 max-w-6xl">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">Who This Is For</h2>
-          <div className="flex justify-center">
-            <div className="h-1 w-20 bg-[#177fc9]"></div>
-          </div>
-        </div>
+    <section className="py-20 lg:py-24 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-4">Is This For You?</h2>
+          <p className="text-base text-gray-600 max-w-2xl mx-auto">
+            The Scaling Blueprint is built for businesses stuck despite working hard.
+          </p>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0 }}
