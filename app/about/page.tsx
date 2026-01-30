@@ -11,7 +11,7 @@ export const metadata = generateMetadata({
   tags: pageMetadata.about.tags,
 })
 
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function AboutPageRoute() {
   const pageData = await sanityFetch<AboutPage | null>({

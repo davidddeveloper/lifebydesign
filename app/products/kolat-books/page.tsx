@@ -11,7 +11,7 @@ export const metadata = generateMetadata({
   tags: pageMetadata.kolatBooks.tags,
 })
 
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function KolatBooksPageRoute() {
   const pageData = await sanityFetch<KolatBooksPage | null>({

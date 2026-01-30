@@ -11,7 +11,7 @@ export const metadata = generateMetadata({
   tags: pageMetadata.scalingBlueprint.tags,
 })
 
-export const revalidate = 60
+export const revalidate = 0
 
 export default async function ScalingBlueprintPageRoute() {
   const pageData = await sanityFetch<ScalingBlueprintPage | null>({
