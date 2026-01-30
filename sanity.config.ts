@@ -2,14 +2,14 @@
 /**
  * This configuration is used to for the Sanity Studio that's mounted on the `\app\studio\[[...tool]]\page.tsx` route
  */
-import {visionTool} from '@sanity/vision'
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
 import { presentationTool } from "sanity/presentation";
 //import { previewDocumentNode } from "@/sanity/preview/previewDocumentNode";
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
-import {apiVersion, dataset, projectId} from './sanity/env'
-import {schema} from './sanity/schemaTypes'
+import { apiVersion, dataset, projectId } from './sanity/env'
+import { schema } from './sanity/schemaTypes'
 import ViewLiveAction from "./sanity/actions/view-live-action"
 import PreviewDraftAction from "./sanity/actions/preview-draft-action"
 import CustomNavbar from "./components/custom-navbar"
@@ -87,12 +87,12 @@ export default defineConfig({
                   .schemaType('workshopsPage')
                   .documentId('workshopsPage')
               ),
-            
+
             S.divider(),
-            
+
             // Regular list documents (multiple allowed)
             S.documentTypeListItem('post').title('Blog Posts'),
-            
+
             // Any other document types not listed above
             ...S.documentTypeListItems().filter(
               (item) => !['homePage', 'productPage', 'aboutPage', 'careersPage', 'scalingBlueprintPage', 'kolatBooksPage', 'workshopsPage', 'post'].includes(item.getId() || '')
@@ -101,10 +101,10 @@ export default defineConfig({
     }),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
-    visionTool({defaultApiVersion: apiVersion}),
+    visionTool({ defaultApiVersion: apiVersion }),
     presentationTool({
       previewUrl: {
-        origin: `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+        origin: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
       },
     }),
   ],
@@ -113,7 +113,7 @@ export default defineConfig({
   document: {
     actions: (prev, context) => {
       const { schemaType } = context
-      
+
       // Filter out create/delete/duplicate actions for singletons
       let filteredActions = prev
       if (SINGLETON_TYPES.includes(schemaType)) {
@@ -121,7 +121,7 @@ export default defineConfig({
           ({ action }: any) => !['unpublish', 'delete', 'duplicate'].includes(action)
         )
       }
-      
+
       // Then apply custom actions
       return filteredActions.map((action) => {
         if ((action.action as string) === "view-live") {
