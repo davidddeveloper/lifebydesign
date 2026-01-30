@@ -140,6 +140,7 @@ export const aboutPageQuery = groq`*[_type == "aboutPage"][0]{
     },
     // missionVision
     _type == "missionVision" => {
+      story,
       mission,
       vision
     },
@@ -191,6 +192,8 @@ export const careersPageQuery = groq`*[_type == "careersPage"][0]{
     },
     // careersMindset
     _type == "careersMindset" => {
+      heading,
+      description,
       items[]{
         _key,
         title,
@@ -203,16 +206,20 @@ export const careersPageQuery = groq`*[_type == "careersPage"][0]{
         _key,
         quote,
         name,
-        role
+        role,
+        image
       }
     },
     // careersValues
     _type == "careersValues" => {
+      heading,
+      description,
       values[]{
         _key,
         icon,
         title,
-        description
+        description,
+        image
       }
     },
     // careersBenefits
@@ -336,7 +343,11 @@ export const kolatBooksPageQuery = groq`*[_type == "kolatBooksPage"][0]{
     },
     // deliverablesSection
     _type == "deliverablesSection" => {
-      items
+      items[]{
+        _key,
+        title,
+        description
+      }
     },
     // workflowPhases
     _type == "workflowPhases" => {
@@ -354,8 +365,10 @@ export const kolatBooksPageQuery = groq`*[_type == "kolatBooksPage"][0]{
       plans[]{
         _key,
         name,
+        focus,
         price,
-        billingNote,
+        yearlyPrice,
+        highlighted,
         features,
         ctaText,
         ctaUrl

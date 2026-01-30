@@ -7,10 +7,10 @@ export const heroSection = defineType({
   fields: [
     { name: "heading", type: "string" },
     { name: "subheading", type: "text", rows: 3 },
-    { name: "image", type: "image", options: { hotspot: true } },
-    { name: "primaryCta", type: "object", fields: [
-        { name: "text", type: "string" },
-        { name: "url", type: "url" },
-    ] },
-  ],
+    { name: "description", type: "text", rows: 3 },
+    { name: "heroImageLeft", type: "image", options: { hotspot: true } },
+    { name: "heroImageRight", type: "image", options: { hotspot: true } },
+    { name: "primaryCtaText", type: "string" },
+    { name: "primaryCtaUrl", type: "string" },
+  ]
 })

@@ -15,6 +15,7 @@ export const careersTestimonials = defineType({
             { name: "quote", type: "text", rows: 4 },
             { name: "name", type: "string" },
             { name: "role", type: "string" },
+            { name: "image", type: "image", options: { hotspot: true } },
           ],
         },
       ],

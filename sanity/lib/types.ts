@@ -61,8 +61,11 @@ export interface HeroSection extends BaseSection {
   _type: 'heroSection'
   heading?: string
   subheading?: string
-  image?: SanityImage
-  primaryCta?: CTA
+  description?: string
+  heroImageLeft?: SanityImage
+  heroImageRight?: SanityImage
+  primaryCtaText?: string
+  primaryCtaUrl?: string
 }
 
 // Home FAQ Section
@@ -114,6 +117,7 @@ export interface MissionVisionSection extends BaseSection {
   _type: 'missionVision'
   mission?: string
   vision?: string
+  story?: PortableTextBlock[]
 }
 
 // Core Values
@@ -155,10 +159,15 @@ export interface CareersHeroSection extends BaseSection {
 // Careers Mindset
 export interface CareersMindsetSection extends BaseSection {
   _type: 'careersMindset'
+  heading?: string
+  description?: string
   items?: Array<{
     _key: string
     title?: string
     description?: string
+    subtext?: string
+    image?: SanityImage
+    reverse?: boolean
   }>
 }
 
@@ -170,17 +179,21 @@ export interface CareersTestimonialsSection extends BaseSection {
     quote?: string
     name?: string
     role?: string
+    image?: SanityImage
   }>
 }
 
 // Careers Values
 export interface CareersValuesSection extends BaseSection {
   _type: 'careersValues'
+  heading?: string
+  description?: string
   values?: Array<{
     _key: string
     icon?: string
     title?: string
     description?: string
+    image?: SanityImageSource
   }>
 }
 
@@ -269,7 +282,11 @@ export interface ProductPromiseSection extends BaseSection {
 // Deliverables Section
 export interface DeliverablesSection extends BaseSection {
   _type: 'deliverablesSection'
-  items?: string[]
+  items?: Array<{
+    _key: string
+    title?: string
+    description?: string
+  }>
 }
 
 // Workflow Phases
@@ -291,8 +308,10 @@ export interface PricingPlansSection extends BaseSection {
   plans?: Array<{
     _key: string
     name?: string
+    focus?: string
     price?: string
-    billingNote?: string
+    yearlyPrice?: string
+    highlighted?: boolean
     features?: string[]
     ctaText?: string
     ctaUrl?: string
@@ -332,7 +351,6 @@ export type HomePageSection =
 
 export type AboutPageSection =
   | AboutHeroSection
-  | AboutStorySection
   | MissionVisionSection
   | CoreValuesSection
   | ServicesSection

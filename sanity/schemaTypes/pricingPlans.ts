@@ -13,8 +13,10 @@ export const pricingPlans = defineType({
           type: "object",
           fields: [
             { name: "name", type: "string" },
-            { name: "price", type: "string" },
-            { name: "billingNote", type: "string" },
+            { name: "focus", type: "string", title: "Plan Focus/Tagline" }, // mapped from billingNote or focus
+            { name: "price", type: "string", title: "Monthly Price" },
+            { name: "yearlyPrice", type: "string", title: "Yearly Price" },
+            { name: "highlighted", type: "boolean", initialValue: false },
             {
               name: "features",
               type: "array",
