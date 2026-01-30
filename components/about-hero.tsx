@@ -4,7 +4,15 @@ import { motion } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 import Link from "next/link"
 
-export function AboutHero() {
+import type { AboutHeroSection } from "@/sanity/lib/types"
+
+interface AboutHeroProps {
+  data?: AboutHeroSection
+}
+
+export function AboutHero({ data }: AboutHeroProps) {
+  const subheading = data?.subheading || "Crafting Success, Empowering Dreams. Sierra Leone's leading entrepreneurship support organization dedicated to empowering MSMEs to start, grow, and scale sustainable businesses."
+
   return (
     <section className="bg-gradient-to-b from-white to-gray-50 py-20">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -15,12 +23,19 @@ export function AboutHero() {
           className="text-center space-y-6"
         >
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 leading-tight">
-            Life By Design <span className="text-[#177fc9]">Startup Bodyshop</span>
+            {(data?.heading || "Life By Design Startup Bodyshop").split(/(Startup Bodyshop)/g).map((part, i) =>
+              part === "Startup Bodyshop" ? (
+                <span key={i} className="text-[#177fc9]">
+                  {part}
+                </span>
+              ) : (
+                part
+              )
+            )}
           </h1>
 
           <p className="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
-            Crafting Success, Empowering Dreams. Sierra Leone's leading entrepreneurship support organization dedicated
-            to empowering MSMEs to start, grow, and scale sustainable businesses.
+            {subheading}
           </p>
 
           <motion.div
@@ -29,7 +44,7 @@ export function AboutHero() {
             className="pt-8 flex justify-center"
           >
             <Link href="#our-story">
-                <ChevronDown className="h-6 w-6 mx-auto text-[#177fc9]" />
+              <ChevronDown className="h-6 w-6 mx-auto text-[#177fc9]" />
             </Link>
           </motion.div>
         </motion.div>

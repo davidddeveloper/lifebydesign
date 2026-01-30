@@ -5,8 +5,18 @@ import { Button } from "@/components/ui/button"
 import { ScaleFormModal } from "@/components/scale-form-modal"
 import { CannotScaleReasonGraphic } from "./cannot-scale-reason"
 
-export function WorkshopValue() {
+import type { WorkshopValueSection } from "@/sanity/lib/types"
+
+interface WorkshopValueProps {
+  data?: WorkshopValueSection
+}
+
+export function WorkshopValue({ data }: WorkshopValueProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const introText = data?.introText || "It's not motivational hype, It's tactical Help, solving real world business problems."
+  const ctaText = data?.cta?.text || "I'M READY TO SCALE"
+  const reasons = data?.animatedReasons // can be undefined, fallback in child
 
   return (
     <>
@@ -14,10 +24,10 @@ export function WorkshopValue() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 leading-relaxed max-w-5xl mx-auto mb-12">
-              It's not motivational hype, It's tactical Help, solving real world business problems.
+              {introText}
             </p>
 
-            <CannotScaleReasonGraphic />
+            <CannotScaleReasonGraphic reasonsProp={reasons} />
 
             {/* Description */}
             <div className="max-w-4xl mx-auto mb-8">
@@ -34,7 +44,7 @@ export function WorkshopValue() {
               onClick={() => setIsModalOpen(true)}
               className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
             >
-              I'M READY TO SCALE
+              {ctaText}
             </Button>
           </div>
         </div>

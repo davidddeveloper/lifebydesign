@@ -2,7 +2,13 @@
 
 import { motion } from "framer-motion"
 
-export function FinanceWorkflow() {
+import type { WorkflowPhasesSection } from "@/sanity/lib/types"
+
+interface FinanceWorkflowProps {
+  data?: WorkflowPhasesSection
+}
+
+export function FinanceWorkflow({ data }: FinanceWorkflowProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -22,7 +28,7 @@ export function FinanceWorkflow() {
     },
   }
 
-  const phases = [
+  const defaultPhases = [
     {
       phase: "Phase I",
       title: "Data Collection & Audit",
@@ -55,6 +61,14 @@ export function FinanceWorkflow() {
       result: "Immediate ROI visible through clean books and clear financial strategy.",
     },
   ]
+
+  const phases = data?.phases?.map(p => ({
+    phase: p.phase || "",
+    title: p.title || "",
+    timeframe: p.duration || "",
+    action: p.action || "",
+    result: p.result || ""
+  })) || defaultPhases
 
   return (
     <section className="py-20 md:py-28 bg-white">

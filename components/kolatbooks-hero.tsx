@@ -2,12 +2,14 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import type { ProductHeroSection } from "@/sanity/lib/types"
 
 interface FinanceHeroProps {
   onOpenForm: () => void
+  data?: ProductHeroSection
 }
 
-export function FinanceHero({ onOpenForm }: FinanceHeroProps) {
+export function FinanceHero({ onOpenForm, data }: FinanceHeroProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -40,46 +42,51 @@ export function FinanceHero({ onOpenForm }: FinanceHeroProps) {
         repeating-linear-gradient(0deg, transparent, transparent 10px, rgba(107, 114, 128, 0.04) 10px, rgba(107, 114, 128, 0.04) 11px, transparent 11px, transparent 30px),
         repeating-linear-gradient(90deg, transparent, transparent 10px, rgba(107, 114, 128, 0.04) 10px, rgba(107, 114, 128, 0.04) 11px, transparent 11px, transparent 30px)
       `,
-    }}
+        }}
       >
-      <section className="bg-transparent z-10 py-20 md:py-32">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="max-w-4xl mx-auto text-center"
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-          >
-            <motion.h1
-              className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 text-balance"
-              variants={itemVariants}
+        <section className="bg-transparent z-10 py-20 md:py-32">
+          <div className="container mx-auto px-4">
+            <motion.div
+              className="max-w-4xl mx-auto text-center"
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
             >
-              Clean Books. <span className="text-[#177fc9]">Credit Ready.</span> Confidence Guaranteed.
-            </motion.h1>
-
-            <motion.p
-              className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8"
-              variants={itemVariants}
-            >
-              Professional accounting and financial management for SMEs in Sierra Leone. Stop guessing about your
-              finances. Get real-time clarity, credit readiness, and professional support.
-            </motion.p>
-
-            <motion.div className="flex flex-col sm:flex-row gap-4 justify-center" variants={itemVariants}>
-              <button
-                onClick={onOpenForm}
-                className="px-8 py-4 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors"
+              <motion.h1
+                className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 text-balance"
+                variants={itemVariants}
               >
-                Get Started
-              </button>
-              <Link href="#our-promise" className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
-                Learn More
-              </Link>
+                {data?.heading ? (
+                  <span>{data.heading}</span>
+                ) : (
+                  <>
+                    Clean Books. <span className="text-[#177fc9]">Credit Ready.</span> Confidence Guaranteed.
+                  </>
+                )}
+              </motion.h1>
+
+              <motion.p
+                className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-8"
+                variants={itemVariants}
+              >
+                {data?.subheading || "Professional accounting and financial management for SMEs in Sierra Leone. Stop guessing about your finances. Get real-time clarity, credit readiness, and professional support."}
+              </motion.p>
+
+              <motion.div className="flex flex-col sm:flex-row gap-4 justify-center" variants={itemVariants}>
+                <button
+                  onClick={onOpenForm}
+                  className="px-8 py-4 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors"
+                >
+                  {data?.primaryCta?.text || "Get Started"}
+                </button>
+                <Link href={data?.secondaryCta?.url || "#our-promise"} className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
+                  {data?.secondaryCta?.text || "Learn More"}
+                </Link>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </section>
       </div>
     </div>
   )

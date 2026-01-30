@@ -2,25 +2,38 @@
 
 import { motion } from "framer-motion"
 import { Lightbulb, Shield, Zap } from "lucide-react"
+import type { OutcomesSection } from "@/sanity/lib/types"
 
-export function BlueprintPromise() {
-  const promises = [
-    {
-      icon: Lightbulb,
-      title: "Clarity",
-      description: "Know exactly what's holding you back — no more guessing.",
-    },
-    {
-      icon: Shield,
-      title: "Control",
-      description: "Fix it with tools and systems that actually work.",
-    },
-    {
-      icon: Zap,
-      title: "Capacity",
-      description: "Scale beyond yourself with documented, repeatable processes.",
-    },
-  ]
+const defaultPromises = [
+  {
+    icon: Lightbulb,
+    title: "Clarity",
+    description: "Know exactly what's holding you back — no more guessing.",
+  },
+  {
+    icon: Shield,
+    title: "Control",
+    description: "Fix it with tools and systems that actually work.",
+  },
+  {
+    icon: Zap,
+    title: "Capacity",
+    description: "Scale beyond yourself with documented, repeatable processes.",
+  },
+]
+
+interface BlueprintPromiseProps {
+  data?: OutcomesSection
+}
+
+export function BlueprintPromise({ data }: BlueprintPromiseProps) {
+  const promises = data?.outcomes?.map((p, i) => ({
+    icon: i === 0 ? Lightbulb : i === 1 ? Shield : Zap, // Map icons based on index
+    title: p.title || "",
+    description: p.description || ""
+  })) || defaultPromises
+
+  const closingStatement = data?.closingStatement || "We don't guess. We measure. We fix. We scale."
 
   return (
     <section className="py-20 lg:py-24 bg-gray-900 text-white">
@@ -61,7 +74,7 @@ export function BlueprintPromise() {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="mt-16 text-center"
         >
-          <p className="text-2xl font-black mb-2">We don't guess. We measure. We fix. We scale.</p>
+          <p className="text-2xl font-black mb-2">{closingStatement}</p>
           <p className="text-gray-400">That's the promise of the Scaling Blueprint.</p>
         </motion.div>
       </div>

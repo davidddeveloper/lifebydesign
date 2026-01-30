@@ -3,14 +3,15 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
-export function CannotScaleReasonGraphic() {
-  const reasons = [
+export function CannotScaleReasonGraphic({ reasonsProp }: { reasonsProp?: string[] }) {
+  const defaultReasons = [
     "KEY MAN RISK",
     "LACK OF SYSTEMS & PROCESSES",
     "POOR CASH FLOW MANAGEMENT",
     "LIMITED MARKET STRATEGY",
     "WEAK TEAM STRUCTURE",
   ]
+  const reasons = reasonsProp || defaultReasons
 
   const [currentReasonIndex, setCurrentReasonIndex] = useState(0)
 

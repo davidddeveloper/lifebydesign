@@ -35,7 +35,9 @@ import { ScaleFormModal } from "@/components/scale-form-modal"
     answer:
       'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
   },*/}
-const faqs = [
+import type { HomeFaqSection, FAQReferenceSection } from '@/sanity/lib/types'
+
+const defaultFaqs = [
   {
     question: "What is the Scaling Blueprint?",
     answer:
@@ -58,7 +60,7 @@ const faqs = [
       "Focus: Stop wasting time on problems that don't matter. Attack the ONE constraint choking your growth.",
       "Results: Average 30-50% revenue increase in 90 - 180 days. 80% of Done-With-You participants execute fully (vs 5% DIY success rate).",
       "System: Learn a repeatable method you can use endlessly. After fixing one constraint, you can tackle the next.",
-      
+
     ],
   },
   {
@@ -77,25 +79,38 @@ const faqs = [
     question: "What is LBD Startup Bodyshop's broader vision?",
     answer:
       [
-          "To build the most successful businesses in Sierra Leone by eliminating the constraints holding them back, one business at a time.",
-          "We believe most businesses aren't stuck because they lack ideas or effort—they're stuck because they don't know which problem to solve first. The Scaling Blueprint gives them that clarity, then the tools to execute.",
-          "Our vision: A thriving Sierra Leone business ecosystem where founders stop guessing and start growing.",
+        "To build the most successful businesses in Sierra Leone by eliminating the constraints holding them back, one business at a time.",
+        "We believe most businesses aren't stuck because they lack ideas or effort—they're stuck because they don't know which problem to solve first. The Scaling Blueprint gives them that clarity, then the tools to execute.",
+        "Our vision: A thriving Sierra Leone business ecosystem where founders stop guessing and start growing.",
       ]
   },
 ]
 
-export function WorkshopFaq() {
+interface WorkshopFaqProps {
+  data?: HomeFaqSection | FAQReferenceSection
+  onOpenForm?: () => void
+}
+
+export function WorkshopFaq({ data, onOpenForm }: WorkshopFaqProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Use Sanity data if available, otherwise use default
+  const title = data?.faq?.title || "FAQs"
+  // Normalize Sanity FAQ items to match structure or use default
+  const displayFaqs = data?.faq?.faqs?.map(item => ({
+    question: item.question,
+    answer: item.answer
+  })) || defaultFaqs
 
   return (
     <>
       <section className="bg-white py-8 md:py-16">
-        <h2 className="mx-auto text-3xl w-[250px mb-10 text-center text-gray-900 font-black">FAQs</h2>
+        <h2 className="mx-auto text-3xl w-[250px mb-10 text-center text-gray-900 font-black">{title}</h2>
         <div className="container mx-auto px-4 max-w-4xl">
           {/* FAQ Items */}
           <div className="space-y-4 mb-12">
-            {faqs.map((faq, index) => (
+            {displayFaqs.map((faq, index) => (
               <div key={index} className="border-none">
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
@@ -120,12 +135,12 @@ export function WorkshopFaq() {
                   <div className="px-6 py-6 bg-gray-50 rounded-b-lg">
                     {Array.isArray(faq.answer) ? (
                       <div className="space-y-4 text-gray-700 text-base leading-relaxed">
-                        {faq.answer.map((line, i) => (
+                        {faq.answer.map((line: string, i: number) => (
                           <p key={i}>{line}</p>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-700 text-lg leading-relaxed">{faq.answer}</p>
+                      <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">{faq.answer}</p>
                     )}
                   </div>
                 </motion.div>
@@ -137,7 +152,7 @@ export function WorkshopFaq() {
           <div className="text-center">
             <Button
               size="default"
-              onClick={() => setIsModalOpen(true)}
+              onClick={onOpenForm || (() => setIsModalOpen(true))}
               className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
             >
               I'M READY TO SCALE

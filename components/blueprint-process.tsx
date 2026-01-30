@@ -2,8 +2,37 @@
 
 import { motion, type Variants } from "framer-motion"
 import { CheckCircle2, BarChart3, Zap } from "lucide-react"
+import type { ProcessStepsSection } from "@/sanity/lib/types"
 
-export function BlueprintProcess() {
+const defaultSteps = [
+  {
+    number: "01",
+    title: "Diagnose",
+    description:
+      "We run your business through the 5 Levers Framework: WHO (your market), WHAT (your offer), HOW YOU SELL (conversion), HOW THEY FIND YOU (lead generation), and HOW YOU DELIVER (operations). We score each lever 0-10 and pinpoint your growth constraint — the one thing slowing you down.",
+    icon: BarChart3,
+  },
+  {
+    number: "02",
+    title: "Workshop (DIY Path)",
+    description:
+      "Attend our 2-day workshop. You learn the framework, identify your constraint, and build a tactical 90-day plan to fix it. You leave with a complete roadmap, accountability partner, and all the tools you need to execute on your own.",
+    icon: CheckCircle2,
+  },
+  {
+    number: "03",
+    title: "Done-With-You Implementation",
+    description:
+      "Join our 90-Day Program. We conduct a deep 41-question audit, give you a detailed roadmap, and coach you through implementation with 6 bi-weekly calls plus daily WhatsApp support. We handle the guidance while you run the business.",
+    icon: Zap,
+  },
+]
+
+interface BlueprintProcessProps {
+  data?: ProcessStepsSection
+}
+
+export function BlueprintProcess({ data }: BlueprintProcessProps) {
   const stepVariants: Variants = {
     hidden: { opacity: 0, x: -50 },
     visible: (i: number) => ({
@@ -13,29 +42,12 @@ export function BlueprintProcess() {
     }),
   }
 
-  const steps = [
-    {
-      number: "01",
-      title: "Diagnose",
-      description:
-        "We run your business through the 5 Levers Framework: WHO (your market), WHAT (your offer), HOW YOU SELL (conversion), HOW THEY FIND YOU (lead generation), and HOW YOU DELIVER (operations). We score each lever 0-10 and pinpoint your growth constraint — the one thing slowing you down.",
-      icon: BarChart3,
-    },
-    {
-      number: "02",
-      title: "Workshop (DIY Path)",
-      description:
-        "Attend our 2-day workshop. You learn the framework, identify your constraint, and build a tactical 90-day plan to fix it. You leave with a complete roadmap, accountability partner, and all the tools you need to execute on your own.",
-      icon: CheckCircle2,
-    },
-    {
-      number: "03",
-      title: "Done-With-You Implementation",
-      description:
-        "Join our 90-Day Program. We conduct a deep 41-question audit, give you a detailed roadmap, and coach you through implementation with 6 bi-weekly calls plus daily WhatsApp support. We handle the guidance while you run the business.",
-      icon: Zap,
-    },
-  ]
+  const steps = data?.steps?.map((s, i) => ({
+    number: s.stepNumber || `0${i + 1}`,
+    title: s.title || "",
+    description: s.description || "",
+    icon: i === 0 ? BarChart3 : i === 1 ? CheckCircle2 : Zap // Simple fallback icon logic based on index
+  })) || defaultSteps
 
   return (
     <section id="how-it-works" className="pt-14 pb-4 md:pt-16 md:pb-5 bg-white">

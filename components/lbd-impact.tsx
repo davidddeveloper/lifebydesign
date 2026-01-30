@@ -2,13 +2,24 @@
 
 import { motion } from "framer-motion"
 
-const impactStats = [
-  { number: "2,900+", label: "Entrepreneurs Trained & Mentored" },
-  { number: "$2.9M", label: "Equity, Debt & Grants Channelled" },
-  { number: "120+", label: "Businesses Trained" },
+import type { ImpactStatsSection } from "@/sanity/lib/types"
+
+const defaultImpactStats = [
+  { value: "2,900+", label: "Entrepreneurs Trained & Mentored" },
+  { value: "$2.9M", label: "Equity, Debt & Grants Channelled" },
+  { value: "120+", label: "Businesses Trained" },
 ]
 
-export function LBDImpact() {
+interface LBDImpactProps {
+  data?: ImpactStatsSection
+}
+
+export function LBDImpact({ data }: LBDImpactProps) {
+  const stats = data?.stats?.map(s => ({
+    value: s.value || "0",
+    label: s.label || ""
+  })) || defaultImpactStats
+
   return (
     <section className="bg-gradient-to-r from-[#177fc9] to-[#6d28d9] py-20 md:py-32">
       <div className="container mx-auto px-4 max-w-5xl">
@@ -23,7 +34,7 @@ export function LBDImpact() {
           viewport={{ once: true, margin: "-100px" }}
           className="grid md:grid-cols-3 gap-8"
         >
-          {impactStats.map((stat, index) => (
+          {stats.map((stat, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -32,7 +43,7 @@ export function LBDImpact() {
               viewport={{ once: true, margin: "-100px" }}
               className="text-center text-white"
             >
-              <div className="text-4xl md:text-5xl font-black mb-2">{stat.number}</div>
+              <div className="text-4xl md:text-5xl font-black mb-2">{stat.value}</div>
               <div className="text-lg font-semibold">{stat.label}</div>
             </motion.div>
           ))}

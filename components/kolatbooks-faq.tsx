@@ -1,23 +1,12 @@
-"use client"
-
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import type { FAQReferenceSection } from "@/sanity/lib/types"
 
 
-{/*
-  question: "How does the onboarding process work?",
-  answer:
-    "Onboarding happens in four phases over 30 days: Phase I (Data Collection & Audit) ensures clarity on your current state, Phase II (System Configuration) establishes your professional structure, Phase III (Record Import & Reconciliation) organizes your books, and Phase IV (Final Reporting & Roadmap) delivers your first comprehensive financial report and growth strategy.",
-},
-{
-  question: "What is included in each pricing tier?",
-  answer:
-    "Starter ($100/month) includes monthly bookkeeping, financial statements, and basic support. Growth ($200/month) adds loan-approval packs, profit audits, and training. VIP CFO ($450/month) includes everything plus payroll support, cash flow forecasting, monthly advisory calls, and a dedicated accountant.",
-*/}
-export function FinanceFaq() {
+export function FinanceFaq({ data }: { data?: FAQReferenceSection }) {
   const [openIndex, setOpenIndex] = useState(-1)
 
-  const faqs = [
+  const defaultFaqs = [
     {
       question: "What is the Kolat Books™?",
       answer:
@@ -40,6 +29,9 @@ export function FinanceFaq() {
     },
   ]
 
+  const faqs = data?.faq?.faqs || defaultFaqs
+  const title = data?.faq?.title || "Frequently Asked Questions"
+
   return (
     <section className="py-20 md:py-28 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -51,7 +43,7 @@ export function FinanceFaq() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Frequently Asked Questions
+            {title}
           </motion.h2>
 
           <div className="space-y-4">

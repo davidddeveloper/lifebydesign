@@ -10,7 +10,13 @@ import {
 } from '@/components/motion-primitives/accordion';
 
 
-export function FinanceComponents() {
+import type { DeliverablesSection } from "@/sanity/lib/types"
+
+interface FinanceComponentsProps {
+  data?: DeliverablesSection
+}
+
+export function FinanceComponents({ data }: FinanceComponentsProps) {
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,30 +37,41 @@ export function FinanceComponents() {
     },
   }
 
-  const services = [
-    /*"Zoho Books setup & configuration",*/
-    "Monthly bookkeeping & reconciliation",
-    "Sales, expenses, and inventory setup",
-    "Monthly financial statements (P&L, Balance Sheet, Cash Flow)",
-    "Loan Application Pack Preparation",
-    "Loan-approval pack preparation",
-    "Dedicated accountant + WhatsApp support",
-    "Monthly financial review & advisory call",
-    "Payroll support (Growth & VIP tiers)",
+  const defaultServices = [
+    { title: "Monthly bookkeeping & reconciliation", description: "Our team of accountants will reconcile your financials on a monthly basis, ensuring accuracy and compliance with regulatory requirements." },
+    { title: "Sales, expenses, and inventory setup", description: "Configure sales, expenses, and inventory tracking using professional accounting software, ensuring accurate financial reporting and compliance with regulatory requirements." },
+    { title: "Monthly financial statements (P&L, Balance Sheet, Cash Flow)", description: "Our team of accountants will prepare your monthly financial statements, including profit and loss, balance sheet, and cash flow statements." },
+    { title: "Loan Application Pack Preparation", description: "Our team of accountants will provide support with loan application pack preparation, including preparation of financial statements and projections, to support your loan application." },
+    { title: "Loan-approval pack preparation", description: "Our team of accountants will prepare a loan-approval pack, including financial statements and projections, to support your loan application." },
+    { title: "Dedicated accountant + WhatsApp support", description: "Dedicated accountant support via WhatsApp, including responses to ad-hoc queries and support with financial management." },
+    { title: "Monthly financial review & advisory call", description: "Monthly financial review and advisory call with our team of accountants, including review of financial performance and provision of strategic advice." },
+    { title: "Payroll support (Growth & VIP tiers)", description: "Payroll support, including calculation of salaries, taxes, and other deductions, as well as preparation of payslips and compliance with regulatory requirements." },
   ]
 
-  const serviceDescriptions = [
-    /* in zoho books */
-    /*"Configure Zoho Books according to your business needs, including chart of accounts, customer and supplier setup, and initial transaction setup.",*/
-    "Our team of accountants will reconcile your financials on a monthly basis, ensuring accuracy and compliance with regulatory requirements.",
-    "Configure sales, expenses, and inventory tracking using professional accounting software, ensuring accurate financial reporting and compliance with regulatory requirements.",
-    "Our team of accountants will prepare your monthly financial statements, including profit and loss, balance sheet, and cash flow statements.",
-    "Our team of accountants will provide support with loan application pack preparation, including preparation of financial statements and projections, to support your loan application.",
-    "Our team of accountants will prepare a loan-approval pack, including financial statements and projections, to support your loan application.",
-    "Dedicated accountant support via WhatsApp, including responses to ad-hoc queries and support with financial management.",
-    "Monthly financial review and advisory call with our team of accountants, including review of financial performance and provision of strategic advice.",
-    "Payroll support, including calculation of salaries, taxes, and other deductions, as well as preparation of payslips and compliance with regulatory requirements.",
-  ]
+  // If data.items exists, map it; otherwise use defaultServices.
+  // Note: Sanity items are { title, description }.
+  const displayServices = data?.items?.map(item => ({
+    title: item?.title || "",
+    description: item.description || ""
+  })) || defaultServices
+
+  // Helper to get icon index safely
+  const getIcon = (index: number) => {
+    // Modulo mostly to prevent crashing if more items than icons
+    const i = index % 9
+    switch (i) {
+      case 0: return <PiggyBankIcon className="w-8 h-8 text-white" />
+      case 1: return <CalendarIcon className="w-8 h-8 text-white" />
+      case 2: return <BarcodeIcon className="w-8 h-8 text-white" />
+      case 3: return <BookTextIcon className="w-8 h-8 text-white" />
+      case 4: return <ShieldIcon className="w-8 h-8 text-white" />
+      case 5: return <FileIcon className="w-8 h-8 text-white" />
+      case 6: return <DollarSignIcon className="w-8 h-8 text-white" />
+      case 7: return <HelpingHandIcon className="w-8 h-8 text-white" />
+      case 8: return <PhoneIcon className="w-8 h-8 text-white" />
+      default: return <BookTextIcon className="w-8 h-8 text-white" />
+    }
+  }
 
   return (
     <section className="py-20 md:py-28 bg-gray-50">
@@ -74,35 +91,24 @@ export function FinanceComponents() {
           </motion.h2>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {services.map((service, index) => (
-              <Accordion>
+            {displayServices.map((service, index) => (
+              <Accordion key={index}>
                 <motion.div
-                  key={index}
                   className="bg-white p-6 rounded-lg border border-gray-200 hover:border-[#177fc9] transition-colors"
                   variants={itemVariants}
-                  onClick={() => {}}
                 >
-                    
+
                   <div className="">
-                    <AccordionItem value={service}>
+                    <AccordionItem value={service.title}>
                       <AccordionTrigger className="flex gap-4 justify-center">
                         <div className="flex-shrink-0 w-10 h-10 rounded-xs bg-[#177fc9] bg-opacity-10 flex items-center justify-center">
-                          {index === 0 && <PiggyBankIcon className="w-8 h-8 text-white" />}
-                          {index === 1 && <CalendarIcon className="w-8 h-8 text-white" />}
-                          {index === 2 && <BarcodeIcon className="w-8 h-8 text-white" />}
-                          {index === 3 && <BookTextIcon className="w-8 h-8 text-white" />}
-                          {index === 4 && <ShieldIcon className="w-8 h-8 text-white" />}
-                          {index === 5 && <FileIcon className="w-8 h-8 text-white" />}
-                          {index === 6 && <DollarSignIcon className="w-8 h-8 text-white" />}
-                          {index === 7 && <HelpingHandIcon className="w-8 h-8 text-white" />}
-                          {index === 8 && <PhoneIcon className="w-8 h-8 text-white" />}
-                          
+                          {getIcon(index)}
                         </div>
-                          <p className="text-gray-700 font-medium">{service}</p>
-                        </AccordionTrigger>
+                        <p className="text-gray-700 font-medium text-left">{service.title}</p>
+                      </AccordionTrigger>
 
-                        <AccordionContent>
-                          <p className="mt-4 text-sm text-gray-600">{serviceDescriptions[index]}</p>
+                      <AccordionContent>
+                        <p className="mt-4 text-sm text-gray-600">{service.description}</p>
                       </AccordionContent>
                     </AccordionItem>
                   </div>
@@ -112,7 +118,7 @@ export function FinanceComponents() {
           </div>
         </motion.div>
       </div>
-  
+
     </section>
   )
 }

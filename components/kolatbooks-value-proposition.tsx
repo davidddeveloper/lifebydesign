@@ -1,8 +1,13 @@
 "use client"
 
 import { motion } from "framer-motion"
+import type { ProductPromiseSection } from "@/sanity/lib/types"
 
-export function FinanceValueProposition() {
+interface FinanceValuePropositionProps {
+  data?: ProductPromiseSection
+}
+
+export function FinanceValueProposition({ data }: FinanceValuePropositionProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -30,6 +35,17 @@ export function FinanceValueProposition() {
     "Full compliance support",
     "Dedicated accountant support",
   ]
+  // Note: ProductPromise schema only has heading, description, guarantee. No benefits list?
+  // Schema check: productPromise.ts -> heading, description, guarantee.
+  // The benefits list in the component seems hardcoded or belongs to another section?
+  // It's inside the "Guaranteed Outcome" box visual, but logically might be part of "deliverables" or just supporting text.
+  // If schema doesn't support it, I'll keep it hardcoded or I need to update schema.
+  // "benefits" here seem generic value props.
+  // I will keep them hardcoded for now or use description field if multiple paragraphs.
+
+  const heading = data?.heading || "Our Promise to You"
+  const description = data?.description || "We organize your SME finances, automate your accounting, and make you fully credit-ready — giving you the confidence to grow."
+  const guarantee = data?.guarantee || "Clean books, credit-ready financial statements, and full confidence in your numbers."
 
   return (
     <section id="our-promise" className="py-20 md:py-28 bg-white">
@@ -42,18 +58,17 @@ export function FinanceValueProposition() {
           viewport={{ once: true }}
         >
           <motion.h2 className="text-3xl md:text-4xl font-black text-gray-900 mb-6 text-center" variants={itemVariants}>
-            Our Promise to You
+            {heading}
           </motion.h2>
 
           <motion.p className="text-lg text-gray-700 text-center mb-12" variants={itemVariants}>
-            We organize your SME finances, automate your accounting, and make you fully credit-ready — giving you the
-            confidence to grow.
+            {description}
           </motion.p>
 
           <motion.div className="bg-gray-50 rounded-lg p-8 md:p-12" variants={itemVariants}>
             <h3 className="text-xl font-bold text-gray-900 mb-6">Guaranteed Outcome:</h3>
             <p className="text-lg text-gray-700 font-semibold mb-8">
-              Clean books, credit-ready financial statements, and full confidence in your numbers.
+              {guarantee}
             </p>
 
             <div className="grid md:grid-cols-2 gap-4">

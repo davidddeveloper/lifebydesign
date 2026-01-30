@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { urlFor } from "@/sanity/lib/image"
+import type { CareersMindsetSection } from "@/sanity/lib/types"
 
-const cultureItems = [
+const defaultCultureItems = [
   {
     title: "You build with the long game in mind.",
     description:
@@ -38,31 +40,42 @@ const cultureItems = [
   },
 ]
 
-export function CultureSection() {
+interface CultureSectionProps {
+  data?: CareersMindsetSection
+}
+
+export function CultureSection({ data }: CultureSectionProps) {
+  const items = data?.items?.map((item, index) => ({
+    title: item.title || "",
+    description: item.description || "",
+    subtext: item.subtext || "",
+    image: item.image ? urlFor(item.image).url() : (defaultCultureItems[index]?.image || "/placeholder.svg"),
+    reverse: item.reverse || false
+  })) || defaultCultureItems
+
+  const heading = data?.heading || "We want disciplined team players who trust and win together."
+  const description = data?.description || "At Startup Bodyshop, we're focused on building businesses that compound over years, not months. We care about creating systems that scale, making decisions that stand the test of time, and building relationships that last."
+
   return (
-    <section className="bg-gray-50 py-16 md:py-24">
+    <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <motion.h2
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-normal text-gray-900 mb-16 text-center text-balance"
+          className="mb-16 text-center"
         >
-          We want disciplined team players who trust and <span className="text-[#177fc9] text-underline">win together.</span>
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-lg md:text-xl text-gray-700 mb-10 leading-relaxed text-center"
-        >
-          At Startup Bodyshop, we're focused on building businesses that compound over years, not months. We care about creating systems that scale, making decisions that stand the test of time, and building relationships that last.
-        </motion.p>
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-8">
+            {heading}
+          </h2>
+          <p className="text-lg md:text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed">
+            {description}
+          </p>
+        </motion.div>
 
         <div className="space-y-20">
-          {cultureItems.map((item, index) => (
+          {items.map((item, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 20 }}
@@ -74,7 +87,7 @@ export function CultureSection() {
               {/* Image */}
               <div className={item.reverse ? "lg:order-2" : ""}>
                 <div className="relative w-full h-64 md:h-96 rounded-lg overflow-hidden">
-                  <img src={item.image || "/placeholder.svg"} alt={item.title} className="w-full h-full object-cover" />
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                 </div>
               </div>
 

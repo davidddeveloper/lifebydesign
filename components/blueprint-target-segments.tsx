@@ -1,40 +1,52 @@
 "use client"
 
 import { motion } from "framer-motion"
+import type { TargetStagesSection } from "@/sanity/lib/types"
 
-export function BlueprintTargetSegments() {
-  const segments = [
-    {
-      name: "WHO (Market)",
-      problem: "Great product, but struggling to find the right buyers.",
-      pain: '"I have customers, but they\'re the wrong ones. High churn, constant price objections."',
-      constraint: "Market positioning, ideal customer profile, messaging that resonates.",
-    },
-    {
-      name: "WHAT (Offer)",
-      problem: "Lots of interest but few people actually buy.",
-      pain: '"Everyone says it sounds great, but no one is willing to pay."',
-      constraint: "Offer structure, value proposition, pricing strategy, differentiation.",
-    },
-    {
-      name: "HOW YOU SELL",
-      problem: "Getting leads but can't convert them to customers.",
-      pain: ' "I have conversations, but they don\'t close. Long sales cycles, constant objections."',
-      constraint: "Sales system, conversion process, objection handling, closing tactics.",
-    },
-    {
-      name: "HOW THEY FIND YOU",
-      problem: "Inconsistent revenue because you can't generate leads predictably.",
-      pain: '"Feast or famine. I rely on referrals and have no marketing system."',
-      constraint: "Lead generation system, marketing channels, predictable pipeline.",
-    },
-    {
-      name: "HOW YOU DELIVER",
-      problem: "Business depends entirely on you. Can't scale without burning out.",
-      pain: '"If I stop, it stops. Quality issues when I try to delegate."',
-      constraint: "Operations systems, SOPs, team structure, delivery processes.",
-    },
-  ]
+const defaultSegments = [
+  {
+    name: "WHO (Market)",
+    problem: "Great product, but struggling to find the right buyers.",
+    pain: '"I have customers, but they\'re the wrong ones. High churn, constant price objections."',
+    constraint: "Market positioning, ideal customer profile, messaging that resonates.",
+  },
+  {
+    name: "WHAT (Offer)",
+    problem: "Lots of interest but few people actually buy.",
+    pain: '"Everyone says it sounds great, but no one is willing to pay."',
+    constraint: "Offer structure, value proposition, pricing strategy, differentiation.",
+  },
+  {
+    name: "HOW YOU SELL",
+    problem: "Getting leads but can't convert them to customers.",
+    pain: ' "I have conversations, but they don\'t close. Long sales cycles, constant objections."',
+    constraint: "Sales system, conversion process, objection handling, closing tactics.",
+  },
+  {
+    name: "HOW THEY FIND YOU",
+    problem: "Inconsistent revenue because you can't generate leads predictably.",
+    pain: '"Feast or famine. I rely on referrals and have no marketing system."',
+    constraint: "Lead generation system, marketing channels, predictable pipeline.",
+  },
+  {
+    name: "HOW YOU DELIVER",
+    problem: "Business depends entirely on you. Can't scale without burning out.",
+    pain: '"If I stop, it stops. Quality issues when I try to delegate."',
+    constraint: "Operations systems, SOPs, team structure, delivery processes.",
+  },
+]
+
+interface BlueprintTargetSegmentsProps {
+  data?: TargetStagesSection
+}
+
+export function BlueprintTargetSegments({ data }: BlueprintTargetSegmentsProps) {
+  const segments = data?.stages?.map(s => ({
+    name: s.title || "",
+    problem: s.coreProblem || "",
+    pain: s.painPoint || "",
+    constraint: s.weFix || ""
+  })) || defaultSegments
 
   return (
     <section className="py-20 lg:py-24 bg-gray-50">

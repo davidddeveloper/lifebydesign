@@ -1,12 +1,14 @@
 "use client"
 
 import { motion } from "framer-motion"
+import type { PricingPlansSection } from "@/sanity/lib/types"
 
 interface FinancePricingProps {
   onOpenForm: () => void
+  data?: PricingPlansSection
 }
 
-export function FinancePricing({ onOpenForm }: FinancePricingProps) {
+export function FinancePricing({ onOpenForm, data }: FinancePricingProps) {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -26,7 +28,7 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
     },
   }
 
-  const plans = [
+  const defaultPlans = [
     {
       name: "Starter",
       focus: "Bookkeeping + reports + basic support",
@@ -38,6 +40,7 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
         "Basic tax support",
         "Email support",
       ],
+      highlighted: false,
     },
     {
       name: "Growth",
@@ -58,6 +61,7 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
       focus: "Growth + payroll + forecasting + monthly advisory",
       monthlyPrice: "Discuss pricing with our team",
       yearlyPrice: "",
+      highlighted: false,
       features: [
         "Everything in Growth",
         "Payroll support",
@@ -68,6 +72,15 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
       ],
     },
   ]
+
+  const plans = data?.plans?.map(p => ({
+    name: p.name || "",
+    focus: p.focus || "", // focus mapped from schema 'focus'
+    monthlyPrice: p.price || "",
+    yearlyPrice: p.yearlyPrice || "",
+    features: p.features || [],
+    highlighted: p.highlighted || false
+  })) || defaultPlans
 
   return (
     <section className="py-20 md:py-28 bg-gray-50">
@@ -91,11 +104,10 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
             {plans.map((plan, index) => (
               <motion.div
                 key={index}
-                className={`rounded-lg p-8 transition-all ${
-                  plan.highlighted
+                className={`rounded-lg p-8 transition-all ${plan.highlighted
                     ? "bg-[#177fc9] text-white border-2 border-[#177fc9] transform md:scale-105"
                     : "bg-white border border-gray-200"
-                }`}
+                  }`}
                 variants={itemVariants}
               >
                 <h3 className={`text-2xl font-bold mb-2 ${plan.highlighted ? "text-white" : "text-gray-900"}`}>
@@ -114,11 +126,10 @@ export function FinancePricing({ onOpenForm }: FinancePricingProps) {
 
                 <button
                   onClick={onOpenForm}
-                  className={`w-full py-3 px-6 rounded-full font-bold mb-8 transition-colors ${
-                    plan.highlighted
+                  className={`w-full py-3 px-6 rounded-full font-bold mb-8 transition-colors ${plan.highlighted
                       ? "bg-white text-[#177fc9] hover:bg-gray-100"
                       : "bg-[#177fc9] text-white hover:bg-[#42adff]"
-                  }`}
+                    }`}
                 >
                   Get Started
                 </button>

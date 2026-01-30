@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
+import type { CareersBenefitsSection } from "@/sanity/lib/types"
 
-const benefits = [
+const defaultBenefits = [
   {
     icon: "💰",
     title: "Performance-driven pay",
@@ -30,7 +31,17 @@ const benefits = [
   },
 ]
 
-export function BenefitsSection() {
+interface BenefitsSectionProps {
+  data?: CareersBenefitsSection
+}
+
+export function BenefitsSection({ data }: BenefitsSectionProps) {
+  const benefits = data?.benefits?.map(b => ({
+    icon: b.icon || "✨",
+    title: b.title || "",
+    description: b.description || ""
+  })) || defaultBenefits
+
   return (
     <section className="bg-[#1a1a2e] py-16 md:py-24">
       <div className="container mx-auto px-4">

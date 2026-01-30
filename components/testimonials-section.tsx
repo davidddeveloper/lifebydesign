@@ -1,8 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { urlFor } from "@/sanity/lib/image"
+import type { CareersTestimonialsSection } from "@/sanity/lib/types"
 
-const testimonials = [
+const defaultTestimonials = [
   {
     quote:
       "Everyone is doing something extremely valuable to the mission, you can see it every day from the shoutouts and general team energy that flows here!",
@@ -23,7 +25,17 @@ const testimonials = [
   },
 ]
 
-export function TestimonialsSection() {
+interface TestimonialsSectionProps {
+  data?: CareersTestimonialsSection
+}
+
+export function TestimonialsSection({ data }: TestimonialsSectionProps) {
+  const testimonials = data?.testimonials?.map(t => ({
+    quote: t.quote || "",
+    author: t.name || "",
+    image: t.image ? urlFor(t.image).url() : "/placeholder.svg"
+  })) || defaultTestimonials
+
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="container mx-auto px-4">
@@ -50,7 +62,7 @@ export function TestimonialsSection() {
               <p className="text-gray-700 mb-6 leading-relaxed italic">"{testimonial.quote}"</p>
               <div className="flex items-center gap-4">
                 <img
-                  src={testimonial.image || "/placeholder.svg"}
+                  src={testimonial.image}
                   alt={testimonial.author}
                   className="w-12 h-12 rounded-full object-cover"
                 />
