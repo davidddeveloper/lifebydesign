@@ -357,9 +357,6 @@ export const kolatBooksPageQuery = groq`*[_type == "kolatBooksPage"][0]{
         title,
         duration,
         action,
-        result
-      }
-    },
     // pricingPlans
     _type == "pricingPlans" => {
       plans[]{
@@ -367,6 +364,7 @@ export const kolatBooksPageQuery = groq`*[_type == "kolatBooksPage"][0]{
         name,
         focus,
         price,
+        billingNote,
         yearlyPrice,
         highlighted,
         features,

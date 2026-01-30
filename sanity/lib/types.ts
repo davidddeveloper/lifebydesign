@@ -310,6 +310,7 @@ export interface PricingPlansSection extends BaseSection {
     name?: string
     focus?: string
     price?: string
+    billingNote?: string
     yearlyPrice?: string
     highlighted?: boolean
     features?: string[]
