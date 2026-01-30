@@ -105,6 +105,9 @@ export default defineConfig({
     presentationTool({
       previewUrl: {
         origin: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+        draftMode: {
+          enable: '/api/draft',
+        },
       },
     }),
   ],
