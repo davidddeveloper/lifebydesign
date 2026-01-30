@@ -4,9 +4,6 @@ export const homePage = defineType({
   name: "homepage",
   title: "Home Page",
   type: "document",
-  options: {
-    singleton: true,
-  },
   fields: [
     defineField({
       name: "title",
