@@ -109,6 +109,11 @@ export default defineConfig({
           enable: `/api/draft?secret=${process.env.NEXT_PUBLIC_SANITY_PREVIEW_SECRET}`,
         },
       },
+      allowOrigins: [
+        'http://localhost:3000',
+        'https://startupbodyshop.com',
+        'https://www.startupbodyshop.com',
+      ],
     }),
   ],
   title: 'Startup Bodyshop Studio',
