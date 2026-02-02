@@ -291,7 +291,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
     return "from-orange-500 to-red-600"
   }
 
-  const getConstraintEmoji = (lever: string) => {
+  const getConstraintEmoji = (lever: string | undefined | null) => {
+    if (!lever) return "🎯"
     if (lever.includes("WHO")) return "👥"
     if (lever.includes("WHAT")) return "💎"
     if (lever.includes("SELL")) return "🤝"
@@ -320,7 +321,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         onclone: (clonedDoc) => {
           const allElements = clonedDoc.querySelectorAll("*")
 
-          const convertToHex = (colorValue: string): string => {
+          const convertToHex = (colorValue: string | undefined | null): string => {
+            if (!colorValue) return "#6b7280"
             if (colorValue.includes("oklch") || colorValue.includes("lab") || colorValue.includes("lch")) {
               if (colorValue.includes("0.5") || colorValue.includes("50")) {
                 return "#177fc9"
