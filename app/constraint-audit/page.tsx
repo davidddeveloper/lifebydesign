@@ -24,22 +24,28 @@ export default function Home() {
 
       const results = await response.json()
 
+      // Validate that results.fields exists
+      if (!results.fields) {
+        throw new Error("Invalid response: missing fields")
+      }
+
       // Parse JSON string fields if needed
+      const fields = results.fields
       const parsedFields = {
-        ...results.fields,
+        ...fields,
         evidence_points:
-          typeof results.fields.evidence_points === "string"
-            ? JSON.parse(results.fields.evidence_points)
-            : results.fields.evidence_points,
-        scores: typeof results.fields.scores === "string" ? JSON.parse(results.fields.scores) : results.fields.scores,
+          typeof fields.evidence_points === "string"
+            ? JSON.parse(fields.evidence_points)
+            : fields.evidence_points || [],
+        scores: typeof fields.scores === "string" ? JSON.parse(fields.scores) : fields.scores || {},
         revenue_impact:
-          typeof results.fields.revenue_impact === "string"
-            ? JSON.parse(results.fields.revenue_impact)
-            : results.fields.revenue_impact,
+          typeof fields.revenue_impact === "string"
+            ? JSON.parse(fields.revenue_impact)
+            : fields.revenue_impact || {},
         quick_win:
-          typeof results.fields.quick_win === "string"
-            ? JSON.parse(results.fields.quick_win)
-            : results.fields.quick_win,
+          typeof fields.quick_win === "string"
+            ? JSON.parse(fields.quick_win)
+            : fields.quick_win || {},
       }
 
       setAuditResults(parsedFields)
