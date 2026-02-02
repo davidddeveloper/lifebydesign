@@ -102,47 +102,66 @@ export async function POST(request: NextRequest) {
     const n8nResults = await n8nResponse.json();
 
     console.log('N8N RESULTS:', JSON.stringify(n8nResults, null, 2));
-    
+
+    // Helper to safely parse JSON strings
+    const safeJsonParse = <T>(value: T | string, fallback: T): T => {
+      if (typeof value === 'string') {
+        try {
+          return JSON.parse(value);
+        } catch {
+          return fallback;
+        }
+      }
+      return value ?? fallback;
+    };
+
+    // Parse n8n fields that might be JSON strings
+    const fields = n8nResults.fields || {};
+    const parsedScores = safeJsonParse(fields.scores, {});
+    const parsedEvidencePoints = safeJsonParse(fields.evidence_points, []);
+    const parsedRevenueImpact = safeJsonParse(fields.revenue_impact, {});
+    const parsedQuickWin = safeJsonParse(fields.quick_win, {});
+
     // 3. Update Supabase with AI results
     const { data: updatedAudit, error: updateError } = await supabaseAdmin
       .from('audits')
       .update({
         // Scores
-        score_who: n8nResults.fields.scores['WHO (Market)'],
-        score_what: n8nResults.fields.scores['WHAT (Offer)'],
-        score_sell: n8nResults.fields.scores['HOW YOU SELL (Conversion)'],
-        score_traffic: n8nResults.fields.scores['HOW THEY FIND YOU (Traffic)'],
-        score_operations: n8nResults.fields.scores['HOW YOU DELIVER (Operations)'],
-        scores: n8nResults.fields.scores,
-        
+        score_who: parsedScores['WHO (Market)'],
+        score_what: parsedScores['WHAT (Offer)'],
+        score_sell: parsedScores['HOW YOU SELL (Conversion)'],
+        score_traffic: parsedScores['HOW THEY FIND YOU (Traffic)'],
+        score_operations: parsedScores['HOW YOU DELIVER (Operations)'],
+        scores: parsedScores,
+
         // Constraint
-        primary_constraint: n8nResults.fields.final_constraint,
-        primary_score: n8nResults.fields.primary_score,
-        secondary_constraint: n8nResults.fields.secondary_constraint,
-        secondary_score: n8nResults.fields.secondary_score,
-        
+        primary_constraint: fields.final_constraint,
+        primary_score: fields.primary_score,
+        secondary_constraint: fields.secondary_constraint,
+        secondary_score: fields.secondary_score,
+
         // AI Analysis
-        confidence: n8nResults.fields.confidence,
-        reasoning: n8nResults.fields.reasoning,
-        evidence_points: n8nResults.fields.evidence_points,
-        
+        confidence: fields.confidence,
+        reasoning: fields.reasoning,
+        evidence_points: parsedEvidencePoints,
+
         // Revenue Impact
-        current_monthly_revenue: n8nResults.fields.revenue_impact.currentMonthly,
-        potential_monthly_revenue: n8nResults.fields.revenue_impact.potentialMonthly,
-        monthly_opportunity_cost: n8nResults.fields.revenue_impact.monthlyOpportunityCost,
-        yearly_opportunity_cost: n8nResults.fields.revenue_impact.yearlyOpportunityCost,
-        revenue_impact_explanation: n8nResults.fields.revenue_impact.explanation,
-        revenue_impact: n8nResults.fields.revenue_impact,
-        
+        current_monthly_revenue: parsedRevenueImpact.currentMonthly,
+        potential_monthly_revenue: parsedRevenueImpact.potentialMonthly,
+        monthly_opportunity_cost: parsedRevenueImpact.monthlyOpportunityCost,
+        yearly_opportunity_cost: parsedRevenueImpact.yearlyOpportunityCost,
+        revenue_impact_explanation: parsedRevenueImpact.explanation,
+        revenue_impact: parsedRevenueImpact,
+
         // Quick Win
-        quick_win_action: n8nResults.fields.quick_win.action,
-        quick_win_impact: n8nResults.fields.quick_win.impact,
-        quick_win_time: n8nResults.fields.quick_win.time,
-        quick_win: n8nResults.fields.quick_win,
-        
+        quick_win_action: parsedQuickWin.action,
+        quick_win_impact: parsedQuickWin.impact,
+        quick_win_time: parsedQuickWin.time,
+        quick_win: parsedQuickWin,
+
         // Status
-        status: n8nResults.fields.revenue_impact.monthlyOpportunityCost > 10000000 
-          ? 'pending_contact' 
+        status: (parsedRevenueImpact.monthlyOpportunityCost || 0) > 10000000
+          ? 'pending_contact'
           : 'nurturing',
       })
       .eq('id', auditData.id)
@@ -223,38 +242,38 @@ export async function POST(request: NextRequest) {
         oneThingToFix: formData.oneThingToFix,
         twelveMonthGoal: formData.twelveMonthGoal,
 
-        // N8N Results (data is in n8nResults.fields)
+        // N8N Results (using parsed values)
         scores: {
-          who: n8nResults.fields?.scores?.['WHO (Market)'] || 0,
-          what: n8nResults.fields?.scores?.['WHAT (Offer)'] || 0,
-          sell: n8nResults.fields?.scores?.['HOW YOU SELL (Conversion)'] || 0,
-          traffic: n8nResults.fields?.scores?.['HOW THEY FIND YOU (Traffic)'] || 0,
-          operations: n8nResults.fields?.scores?.['HOW YOU DELIVER (Operations)'] || 0,
+          who: parsedScores['WHO (Market)'] || 0,
+          what: parsedScores['WHAT (Offer)'] || 0,
+          sell: parsedScores['HOW YOU SELL (Conversion)'] || 0,
+          traffic: parsedScores['HOW THEY FIND YOU (Traffic)'] || 0,
+          operations: parsedScores['HOW YOU DELIVER (Operations)'] || 0,
         },
-        primaryConstraint: n8nResults.fields?.final_constraint || '',
-        primaryScore: n8nResults.fields?.primary_score || 0,
-        secondaryConstraint: n8nResults.fields?.secondary_constraint || '',
-        secondaryScore: n8nResults.fields?.secondary_score || 0,
-        confidence: n8nResults.fields?.confidence || 0,
-        reasoning: n8nResults.fields?.reasoning || '',
-        evidencePoints: n8nResults.fields?.evidence_points || [],
+        primaryConstraint: fields.final_constraint || '',
+        primaryScore: fields.primary_score || 0,
+        secondaryConstraint: fields.secondary_constraint || '',
+        secondaryScore: fields.secondary_score || 0,
+        confidence: fields.confidence || 0,
+        reasoning: fields.reasoning || '',
+        evidencePoints: Array.isArray(parsedEvidencePoints) ? parsedEvidencePoints : [],
 
         revenueImpact: {
-          currentMonthly: n8nResults.fields?.revenue_impact?.currentMonthly || 0,
-          potentialMonthly: n8nResults.fields?.revenue_impact?.potentialMonthly || 0,
-          monthlyOpportunityCost: n8nResults.fields?.revenue_impact?.monthlyOpportunityCost || 0,
-          yearlyOpportunityCost: n8nResults.fields?.revenue_impact?.yearlyOpportunityCost || 0,
-          explanation: n8nResults.fields?.revenue_impact?.explanation || '',
+          currentMonthly: parsedRevenueImpact.currentMonthly || 0,
+          potentialMonthly: parsedRevenueImpact.potentialMonthly || 0,
+          monthlyOpportunityCost: parsedRevenueImpact.monthlyOpportunityCost || 0,
+          yearlyOpportunityCost: parsedRevenueImpact.yearlyOpportunityCost || 0,
+          explanation: parsedRevenueImpact.explanation || '',
         },
 
         quickWin: {
-          action: n8nResults.fields?.quick_win?.action || '',
-          impact: n8nResults.fields?.quick_win?.impact || '',
-          time: n8nResults.fields?.quick_win?.time || '',
+          action: parsedQuickWin.action || '',
+          impact: parsedQuickWin.impact || '',
+          time: parsedQuickWin.time || '',
         },
 
         // Status & Metadata
-        status: (n8nResults.fields?.revenue_impact?.monthlyOpportunityCost || 0) > 10000000
+        status: (parsedRevenueImpact.monthlyOpportunityCost || 0) > 10000000
           ? 'pending_contact'
           : 'nurturing',
         supabaseId: String(auditData.id),
