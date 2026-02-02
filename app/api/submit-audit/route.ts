@@ -223,38 +223,38 @@ export async function POST(request: NextRequest) {
         oneThingToFix: formData.oneThingToFix,
         twelveMonthGoal: formData.twelveMonthGoal,
 
-        // N8N Results
+        // N8N Results (data is in n8nResults.fields)
         scores: {
-          who: n8nResults.scores['WHO (Market)'],
-          what: n8nResults.scores['WHAT (Offer)'],
-          sell: n8nResults.scores['HOW YOU SELL (Conversion)'],
-          traffic: n8nResults.scores['HOW THEY FIND YOU (Traffic)'],
-          operations: n8nResults.scores['HOW YOU DELIVER (Operations)'],
+          who: n8nResults.fields?.scores?.['WHO (Market)'] || 0,
+          what: n8nResults.fields?.scores?.['WHAT (Offer)'] || 0,
+          sell: n8nResults.fields?.scores?.['HOW YOU SELL (Conversion)'] || 0,
+          traffic: n8nResults.fields?.scores?.['HOW THEY FIND YOU (Traffic)'] || 0,
+          operations: n8nResults.fields?.scores?.['HOW YOU DELIVER (Operations)'] || 0,
         },
-        primaryConstraint: n8nResults.finalConstraint,
-        primaryScore: n8nResults.primaryScore,
-        secondaryConstraint: n8nResults.secondaryConstraint,
-        secondaryScore: n8nResults.secondaryScore,
-        confidence: n8nResults.confidence,
-        reasoning: n8nResults.reasoning,
-        evidencePoints: n8nResults.evidencePoints,
+        primaryConstraint: n8nResults.fields?.final_constraint || '',
+        primaryScore: n8nResults.fields?.primary_score || 0,
+        secondaryConstraint: n8nResults.fields?.secondary_constraint || '',
+        secondaryScore: n8nResults.fields?.secondary_score || 0,
+        confidence: n8nResults.fields?.confidence || 0,
+        reasoning: n8nResults.fields?.reasoning || '',
+        evidencePoints: n8nResults.fields?.evidence_points || [],
 
         revenueImpact: {
-          currentMonthly: n8nResults.revenueImpact.currentMonthly,
-          potentialMonthly: n8nResults.revenueImpact.potentialMonthly,
-          monthlyOpportunityCost: n8nResults.revenueImpact.monthlyOpportunityCost,
-          yearlyOpportunityCost: n8nResults.revenueImpact.yearlyOpportunityCost,
-          explanation: n8nResults.revenueImpact.explanation,
+          currentMonthly: n8nResults.fields?.revenue_impact?.currentMonthly || 0,
+          potentialMonthly: n8nResults.fields?.revenue_impact?.potentialMonthly || 0,
+          monthlyOpportunityCost: n8nResults.fields?.revenue_impact?.monthlyOpportunityCost || 0,
+          yearlyOpportunityCost: n8nResults.fields?.revenue_impact?.yearlyOpportunityCost || 0,
+          explanation: n8nResults.fields?.revenue_impact?.explanation || '',
         },
 
         quickWin: {
-          action: n8nResults.quickWin.action,
-          impact: n8nResults.quickWin.impact,
-          time: n8nResults.quickWin.time,
+          action: n8nResults.fields?.quick_win?.action || '',
+          impact: n8nResults.fields?.quick_win?.impact || '',
+          time: n8nResults.fields?.quick_win?.time || '',
         },
 
         // Status & Metadata
-        status: n8nResults.revenueImpact.monthlyOpportunityCost > 10000000
+        status: (n8nResults.fields?.revenue_impact?.monthlyOpportunityCost || 0) > 10000000
           ? 'pending_contact'
           : 'nurturing',
         supabaseId: String(auditData.id),
