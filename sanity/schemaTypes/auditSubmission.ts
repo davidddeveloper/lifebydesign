@@ -406,13 +406,42 @@ export const auditSubmission = defineType({
   preview: {
     select: {
       title: 'businessName',
-      subtitle: 'primaryConstraint',
+      constraint: 'primaryConstraint',
       owner: 'ownerName',
+      email: 'email',
+      status: 'status',
+      yearlyCost: 'revenueImpact.yearlyOpportunityCost',
+      submittedAt: 'submittedAt',
     },
-    prepare({ title, subtitle, owner }) {
+    prepare({ title, constraint, owner, email, status, yearlyCost, submittedAt }) {
+      const statusEmoji = {
+        pending_contact: '🔴',
+        nurturing: '🟡',
+        contacted: '🟢',
+        converted: '✅',
+      }[status as string] || '⚪'
+
+      const constraintEmoji = constraint?.includes('WHO') ? '👥' :
+        constraint?.includes('WHAT') ? '💎' :
+        constraint?.includes('SELL') ? '🤝' :
+        constraint?.includes('FIND') ? '📢' :
+        constraint?.includes('DELIVER') ? '⚙️' : '🎯'
+
+      const formattedDate = submittedAt
+        ? new Date(submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        : ''
+
+      const costDisplay = yearlyCost ? `Le ${(yearlyCost / 1000000).toFixed(1)}M/yr` : ''
+
       return {
-        title: title || 'Unnamed Business',
-        subtitle: subtitle ? `${owner} - Constraint: ${subtitle}` : owner,
+        title: `${statusEmoji} ${title || 'Unnamed Business'}`,
+        subtitle: [
+          `${constraintEmoji} ${constraint || 'No constraint'}`,
+          owner,
+          email,
+          costDisplay,
+          formattedDate,
+        ].filter(Boolean).join(' • '),
       }
     },
   },

@@ -177,6 +177,10 @@ interface ResultsPageProps {
   }
 }
 
+// Exchange rate: Sierra Leone Leone (SLE) to USD
+// Update this value as needed to reflect current rates
+const SLE_TO_USD_RATE = 22500
+
 export default function ResultsPage({ data }: ResultsPageProps) {
   const [showConfetti, setShowConfetti] = useState(false)
   const [revealStep, setRevealStep] = useState(0)
@@ -438,16 +442,16 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 year: "numeric",
               })}
             </p>
-            {/*<motion.button
+            <motion.button
               onClick={handleDownloadPDF}
               disabled={isGeneratingPDF}
-              className="mt-6 px-6 py-3 bg-white text-[#177fc9] font-bold rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2 mx-auto"
+              className="mt-6 px-6 py-3 bg-white text-[#177fc9] font-bold rounded-full hover:bg-gray-100 transition-colors flex items-center gap-2 mx-auto disabled:opacity-50 disabled:cursor-not-allowed"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <Download className="w-5 h-5" />
               {isGeneratingPDF ? "Generating PDF..." : "Download Results as PDF"}
-            </motion.button>*/}
+            </motion.button>
           </motion.div>
         </div>
       </header>
@@ -641,7 +645,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     Le {data.revenue_impact.currentMonthly.toLocaleString()}M
                   </div>
                   <div className="text-sm text-gray-500 mt-1">
-                    ~${(data.revenue_impact.currentMonthly / 25000).toFixed(0)} USD
+                    ~${(data.revenue_impact.currentMonthly / SLE_TO_USD_RATE).toFixed(0)} USD
                   </div>
                 </motion.div>
 
@@ -695,7 +699,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                     <div className="bg-white rounded-lg p-3">
                       <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">In USD (Annually)</div>
                       <div className="text-3xl font-black text-gray-800">
-                        ${(data.revenue_impact.yearlyOpportunityCost / 25000).toLocaleString()}
+                        ${(data.revenue_impact.yearlyOpportunityCost / SLE_TO_USD_RATE).toLocaleString()}
                       </div>
                     </div>
                   </div>
