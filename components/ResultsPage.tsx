@@ -111,8 +111,7 @@ import { useEffect, useState, useRef } from "react"
 import { motion } from "framer-motion"
 import { Radar } from "react-chartjs-2"
 import { Download } from "lucide-react"
-import html2canvas from "html2canvas"
-import jsPDF from "jspdf"
+import { generatePDFBlob } from "@/lib/generate-pdf"
 import {
   Chart as ChartJS,
   RadialLinearScale,
@@ -313,78 +312,18 @@ export default function ResultsPage({ data }: ResultsPageProps) {
   }
 
   const handleDownloadPDF = async () => {
-    if (!resultsRef.current) return
-
     setIsGeneratingPDF(true)
 
     try {
-      const canvas = await html2canvas(resultsRef.current, {
-        useCORS: true,
-        logging: false,
-        background: "#ffffff",
-        onclone: (clonedDoc) => {
-          const allElements = clonedDoc.querySelectorAll("*")
-
-          const convertToHex = (colorValue: string | undefined | null): string => {
-            if (!colorValue) return "#6b7280"
-            if (colorValue.includes("oklch") || colorValue.includes("lab") || colorValue.includes("lch")) {
-              if (colorValue.includes("0.5") || colorValue.includes("50")) {
-                return "#177fc9"
-              }
-              if (colorValue.includes("0.9") || colorValue.includes("90")) {
-                return "#f0f9ff"
-              }
-              if (colorValue.includes("0.2") || colorValue.includes("20")) {
-                return "#1f2937"
-              }
-              return "#6b7280"
-            }
-            return colorValue
-          }
-
-          allElements.forEach((el) => {
-            const element = el as HTMLElement
-            const computed = window.getComputedStyle(element)
-
-            element.style.color = convertToHex(computed.color)
-            element.style.backgroundColor = convertToHex(computed.backgroundColor)
-            element.style.borderColor = convertToHex(computed.borderColor)
-            element.style.borderTopColor = convertToHex(computed.borderTopColor)
-            element.style.borderRightColor = convertToHex(computed.borderRightColor)
-            element.style.borderBottomColor = convertToHex(computed.borderBottomColor)
-            element.style.borderLeftColor = convertToHex(computed.borderLeftColor)
-            element.style.outlineColor = convertToHex(computed.outlineColor)
-
-            if (computed.backgroundImage && computed.backgroundImage.includes("gradient")) {
-              element.style.backgroundImage = "none"
-              element.style.backgroundColor = "#177fc9"
-            }
-          })
-        },
-      })
-
-      const pdf = new jsPDF("p", "mm", "a4")
-      const pdfWidth = pdf.internal.pageSize.getWidth()
-      const pdfHeight = pdf.internal.pageSize.getHeight()
-
-      const imgData = canvas.toDataURL("image/png")
-      const imgWidth = pdfWidth - 20
-      const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-      let heightLeft = imgHeight
-      let position = 10
-
-      pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight)
-      heightLeft -= pdfHeight
-
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight + 10
-        pdf.addPage()
-        pdf.addImage(imgData, "PNG", 10, position, imgWidth, imgHeight)
-        heightLeft -= pdfHeight
-      }
-
-      pdf.save(`${data.business_name.replace(/\s+/g, "-")}-Constraint-Audit-Results.pdf`)
+      const blob = await generatePDFBlob(data)
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = url
+      link.download = `${(data.business_name || "Audit").replace(/\s+/g, "-")}-Constraint-Audit-Results.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(url)
     } catch (error) {
       console.error("Error generating PDF:", error)
       alert("Error generating PDF. Please try again.")

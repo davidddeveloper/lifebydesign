@@ -408,40 +408,29 @@ export const auditSubmission = defineType({
       title: 'businessName',
       constraint: 'primaryConstraint',
       owner: 'ownerName',
-      email: 'email',
       status: 'status',
-      yearlyCost: 'revenueImpact.yearlyOpportunityCost',
       submittedAt: 'submittedAt',
     },
-    prepare({ title, constraint, owner, email, status, yearlyCost, submittedAt }) {
-      const statusEmoji = {
-        pending_contact: '🔴',
-        nurturing: '🟡',
-        contacted: '🟢',
-        converted: '✅',
-      }[status as string] || '⚪'
+    prepare({ title, constraint, owner, status, submittedAt }) {
+      const statusLabels: Record<string, string> = {
+        pending_contact: '[ PENDING ]',
+        nurturing: '[ NURTURING ]',
+        contacted: '[ CONTACTED ]',
+        converted: '[ CONVERTED ]',
+      }
+      const statusLabel = statusLabels[status as string] || '[ NEW ]'
 
-      const constraintEmoji = constraint?.includes('WHO') ? '👥' :
-        constraint?.includes('WHAT') ? '💎' :
-        constraint?.includes('SELL') ? '🤝' :
-        constraint?.includes('FIND') ? '📢' :
-        constraint?.includes('DELIVER') ? '⚙️' : '🎯'
+      const shortConstraint = constraint
+        ? constraint.replace('HOW YOU SELL ', '').replace('HOW THEY FIND YOU ', '').replace('HOW YOU DELIVER ', '')
+        : 'Pending analysis'
 
-      const formattedDate = submittedAt
-        ? new Date(submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      const date = submittedAt
+        ? new Date(submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
         : ''
 
-      const costDisplay = yearlyCost ? `Le ${(yearlyCost / 1000000).toFixed(1)}M/yr` : ''
-
       return {
-        title: `${statusEmoji} ${title || 'Unnamed Business'}`,
-        subtitle: [
-          `${constraintEmoji} ${constraint || 'No constraint'}`,
-          owner,
-          email,
-          costDisplay,
-          formattedDate,
-        ].filter(Boolean).join(' • '),
+        title: `${title || 'Unnamed Business'} ${statusLabel}`,
+        subtitle: `${owner || ''} — Constraint: ${shortConstraint}${date ? ` — ${date}` : ''}`,
       }
     },
   },
