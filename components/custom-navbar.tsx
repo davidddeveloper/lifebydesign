@@ -9,37 +9,50 @@ export default function CustomNavbar(props: NavbarProps) {
   const draftModeUrl = `${baseUrl}/api/draft?secret=${process.env.NEXT_PUBLIC_SANITY_PREVIEW_SECRET}&slug=/`
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-      <a
-        href="/"
-        style={{
-          fontWeight: 400,
-          fontSize: 14,
-          textDecoration: 'none',
-          color: 'inherit'
-        }}
-      >
-        ← Back to Website
-      </a>
-      <a
-        href={draftModeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={{
-          padding: '6px 12px',
-          backgroundColor: '#2276fc',
-          color: 'white',
-          borderRadius: '4px',
-          fontSize: '13px',
-          fontWeight: 500,
-          textDecoration: 'none',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        Enable Draft Mode
-      </a>
+    <div>
       {props.renderDefault(props)}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          gap: '0.5rem',
+          padding: '4px 12px',
+          borderBottom: '1px solid rgba(0,0,0,0.1)',
+          backgroundColor: 'rgba(0,0,0,0.02)',
+        }}
+      >
+        <a
+          href="/"
+          style={{
+            fontWeight: 400,
+            fontSize: 12,
+            textDecoration: 'none',
+            color: '#666',
+            marginRight: 'auto',
+          }}
+        >
+          &larr; Back to Website
+        </a>
+        <a
+          href={draftModeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{
+            padding: '4px 10px',
+            backgroundColor: '#177fc9',
+            color: 'white',
+            borderRadius: '4px',
+            fontSize: '11px',
+            fontWeight: 500,
+            textDecoration: 'none',
+            border: 'none',
+            cursor: 'pointer',
+          }}
+        >
+          Enable Draft Mode
+        </a>
+      </div>
     </div>
   )
 }

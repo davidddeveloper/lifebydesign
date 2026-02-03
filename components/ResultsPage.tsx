@@ -309,7 +309,7 @@ function PDFPreview({ data, onDownload, isGenerating }: {
   }
 
   return (
-    <div className="sticky top-8">
+    <div>
       {/* PDF Page */}
       <div
         className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 cursor-pointer"
@@ -507,47 +507,57 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Confetti */}
+      {/* Confetti Celebration */}
       {showConfetti && (
-        <div className="fixed inset-0 pointer-events-none z-50">
-          {[...Array(40)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-2 h-2 rounded-full"
-              style={{
-                backgroundColor: ["#177fc9", "#42adff", "#22c55e", "#f59e0b"][i % 4],
-                left: `${Math.random() * 100}%`,
-                top: "-10px",
-              }}
-              animate={{
-                y: typeof window !== "undefined" ? window.innerHeight + 50 : 800,
-                x: [0, (Math.random() - 0.5) * 150],
-                rotate: Math.random() * 360,
-                opacity: [1, 0],
-              }}
-              transition={{ duration: 2.5 + Math.random() * 1.5, ease: "easeOut" }}
-            />
-          ))}
+        <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
+          {[...Array(60)].map((_, i) => {
+            const colors = ["#177fc9", "#42adff", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6", "#ec4899"]
+            const size = 4 + Math.random() * 8
+            const isRect = i % 3 === 0
+            const startX = Math.random() * 100
+            const drift = (Math.random() - 0.5) * 200
+            const duration = 2.5 + Math.random() * 2
+            const delay = Math.random() * 0.8
+
+            return (
+              <motion.div
+                key={i}
+                className="absolute"
+                style={{
+                  width: isRect ? size * 0.5 : size,
+                  height: size,
+                  backgroundColor: colors[i % colors.length],
+                  borderRadius: isRect ? "1px" : "50%",
+                  left: `${startX}%`,
+                  top: "-15px",
+                }}
+                initial={{ opacity: 1, y: 0, x: 0, rotate: 0 }}
+                animate={{
+                  y: typeof window !== "undefined" ? window.innerHeight + 60 : 900,
+                  x: [0, drift * 0.3, drift, drift * 0.7],
+                  rotate: [0, 180 + Math.random() * 540],
+                  opacity: [1, 1, 1, 0],
+                }}
+                transition={{
+                  duration,
+                  delay,
+                  ease: [0.12, 0.8, 0.3, 1],
+                }}
+              />
+            )
+          })}
         </div>
       )}
 
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <a href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-1 inline-block">
+              <a href="/" className="text-sm text-gray-400 hover:text-gray-600 transition-colors mb-0.5 inline-block">
                 &larr; Home
               </a>
-              <h1 className="text-2xl font-bold text-gray-900">Your Audit Results</h1>
-              <p className="text-sm text-gray-500 mt-0.5">
-                {data.business_name} &middot;{" "}
-                {new Date(data.created_at).toLocaleDateString("en-US", {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
+              <h1 className="text-xl font-bold text-gray-900">{data.business_name}</h1>
             </div>
             <CurrencyToggle value={currency} onChange={setCurrency} />
           </div>
@@ -556,19 +566,20 @@ export default function ResultsPage({ data }: ResultsPageProps) {
 
       {/* Main Content: Split Layout */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="grid lg:grid-cols-12 gap-8">
-          {/* Left: PDF Preview */}
-          <div className="lg:col-span-5">
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
+          {/* Left: PDF Preview — sticky on desktop */}
+          <div className="lg:col-span-5 mb-8 lg:mb-0">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
+              className="lg:sticky lg:top-24"
             >
               <PDFPreview data={data} onDownload={handleDownloadPDF} isGenerating={isGeneratingPDF} />
             </motion.div>
           </div>
 
-          {/* Right: Analysis */}
+          {/* Right: Analysis — scrolls naturally */}
           <div className="lg:col-span-7 space-y-6">
             {/* Constraint Hero */}
             <motion.div

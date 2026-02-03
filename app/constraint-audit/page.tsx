@@ -76,84 +76,164 @@ function AnalyzingScreen() {
   const [currentStep, setCurrentStep] = useState(0)
 
   const steps = [
-    "Calculating your scores...",
-    "Analyzing your responses...",
-    "Identifying your constraint...",
-    "Calculating revenue impact...",
-    "Preparing your roadmap...",
+    { label: "Scoring your 5 growth levers", icon: "WHO,WHAT,SELL,FIND,OPS" },
+    { label: "Analyzing response patterns", icon: "patterns" },
+    { label: "Identifying your #1 constraint", icon: "constraint" },
+    { label: "Calculating revenue impact", icon: "revenue" },
+    { label: "Building your roadmap", icon: "roadmap" },
   ]
+
+  const tips = [
+    "80% of business problems come from just one constraint. Fix that, and everything else becomes easier.",
+    "The biggest bottleneck is rarely where you think it is. That's why data-driven analysis matters.",
+    "Businesses that focus on one constraint at a time grow 3x faster than those trying to fix everything.",
+  ]
+
+  const [tipIndex, setTipIndex] = useState(0)
 
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 95) return prev
-        return prev + Math.random() * 10
+        return prev + Math.random() * 8
       })
-    }, 500)
+    }, 600)
 
     const stepInterval = setInterval(() => {
       setCurrentStep((prev) => (prev < steps.length - 1 ? prev + 1 : prev))
-    }, 2000)
+    }, 2500)
+
+    const tipInterval = setInterval(() => {
+      setTipIndex((prev) => (prev + 1) % tips.length)
+    }, 5000)
 
     return () => {
       clearInterval(interval)
       clearInterval(stepInterval)
+      clearInterval(tipInterval)
     }
   }, [])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center px-4">
-      <div className="max-w-md w-full">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center">
-          {/* Animated Logo/Icon */}
-          <motion.div
-            animate={{
-              rotate: 360,
-              scale: [1, 1.2, 1],
-            }}
-            transition={{
-              rotate: { duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-              scale: { duration: 1, repeat: Number.POSITIVE_INFINITY },
-            }}
-            className="w-24 h-24 mx-auto mb-8 bg-gradient-to-br from-[#177fc9] to-[#42adff] rounded-full flex items-center justify-center text-white text-4xl shadow-2xl"
-          >
-            🎯
-          </motion.div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="max-w-lg w-full">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }} className="text-center">
+
+          {/* Animated rings */}
+          <div className="relative w-32 h-32 mx-auto mb-10">
+            {/* Outer ring */}
+            <motion.div
+              className="absolute inset-0 rounded-full border-2 border-[#177fc9]/20"
+              animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            />
+            {/* Middle ring */}
+            <motion.div
+              className="absolute inset-2 rounded-full border-2 border-[#177fc9]/30"
+              animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut", delay: 0.3 }}
+            />
+            {/* Spinning arc */}
+            <motion.svg
+              className="absolute inset-0 w-full h-full"
+              viewBox="0 0 100 100"
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            >
+              <circle
+                cx="50" cy="50" r="46"
+                fill="none"
+                stroke="#177fc9"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeDasharray="70 220"
+              />
+            </motion.svg>
+            {/* Center icon */}
+            <motion.div
+              className="absolute inset-0 flex items-center justify-center"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 1.5, repeat: Infinity }}
+            >
+              <div className="w-16 h-16 rounded-2xl bg-[#177fc9] flex items-center justify-center shadow-lg shadow-blue-200">
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              </div>
+            </motion.div>
+          </div>
 
           {/* Title */}
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Analyzing Your Business...</h2>
-          <p className="text-gray-600 mb-8">Our AI is identifying your #1 constraint</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">Analyzing Your Business</h2>
+          <p className="text-sm text-gray-500 mb-8">Our AI is processing your responses</p>
 
-          {/* Progress Bar */}
-          <div className="bg-gray-200 rounded-full h-3 mb-6 overflow-hidden">
-            <motion.div
-              className="bg-gradient-to-r from-[#177fc9] to-[#42adff] h-full rounded-full"
-              initial={{ width: 0 }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.5 }}
-            />
+          {/* Steps with progress */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 text-left">
+            <div className="space-y-3">
+              {steps.map((step, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0.4 }}
+                  animate={{
+                    opacity: i <= currentStep ? 1 : 0.4,
+                  }}
+                  className="flex items-center gap-3"
+                >
+                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 ${
+                    i < currentStep
+                      ? "bg-green-100 text-green-600"
+                      : i === currentStep
+                        ? "bg-[#177fc9] text-white"
+                        : "bg-gray-100 text-gray-400"
+                  }`}>
+                    {i < currentStep ? (
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      i + 1
+                    )}
+                  </div>
+                  <span className={`text-sm ${
+                    i === currentStep ? "font-semibold text-gray-900" : i < currentStep ? "text-gray-500" : "text-gray-400"
+                  }`}>
+                    {step.label}
+                    {i === currentStep && (
+                      <motion.span
+                        animate={{ opacity: [1, 0.3, 1] }}
+                        transition={{ duration: 1.2, repeat: Infinity }}
+                        className="inline-block ml-0.5"
+                      >...</motion.span>
+                    )}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Progress bar */}
+            <div className="mt-4 bg-gray-100 rounded-full h-1.5 overflow-hidden">
+              <motion.div
+                className="bg-[#177fc9] h-full rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+            </div>
           </div>
 
-          {/* Current Step */}
+          {/* Rotating tips */}
           <AnimatePresence mode="wait">
             <motion.p
-              key={currentStep}
-              initial={{ opacity: 0, y: 10 }}
+              key={tipIndex}
+              initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="text-[#177fc9] font-medium"
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.4 }}
+              className="text-xs text-gray-400 italic max-w-sm mx-auto leading-relaxed"
             >
-              {steps[currentStep]}
+              &ldquo;{tips[tipIndex]}&rdquo;
             </motion.p>
           </AnimatePresence>
-
-          {/* Fun facts while they wait */}
-          <div className="mt-12 p-6 bg-white rounded-xl shadow-lg border border-gray-100">
-            <p className="text-sm text-gray-600 italic">
-              "Did you know? 80% of business problems come from just one constraint. Fix that, and everything else
-              becomes easier."
-            </p>
-          </div>
         </motion.div>
       </div>
     </div>
