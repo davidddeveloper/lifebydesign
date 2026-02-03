@@ -827,7 +827,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                 <p className="text-blue-100 text-lg mb-4">Want to discuss your results right now?</p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                   <a
-                    href={`https://wa.me/23230600800?text=Hi Joe! I just completed my audit. My constraint is: ${encodeURIComponent(data.final_constraint)}. Can we discuss?`}
+                    href={`https://wa.me/23230600600?text=Hi Joe! I just completed my audit. My constraint is: ${encodeURIComponent(data.final_constraint)}. Can we discuss?`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center text-white hover:text-blue-100 transition-colors"
@@ -873,7 +873,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   startupbodyshop.com
                 </a>
                 <a
-                  href="https://wa.me/23230600800"
+                  href="https://wa.me/23230600600"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-blue-600 transition-colors font-medium"

@@ -6,7 +6,9 @@ import {
   Text,
   View,
   StyleSheet,
+  Image,
 } from '@react-pdf/renderer';
+import { LOGO_BASE64 } from '@/lib/logo-base64';
 
 // Exchange rate constant
 const SLE_TO_USD_RATE = 22500;
@@ -217,6 +219,77 @@ const styles = StyleSheet.create({
   col: {
     flex: 1,
   },
+  // Cover page
+  coverPage: {
+    padding: 0,
+    backgroundColor: '#ffffff',
+    fontFamily: 'Helvetica',
+  },
+  coverTopBar: {
+    height: 8,
+    backgroundColor: blue,
+  },
+  coverContent: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 60,
+  },
+  coverLogo: {
+    width: 260,
+    height: 113,
+    marginBottom: 50,
+  },
+  coverLine: {
+    width: 60,
+    height: 3,
+    backgroundColor: blue,
+    marginBottom: 30,
+  },
+  coverTitle: {
+    fontSize: 32,
+    fontWeight: 700,
+    color: '#1a1a1a',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  coverSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 40,
+  },
+  coverBusinessName: {
+    fontSize: 22,
+    fontWeight: 700,
+    color: blue,
+    textAlign: 'center',
+    marginBottom: 6,
+  },
+  coverOwner: {
+    fontSize: 13,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  coverDate: {
+    fontSize: 11,
+    color: '#999',
+    textAlign: 'center',
+    marginTop: 12,
+  },
+  coverBottom: {
+    paddingVertical: 24,
+    paddingHorizontal: 60,
+    borderTop: 1,
+    borderTopColor: '#e5e7eb',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  coverBottomText: {
+    fontSize: 9,
+    color: '#999',
+  },
 });
 
 interface AuditResultsPDFProps {
@@ -253,18 +326,36 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
       ? (() => { try { const p = JSON.parse(data.evidence_points as string); return Array.isArray(p) ? p : []; } catch { return []; } })()
       : [];
 
+  const formattedDate = data.created_at
+    ? new Date(data.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+    : '';
+
   return (
     <Document>
-      {/* Page 1: Header + Constraint + Scores */}
+      {/* Cover Page */}
+      <Page size="A4" style={styles.coverPage}>
+        <View style={styles.coverTopBar} />
+        <View style={styles.coverContent}>
+          <Image style={styles.coverLogo} src={LOGO_BASE64} />
+          <View style={styles.coverLine} />
+          <Text style={styles.coverTitle}>Constraint Audit</Text>
+          <Text style={styles.coverSubtitle}>Business Analysis Report</Text>
+          <Text style={styles.coverBusinessName}>{data.business_name}</Text>
+          <Text style={styles.coverOwner}>{data.owner_name}</Text>
+          {formattedDate ? <Text style={styles.coverDate}>{formattedDate}</Text> : null}
+        </View>
+        <View style={styles.coverBottom}>
+          <Text style={styles.coverBottomText}>startupbodyshop.com</Text>
+          <Text style={styles.coverBottomText}>Confidential</Text>
+        </View>
+      </Page>
+
+      {/* Page 2: Constraint + Scores */}
       <Page size="A4" style={styles.page}>
         <View style={styles.header}>
           <Text style={styles.title}>Constraint Audit Results</Text>
           <Text style={styles.subtitle}>{data.business_name} - {data.owner_name}</Text>
-          <Text style={styles.subtitle}>
-            {data.created_at ? new Date(data.created_at).toLocaleDateString('en-US', {
-              month: 'long', day: 'numeric', year: 'numeric',
-            }) : ''}
-          </Text>
+          {formattedDate ? <Text style={styles.subtitle}>{formattedDate}</Text> : null}
         </View>
 
         <View style={styles.section}>
@@ -292,11 +383,11 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
         </View>
 
         <View style={styles.footer}>
-          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 800</Text>
+          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 600</Text>
         </View>
       </Page>
 
-      {/* Page 2: Evidence + Revenue Impact */}
+      {/* Page 3: Evidence + Revenue Impact */}
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Why This Is Your Bottleneck</Text>
@@ -349,11 +440,11 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
         </View>
 
         <View style={styles.footer}>
-          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 800</Text>
+          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 600</Text>
         </View>
       </Page>
 
-      {/* Page 3: Quick Win + Next Steps */}
+      {/* Page 4: Quick Win + Next Steps */}
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Win - Start Today</Text>
@@ -377,7 +468,7 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
           <Text style={[styles.text, { marginBottom: 8 }]}>
             Ready to break through your #1 constraint? Reach out to discuss your personalized roadmap.
           </Text>
-          <Text style={styles.text}>WhatsApp: +232 30 600 800</Text>
+          <Text style={styles.text}>WhatsApp: +232 30 600 600</Text>
           <Text style={styles.text}>Web: startupbodyshop.com</Text>
         </View>
 
