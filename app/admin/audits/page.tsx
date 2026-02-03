@@ -57,7 +57,7 @@ type SortField = "submittedAt" | "businessName" | "primaryConstraint" | "yearlyO
 type SortDir = "asc" | "desc"
 
 // ─── Helpers ─────────────────────────────────────────────────────
-const SLE_TO_USD_RATE = 22500
+import { USD_TO_SLE, formatSLE, usdHint } from '@/lib/currency'
 
 function safeArray(value: unknown): string[] {
   if (Array.isArray(value)) return value
@@ -76,10 +76,8 @@ function safeObj<T>(value: unknown, fallback: T): T {
 }
 
 function formatLeones(value: number | undefined) {
-  if (!value) return "Le 0"
-  if (value >= 1_000_000) return `Le ${(value / 1_000_000).toFixed(1)}M`
-  if (value >= 1_000) return `Le ${(value / 1_000).toFixed(0)}K`
-  return `Le ${value.toLocaleString()}`
+  if (!value) return "SLE 0"
+  return formatSLE(value)
 }
 
 function formatDate(dateStr: string) {
@@ -218,7 +216,7 @@ function exportToSheet(audits: Audit[]) {
       "Monthly Opp. Cost (Le)": a.revenueImpact?.monthlyOpportunityCost,
       "Yearly Opp. Cost (Le)": a.revenueImpact?.yearlyOpportunityCost,
       "Yearly Opp. Cost (USD)": a.revenueImpact?.yearlyOpportunityCost
-        ? Math.round(a.revenueImpact.yearlyOpportunityCost / SLE_TO_USD_RATE)
+        ? Math.round(a.revenueImpact.yearlyOpportunityCost / USD_TO_SLE)
         : 0,
       "Quick Win": a.quickWin?.action,
       Reasoning: a.reasoning,
@@ -347,7 +345,7 @@ function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => voi
                 <div className="text-lg font-bold text-red-600">
                   {formatLeones(audit.revenueImpact?.yearlyOpportunityCost)}
                   <span className="text-sm font-normal text-gray-400 ml-2">
-                    (~${audit.revenueImpact?.yearlyOpportunityCost ? Math.round(audit.revenueImpact.yearlyOpportunityCost / SLE_TO_USD_RATE).toLocaleString() : 0} USD)
+                    ({audit.revenueImpact?.yearlyOpportunityCost ? usdHint(audit.revenueImpact.yearlyOpportunityCost) : '$0 USD'})
                   </span>
                 </div>
               </div>
@@ -823,7 +821,7 @@ export default function AdminAuditsPage() {
                         </div>
                         {audit.revenueImpact?.yearlyOpportunityCost > 0 && (
                           <div className="text-xs text-gray-400">
-                            ~${Math.round(audit.revenueImpact.yearlyOpportunityCost / SLE_TO_USD_RATE).toLocaleString()}
+                            {usdHint(audit.revenueImpact.yearlyOpportunityCost)}
                           </div>
                         )}
                       </td>

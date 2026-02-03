@@ -9,9 +9,7 @@ import {
   Image,
 } from '@react-pdf/renderer';
 import { LOGO_BASE64 } from '@/lib/logo-base64';
-
-// Exchange rate constant
-const SLE_TO_USD_RATE = 22500;
+import { USD_TO_SLE, formatSLE, usdHint } from '@/lib/currency';
 
 const blue = '#177fc9';
 const blueLighter = '#E8F4FD';
@@ -406,17 +404,17 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
             <View style={[styles.revenueBox, styles.col]}>
               <Text style={styles.revenueLabel}>Current Monthly</Text>
               <Text style={styles.revenueAmount}>
-                Le {(data.revenue_impact?.currentMonthly || 0).toLocaleString()}M
+                {formatSLE(data.revenue_impact?.currentMonthly || 0)}
               </Text>
               <Text style={styles.text}>
-                ~${((data.revenue_impact?.currentMonthly || 0) / SLE_TO_USD_RATE).toFixed(0)} USD
+                {usdHint(data.revenue_impact?.currentMonthly || 0)}
               </Text>
             </View>
 
             <View style={[styles.revenueBox, styles.col]}>
               <Text style={styles.revenueLabel}>Potential Monthly</Text>
               <Text style={styles.revenueAmount}>
-                Le {(data.revenue_impact?.potentialMonthly || 0).toLocaleString()}M
+                {formatSLE(data.revenue_impact?.potentialMonthly || 0)}
               </Text>
             </View>
           </View>
@@ -424,11 +422,11 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
           <View style={styles.costBox}>
             <Text style={styles.revenueLabel}>Monthly Opportunity Cost</Text>
             <Text style={styles.costAmount}>
-              Le {(data.revenue_impact?.monthlyOpportunityCost || 0).toLocaleString()}M
+              {formatSLE(data.revenue_impact?.monthlyOpportunityCost || 0)}
             </Text>
             <Text style={[styles.text, { marginTop: 4 }]}>
-              That is Le {(data.revenue_impact?.yearlyOpportunityCost || 0).toLocaleString()}M per year
-              (~${((data.revenue_impact?.yearlyOpportunityCost || 0) / SLE_TO_USD_RATE).toLocaleString()} USD)
+              That is {formatSLE(data.revenue_impact?.yearlyOpportunityCost || 0)} per year
+              ({usdHint(data.revenue_impact?.yearlyOpportunityCost || 0)})
             </Text>
           </View>
 
