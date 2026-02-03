@@ -21,7 +21,6 @@ import {
   BarElement,
 } from "chart.js"
 
-import { Footer } from "@/components/Footer"
 
 ChartJS.register(RadialLinearScale, PointElement, LineElement, Filler, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
 
@@ -309,10 +308,10 @@ function PDFPreview({ data, onDownload, isGenerating }: {
   }
 
   return (
-    <div>
+    <div className="lg:h-full lg:flex lg:flex-col">
       {/* PDF Page */}
       <div
-        className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 cursor-pointer"
+        className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 cursor-pointer flex-1 min-h-0"
         onClick={goNext}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -506,7 +505,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
       : 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50 lg:overflow-hidden overflow-auto">
       {/* Confetti Celebration */}
       {showConfetti && (
         <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
@@ -549,8 +548,8 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         </div>
       )}
 
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+      {/* Header — fixed at top */}
+      <header className="bg-white border-b border-gray-200 flex-shrink-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
@@ -564,23 +563,23 @@ export default function ResultsPage({ data }: ResultsPageProps) {
         </div>
       </header>
 
-      {/* Main Content: Split Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-start">
-          {/* Left: PDF Preview — sticky on desktop */}
-          <div className="lg:col-span-5 mb-8 lg:mb-0">
+      {/* Main Content: Split Layout — fills remaining height on desktop */}
+      <div className="flex-1 lg:min-h-0">
+        <div className="h-full max-w-7xl mx-auto px-4 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-8">
+          {/* Left: PDF Preview — fixed on desktop, fills available height */}
+          <div className="lg:col-span-5 py-8 lg:h-full lg:overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="lg:sticky lg:top-24"
+              className="lg:h-full lg:flex lg:flex-col"
             >
               <PDFPreview data={data} onDownload={handleDownloadPDF} isGenerating={isGeneratingPDF} />
             </motion.div>
           </div>
 
-          {/* Right: Analysis — scrolls naturally */}
-          <div className="lg:col-span-7 space-y-6">
+          {/* Right: Analysis — scrolls independently on desktop */}
+          <div className="lg:col-span-7 lg:h-full lg:overflow-y-auto lg:py-8 pb-8 space-y-6 scrollbar-thin">
             {/* Constraint Hero */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -752,10 +751,15 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             >
               <PersonalizedSolutionCTA />
             </motion.div>
+            {/* Footer inside scroll area */}
+            <div className="pt-6 border-t border-gray-200 mt-2">
+              <div className="text-center text-xs text-gray-400 pb-4">
+                Startup Bodyshop &middot; startupbodyshop.com &middot; +232 30 600 600
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   )
 }

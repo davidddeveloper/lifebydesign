@@ -574,10 +574,10 @@ export default function AdminAuditsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+      {/* Header + Toolbar — sticky top section */}
+      <div className="flex-shrink-0 bg-white border-b border-gray-200 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900">Audit Submissions</h1>
@@ -615,11 +615,10 @@ export default function AdminAuditsPage() {
             ))}
           </div>
         </div>
-      </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        {/* Toolbar */}
-        <div className="bg-white rounded-xl border border-gray-200 p-4 mb-4">
+        {/* Toolbar — part of the sticky top */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
+          <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
           <div className="flex flex-col lg:flex-row gap-3">
             {/* Search */}
             <div className="relative flex-1">
@@ -726,9 +725,13 @@ export default function AdminAuditsPage() {
               {bulkExporting && <span className="text-xs text-blue-600">Exporting...</span>}
             </div>
           )}
+          </div>
         </div>
+      </div>
 
-        {/* Table */}
+      {/* Table — scrollable area fills remaining height */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           {loading ? (
             <div className="p-12 text-center">
@@ -864,6 +867,7 @@ export default function AdminAuditsPage() {
               </table>
             </div>
           )}
+        </div>
         </div>
       </div>
 
