@@ -6,21 +6,10 @@ import {
   Text,
   View,
   StyleSheet,
-  Font,
 } from '@react-pdf/renderer';
 
 // Exchange rate constant
 const SLE_TO_USD_RATE = 22500;
-
-// Register fonts
-Font.register({
-  family: 'Inter',
-  fonts: [
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2', fontWeight: 400 },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuGKYAZ9hiA.woff2', fontWeight: 600 },
-    { src: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuFuYAZ9hiA.woff2', fontWeight: 700 },
-  ],
-});
 
 const blue = '#177fc9';
 const blueLighter = '#E8F4FD';
@@ -30,7 +19,7 @@ const styles = StyleSheet.create({
   page: {
     padding: 40,
     backgroundColor: '#ffffff',
-    fontFamily: 'Inter',
+    fontFamily: 'Helvetica',
   },
   header: {
     marginBottom: 30,
@@ -259,6 +248,10 @@ interface AuditResultsPDFProps {
 
 export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
   const constraint = data.final_constraint || 'Unknown';
+  const evidencePoints = Array.isArray(data.evidence_points) ? data.evidence_points
+    : typeof data.evidence_points === 'string'
+      ? (() => { try { const p = JSON.parse(data.evidence_points as string); return Array.isArray(p) ? p : []; } catch { return []; } })()
+      : [];
 
   return (
     <Document>
@@ -307,7 +300,7 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
       <Page size="A4" style={styles.page}>
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Why This Is Your Bottleneck</Text>
-          {data.evidence_points && data.evidence_points.map((point: string, index: number) => (
+          {evidencePoints.map((point: string, index: number) => (
             <View key={index} style={styles.evidenceItem}>
               <Text style={styles.evidenceNumber}>{index + 1}</Text>
               <Text style={styles.evidenceText}>{point}</Text>

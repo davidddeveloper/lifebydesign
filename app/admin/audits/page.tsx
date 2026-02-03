@@ -59,6 +59,22 @@ type SortDir = "asc" | "desc"
 // ─── Helpers ─────────────────────────────────────────────────────
 const SLE_TO_USD_RATE = 22500
 
+function safeArray(value: unknown): string[] {
+  if (Array.isArray(value)) return value
+  if (typeof value === "string") {
+    try { const parsed = JSON.parse(value); return Array.isArray(parsed) ? parsed : [] } catch { return [] }
+  }
+  return []
+}
+
+function safeObj<T>(value: unknown, fallback: T): T {
+  if (value && typeof value === "object" && !Array.isArray(value)) return value as T
+  if (typeof value === "string") {
+    try { const parsed = JSON.parse(value); return typeof parsed === "object" && parsed ? parsed : fallback } catch { return fallback }
+  }
+  return fallback
+}
+
 function formatLeones(value: number | undefined) {
   if (!value) return "Le 0"
   if (value >= 1_000_000) return `Le ${(value / 1_000_000).toFixed(1)}M`
@@ -154,6 +170,10 @@ async function exportToPDF(audits: Audit[]) {
 }
 
 function mapAuditToPDFData(a: Audit) {
+  const scores = safeObj(a.scores, { who: 0, what: 0, sell: 0, traffic: 0, operations: 0 })
+  const ri = safeObj(a.revenueImpact, { currentMonthly: 0, potentialMonthly: 0, monthlyOpportunityCost: 0, yearlyOpportunityCost: 0, explanation: "" })
+  const qw = safeObj(a.quickWin, { action: "", impact: "", time: "" })
+
   return {
     business_name: a.businessName || "",
     owner_name: a.ownerName || "",
@@ -164,21 +184,15 @@ function mapAuditToPDFData(a: Audit) {
     confidence: a.confidence || 0,
     reasoning: a.reasoning || "",
     scores: {
-      "WHO (Market)": a.scores?.who || 0,
-      "WHAT (Offer)": a.scores?.what || 0,
-      "HOW YOU SELL (Conversion)": a.scores?.sell || 0,
-      "HOW THEY FIND YOU (Traffic)": a.scores?.traffic || 0,
-      "HOW YOU DELIVER (Operations)": a.scores?.operations || 0,
+      "WHO (Market)": scores.who || 0,
+      "WHAT (Offer)": scores.what || 0,
+      "HOW YOU SELL (Conversion)": scores.sell || 0,
+      "HOW THEY FIND YOU (Traffic)": scores.traffic || 0,
+      "HOW YOU DELIVER (Operations)": scores.operations || 0,
     },
-    evidence_points: a.evidencePoints || [],
-    revenue_impact: a.revenueImpact || {
-      currentMonthly: 0,
-      potentialMonthly: 0,
-      monthlyOpportunityCost: 0,
-      yearlyOpportunityCost: 0,
-      explanation: "",
-    },
-    quick_win: a.quickWin || { action: "", impact: "", time: "" },
+    evidence_points: safeArray(a.evidencePoints),
+    revenue_impact: ri,
+    quick_win: qw,
   }
 }
 
@@ -349,11 +363,11 @@ function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => voi
           )}
 
           {/* Evidence */}
-          {audit.evidencePoints && audit.evidencePoints.length > 0 && (
+          {safeArray(audit.evidencePoints).length > 0 && (
             <div>
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Evidence</h3>
               <ul className="space-y-2">
-                {audit.evidencePoints.map((point, i) => (
+                {safeArray(audit.evidencePoints).map((point, i) => (
                   <li key={i} className="flex gap-2 text-sm text-gray-700">
                     <span className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs flex items-center justify-center font-bold">
                       {i + 1}
