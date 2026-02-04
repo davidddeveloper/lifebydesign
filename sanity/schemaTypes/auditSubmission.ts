@@ -406,13 +406,31 @@ export const auditSubmission = defineType({
   preview: {
     select: {
       title: 'businessName',
-      subtitle: 'primaryConstraint',
+      constraint: 'primaryConstraint',
       owner: 'ownerName',
+      status: 'status',
+      submittedAt: 'submittedAt',
     },
-    prepare({ title, subtitle, owner }) {
+    prepare({ title, constraint, owner, status, submittedAt }) {
+      const statusLabels: Record<string, string> = {
+        pending_contact: '[ PENDING ]',
+        nurturing: '[ NURTURING ]',
+        contacted: '[ CONTACTED ]',
+        converted: '[ CONVERTED ]',
+      }
+      const statusLabel = statusLabels[status as string] || '[ NEW ]'
+
+      const shortConstraint = constraint
+        ? constraint.replace('HOW YOU SELL ', '').replace('HOW THEY FIND YOU ', '').replace('HOW YOU DELIVER ', '')
+        : 'Pending analysis'
+
+      const date = submittedAt
+        ? new Date(submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+        : ''
+
       return {
-        title: title || 'Unnamed Business',
-        subtitle: subtitle ? `${owner} - Constraint: ${subtitle}` : owner,
+        title: `${title || 'Unnamed Business'} ${statusLabel}`,
+        subtitle: `${owner || ''} — Constraint: ${shortConstraint}${date ? ` — ${date}` : ''}`,
       }
     },
   },

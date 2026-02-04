@@ -9,12 +9,41 @@ import { draftMode } from "next/headers";
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Life By Design - Unlock Purpose, Build Legacy",
-  description: "Empowering entrepreneurs to design businesses and lives of impact.",
+  metadataBase: new URL("https://startupbodyshop.com"),
+  title: {
+    default: "LBD Startup Bodyshop - Unlock Purpose, Build Legacy",
+    template: "%s | Startup Bodyshop",
+  },
+  description:
+    "Empowering entrepreneurs to design businesses and lives of impact through proven systems, expert guidance, and community support.",
   openGraph: {
     type: "website",
-    url: "https://lifebydesign.africa",
-    siteName: "Life By Design",
+    url: "https://startupbodyshop.com",
+    siteName: "LBD Startup Bodyshop",
+    locale: "en_US",
+    images: [
+      {
+        url: "/images/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "LBD Startup Bodyshop",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@startupbodyshop",
+    creator: "@startupbodyshop",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large" as const,
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
+  alternates: {
+    canonical: "https://startupbodyshop.com",
   },
 };
 

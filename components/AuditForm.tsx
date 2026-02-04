@@ -423,12 +423,12 @@ function BasicInfoStep({ formData, onChange }: any) {
           required
         />
         <FormField
-          label="Monthly Revenue (Leones)"
+          label="Monthly Revenue (New Leones / SLE)"
           type="number"
           value={formData.monthlyRevenue}
           onChange={(v: any) => onChange("monthlyRevenue", v)}
-          placeholder="e.g., 20000000"
-          helpText="Last 3 months average"
+          placeholder="e.g., 20000"
+          helpText="Enter in New Leones (SLE). Last 3 months average."
           required
         />
         <FormField

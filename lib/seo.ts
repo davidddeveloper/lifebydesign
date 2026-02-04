@@ -202,4 +202,16 @@ export const pageMetadata = {
       "Join our interactive workshops and training sessions. Learn from industry experts and accelerate your business growth.",
     tags: ["workshops", "training", "business education", "scaling sessions"],
   },
+  constraintAudit: {
+    title: "Free Constraint Audit - Find Your #1 Business Bottleneck",
+    description:
+      "Take the free AI-powered Constraint Audit to identify the ONE thing holding your business back. Get a personalized report with scores, revenue impact, and a quick-win action plan.",
+    tags: ["constraint audit", "business audit", "free business analysis", "growth bottleneck", "AI business tool"],
+  },
+  newsletter: {
+    title: "Newsletter - Business Insights Delivered Weekly",
+    description:
+      "Subscribe to the LBD Startup Bodyshop newsletter for weekly entrepreneurship insights, growth strategies, and exclusive content.",
+    tags: ["newsletter", "business insights", "entrepreneurship tips"],
+  },
 }
