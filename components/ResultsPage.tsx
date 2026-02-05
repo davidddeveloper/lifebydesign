@@ -101,7 +101,7 @@ function PDFCoverPage({ data }: { data: ResultsPageProps["data"] }) {
     <div className="w-full h-full bg-white flex flex-col font-sans">
       <div className="h-2 bg-[#177fc9]" />
       <div className="flex-1 flex flex-col items-center justify-center px-10">
-        <img src="/lifebydesignlogo.png" alt="Logo" className="w-40 mb-8 object-contain" />
+        <img src="/images/startupbodyshoplogo.png" alt="Logo" className="w-40 mb-8 object-contain" />
         <div className="w-10 h-0.5 bg-[#177fc9] mb-5" />
         <h2 className="text-2xl font-bold text-gray-900 text-center">Constraint Audit</h2>
         <p className="text-sm text-gray-500 text-center mb-6">Business Analysis Report</p>
