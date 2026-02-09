@@ -361,7 +361,7 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
             <Text style={styles.constraintLabel}>Your #1 Constraint</Text>
             <Text style={styles.constraintName}>{constraint}</Text>
             <Text style={styles.constraintScore}>
-              Score: {data.primary_score}/10  |  AI Confidence: {data.confidence}/10
+              Constraint Score: {data.primary_score}/10
             </Text>
             <Text style={styles.text}>{data.reasoning}</Text>
           </View>

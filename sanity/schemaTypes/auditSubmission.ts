@@ -309,13 +309,13 @@ export const auditSubmission = defineType({
 
     defineField({
       name: 'confidence',
-      title: 'AI Confidence',
+      title: 'Analysis Confidence',
       type: 'number',
-      description: 'Confidence level of the AI analysis (0-10)',
+      description: 'Confidence level of the analysis (0-10)',
     }),
     defineField({
       name: 'reasoning',
-      title: 'AI Reasoning',
+      title: 'Analysis Reasoning',
       type: 'text',
       description: 'Explanation of why this constraint was identified',
     }),

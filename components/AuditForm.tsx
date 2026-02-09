@@ -225,8 +225,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-black text-gray-900 mb-4"
           >
-            The Constraint-Busting <br />
-            <span className="text-[#177fc9]">Business Audit</span>
+            Business Constraint <br />
+            <span className="text-[#177fc9]">Audit</span>
           </motion.h1>
           <p className="text-xl text-gray-600 mb-2">
             Identify the ONE thing holding you back from a more substantial monthly revenue

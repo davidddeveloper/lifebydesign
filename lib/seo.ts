@@ -203,10 +203,10 @@ export const pageMetadata = {
     tags: ["workshops", "training", "business education", "scaling sessions"],
   },
   constraintAudit: {
-    title: "Free Constraint Audit - Find Your #1 Business Bottleneck",
+    title: "Free Business Constraint Audit - Find Your #1 Bottleneck",
     description:
-      "Take the free AI-powered Constraint Audit to identify the ONE thing holding your business back. Get a personalized report with scores, revenue impact, and a quick-win action plan.",
-    tags: ["constraint audit", "business audit", "free business analysis", "growth bottleneck", "AI business tool"],
+      "Take the free Business Constraint Audit to identify the ONE thing holding your business back. Get a personalized report with scores, revenue impact, and a quick-win action plan.",
+    tags: ["constraint audit", "business audit", "free business analysis", "growth bottleneck", "business diagnostic tool"],
   },
   newsletter: {
     title: "Newsletter - Business Insights Delivered Weekly",

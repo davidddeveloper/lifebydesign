@@ -70,7 +70,7 @@ export default function Home() {
   return <AuditForm onSubmit={handleFormSubmit} />
 }
 
-// Loading screen while AI analyzes
+// Loading screen while analyzing responses
 function AnalyzingScreen() {
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
@@ -165,7 +165,7 @@ function AnalyzingScreen() {
 
           {/* Title */}
           <h2 className="text-2xl font-bold text-gray-900 mb-1">Analyzing Your Business</h2>
-          <p className="text-sm text-gray-500 mb-8">Our AI is processing your responses</p>
+          <p className="text-sm text-gray-500 mb-8">Calculating your scores based on your responses</p>
 
           {/* Steps with progress */}
           <div className="bg-white rounded-xl border border-gray-200 p-5 mb-6 text-left">

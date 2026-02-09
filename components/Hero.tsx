@@ -9,7 +9,7 @@ export default function Hero() {
       <p className="text-lg mb-8 max-w-xl">
         Join the movement of purpose-driven entrepreneurs creating real impact across Africa.
       </p>
-      <CTAButton href="https://go.lifebydesign.africa/workshop" label="Start Your Journey" />
+      <CTAButton href="/workshops" label="Start Your Journey" />
     </section>
   );
 }

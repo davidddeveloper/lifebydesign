@@ -137,7 +137,7 @@ function PDFScoresPage({ data }: { data: ResultsPageProps["data"] }) {
         <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-1">Your #1 Constraint</p>
         <p className="text-lg font-bold text-[#177fc9] mb-1">{constraint}</p>
         <p className="text-xs text-gray-600">
-          Score: {data.primary_score}/10 | AI Confidence: {data.confidence}/10
+          Constraint Score: {data.primary_score}/10
         </p>
         <p className="text-[10px] text-gray-600 mt-2 leading-relaxed line-clamp-3">{data.reasoning}</p>
       </div>
@@ -589,16 +589,9 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             >
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Your #1 Constraint</p>
               <h2 className="text-3xl font-bold text-[#177fc9] mb-3">{data.final_constraint}</h2>
-              <div className="flex items-center gap-4 mb-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Score</span>
-                  <span className="text-xl font-bold text-gray-900">{data.primary_score}/10</span>
-                </div>
-                <div className="w-px h-6 bg-gray-200" />
-                <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-500">Confidence</span>
-                  <span className="text-xl font-bold text-gray-900">{data.confidence}/10</span>
-                </div>
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-sm text-gray-500">Constraint Score</span>
+                <span className="text-xl font-bold text-gray-900">{data.primary_score}/10</span>
               </div>
               <p className="text-sm text-gray-600 leading-relaxed">{data.reasoning}</p>
             </motion.div>
