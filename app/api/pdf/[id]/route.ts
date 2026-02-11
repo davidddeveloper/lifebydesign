@@ -1,6 +1,8 @@
-// app/api/dashboard/[id]/route.ts
+// app/api/pdf/[id]/route.ts
+// Server-side PDF generation for n8n email workflows
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { generatePDFBlob } from '@/lib/generate-pdf';
 
 export async function GET(
   request: NextRequest,
@@ -8,6 +10,8 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const { searchParams } = new URL(request.url);
+    const format = searchParams.get('format') || 'blob'; // 'blob' or 'base64'
 
     if (!id) {
       return NextResponse.json(
@@ -24,14 +28,12 @@ export async function GET(
       .single();
 
     if (error) {
-      // PGRST116 = no rows found - this is expected for invalid IDs
       if (error.code === 'PGRST116') {
         return NextResponse.json(
           { error: 'Audit not found' },
           { status: 404 }
         );
       }
-      // Log unexpected errors
       console.error('Supabase error:', error);
       throw error;
     }
@@ -43,8 +45,8 @@ export async function GET(
       );
     }
 
-    // Transform to match the ResultsPage data format
-    const transformedData = {
+    // Transform data to match PDF component expectations
+    const pdfData = {
       business_name: audit.business_name,
       owner_name: audit.owner_name,
       email: audit.email,
@@ -79,15 +81,38 @@ export async function GET(
       created_at: audit.created_at,
     };
 
-    return NextResponse.json({
-      success: true,
-      data: transformedData,
+    // Generate PDF using shared utility
+    const pdfBlob = await generatePDFBlob(pdfData);
+
+    // Convert to buffer
+    const buffer = Buffer.from(await pdfBlob.arrayBuffer());
+
+    // Return based on format
+    if (format === 'base64') {
+      return NextResponse.json({
+        success: true,
+        pdf: buffer.toString('base64'),
+        filename: `${(audit.business_name || 'Audit').replace(/\s+/g, '-')}-Constraint-Audit.pdf`,
+        content_type: 'application/pdf',
+      });
+    }
+
+    // Default: return as downloadable PDF
+    const filename = `${(audit.business_name || 'Audit').replace(/\s+/g, '-')}-Constraint-Audit.pdf`;
+
+    return new NextResponse(buffer, {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="${filename}"`,
+        'Content-Length': buffer.length.toString(),
+      },
     });
 
   } catch (error) {
-    console.error('Dashboard API error:', error);
+    console.error('PDF generation error:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch audit data' },
+      { error: 'Failed to generate PDF' },
       { status: 500 }
     );
   }
