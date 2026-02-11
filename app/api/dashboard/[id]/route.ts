@@ -1,6 +1,6 @@
 // app/api/dashboard/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
@@ -16,8 +16,8 @@ export async function GET(
       );
     }
 
-    // Fetch audit by dashboard_id
-    const { data: audit, error } = await supabase
+    // Fetch audit by dashboard_id (use admin client to bypass RLS)
+    const { data: audit, error } = await supabaseAdmin
       .from('audits')
       .select('*')
       .eq('dashboard_id', id)

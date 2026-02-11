@@ -1,7 +1,7 @@
 // app/api/pdf/[id]/route.ts
 // Server-side PDF generation for n8n email workflows
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase';
 import { generatePDFBlob } from '@/lib/generate-pdf';
 
 export async function GET(
@@ -20,8 +20,8 @@ export async function GET(
       );
     }
 
-    // Fetch audit by dashboard_id
-    const { data: audit, error } = await supabase
+    // Fetch audit by dashboard_id (use admin client to bypass RLS)
+    const { data: audit, error } = await supabaseAdmin
       .from('audits')
       .select('*')
       .eq('dashboard_id', id)
