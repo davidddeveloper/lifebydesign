@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { ScaleFormModal } from "@/components/scale-form-modal"
+import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
 import { CannotScaleReasonGraphic } from "./cannot-scale-reason"
 
 import type { WorkshopValueSection } from "@/sanity/lib/types"
@@ -15,12 +15,12 @@ export function WorkshopValue({ data }: WorkshopValueProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const introText = data?.introText || "It's not motivational hype, It's tactical Help, solving real world business problems."
-  const ctaText = data?.cta?.text || "I'M READY TO SCALE"
+  const ctaText = data?.cta?.text || "REGISTER NOW"
   const reasons = data?.animatedReasons // can be undefined, fallback in child
 
   return (
     <>
-      <section className="bg-gray-100 py-16 md:py-24"> {/**bg-[#1e293b] */}
+      <section className="bg-gray-100 py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <p className="text-xl md:text-2xl lg:text-3xl text-gray-900 leading-relaxed max-w-5xl mx-auto mb-12">
@@ -50,7 +50,12 @@ export function WorkshopValue({ data }: WorkshopValueProps) {
         </div>
       </section>
 
-      <ScaleFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <WorkshopRegistrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        workshopTitle="Business Constraint-Breaking Workshop"
+        workshopPrice={500}
+      />
     </>
   )
 }

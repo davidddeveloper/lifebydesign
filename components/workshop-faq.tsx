@@ -4,7 +4,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Plus, X } from "lucide-react"
-import { ScaleFormModal } from "@/components/scale-form-modal"
+import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
 
 {/*{
     question: "What actually happens during the 2 days?",
@@ -161,7 +161,12 @@ export function WorkshopFaq({ data, onOpenForm }: WorkshopFaqProps) {
         </div>
       </section>
 
-      <ScaleFormModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <WorkshopRegistrationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        workshopTitle="Business Constraint-Breaking Workshop"
+        workshopPrice={500}
+      />
     </>
   )
 }
