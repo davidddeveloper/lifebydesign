@@ -2,16 +2,18 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+
+const STORAGE_KEY = "sbs_audit_form_progress"
+const STORAGE_STEP_KEY = "sbs_audit_form_step"
 
 interface AuditFormProps {
   onSubmit: (data: any) => void
 }
 
-export default function AuditForm({ onSubmit }: AuditFormProps) {
-  const [currentStep, setCurrentStep] = useState(0)
-  const [formData, setFormData] = useState({
+// Initial form state - extracted for reuse
+const initialFormData = {
     // Basic Info
     businessName: "",
     ownerName: "",
@@ -80,7 +82,73 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
     topChallenge: "",
     oneThingToFix: "",
     twelveMonthGoal: "",
-  })
+}
+
+export default function AuditForm({ onSubmit }: AuditFormProps) {
+  const [currentStep, setCurrentStep] = useState(0)
+  const [formData, setFormData] = useState(initialFormData)
+  const [showClearConfirm, setShowClearConfirm] = useState(false)
+  const [hasRestoredData, setHasRestoredData] = useState(false)
+  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Load saved progress on mount
+  useEffect(() => {
+    try {
+      const savedData = localStorage.getItem(STORAGE_KEY)
+      const savedStep = localStorage.getItem(STORAGE_STEP_KEY)
+
+      if (savedData) {
+        const parsedData = JSON.parse(savedData)
+        setFormData(parsedData)
+        setHasRestoredData(true)
+      }
+
+      if (savedStep) {
+        const parsedStep = parseInt(savedStep, 10)
+        if (!isNaN(parsedStep) && parsedStep >= 0 && parsedStep < 7) {
+          setCurrentStep(parsedStep)
+        }
+      }
+    } catch (error) {
+      console.error("Error restoring form progress:", error)
+    }
+  }, [])
+
+  // Debounced save to localStorage
+  const saveProgress = useCallback((data: typeof formData, step: number) => {
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current)
+    }
+
+    saveTimeoutRef.current = setTimeout(() => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data))
+        localStorage.setItem(STORAGE_STEP_KEY, step.toString())
+      } catch (error) {
+        console.error("Error saving form progress:", error)
+      }
+    }, 500) // 500ms debounce
+  }, [])
+
+  // Clear saved progress
+  const clearProgress = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+      localStorage.removeItem(STORAGE_STEP_KEY)
+    } catch (error) {
+      console.error("Error clearing form progress:", error)
+    }
+  }, [])
+
+  // Handle clearing and starting over
+  const handleClearAndStartOver = () => {
+    clearProgress()
+    setFormData(initialFormData)
+    setCurrentStep(0)
+    setShowClearConfirm(false)
+    setHasRestoredData(false)
+    window.scrollTo(0, 0)
+  }
 
   const steps = [
     { title: "Basic Info", short: "Info", fields: "basic" },
@@ -103,25 +171,34 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   }
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+    setFormData((prev) => {
+      const newData = { ...prev, [field]: value }
+      saveProgress(newData, currentStep)
+      return newData
+    })
   }
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1)
+      const newStep = currentStep + 1
+      setCurrentStep(newStep)
+      saveProgress(formData, newStep)
       window.scrollTo(0, 0)
     }
   }
 
   const handlePrevious = () => {
     if (currentStep > 0) {
-      setCurrentStep(currentStep - 1)
+      const newStep = currentStep - 1
+      setCurrentStep(newStep)
+      saveProgress(formData, newStep)
       window.scrollTo(0, 0)
     }
   }
 
   const handleGoToStep = (index: number) => {
     setCurrentStep(index)
+    saveProgress(formData, index)
     window.scrollTo(0, 0)
   }
 
@@ -201,6 +278,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   }
 
   const handleSubmit = () => {
+    // Clear saved progress on successful submission
+    clearProgress()
     onSubmit(formData)
   }
 
@@ -209,7 +288,7 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 py-12 px-4">
       <div className="max-w-3xl mx-auto">
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-between items-center mb-4">
           <Link
             href="/"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#177fc9] hover:text-[#0f5b90] transition-colors"
@@ -217,7 +296,73 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             <span aria-hidden>←</span>
             Back home
           </Link>
+          {hasRestoredData && (
+            <button
+              type="button"
+              onClick={() => setShowClearConfirm(true)}
+              className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            >
+              Clear & Start Over
+            </button>
+          )}
         </div>
+
+        {/* Progress Restored Notification */}
+        <AnimatePresence>
+          {hasRestoredData && currentStep === 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800 flex items-center gap-2"
+            >
+              <span>✓</span>
+              <span>Your previous progress has been restored. Continue where you left off!</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Clear Confirmation Modal */}
+        <AnimatePresence>
+          {showClearConfirm && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+              onClick={() => setShowClearConfirm(false)}
+            >
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                className="bg-white rounded-xl p-6 max-w-sm w-full shadow-xl"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 className="text-lg font-bold text-gray-900 mb-2">Start Over?</h3>
+                <p className="text-gray-600 mb-4">
+                  This will clear all your progress and start the audit from the beginning.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowClearConfirm(false)}
+                    className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleClearAndStartOver}
+                    className="flex-1 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 transition-colors"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {/* Header */}
         <div className="text-center mb-8">
           <motion.h1
@@ -225,8 +370,8 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-black text-gray-900 mb-4"
           >
-            The Constraint-Busting <br />
-            <span className="text-[#177fc9]">Business Audit</span>
+            Business Constraint <br />
+            <span className="text-[#177fc9]">Audit</span>
           </motion.h1>
           <p className="text-xl text-gray-600 mb-2">
             Identify the ONE thing holding you back from a more substantial monthly revenue

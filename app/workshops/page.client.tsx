@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Header } from "@/components/Header"
 import { Footer } from "@/components/Footer"
-import { ScaleFormModal } from "@/components/scale-form-modal"
+import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
 import { WorkshopHero } from "@/components/workshop-hero"
 import { WorkshopBenefits } from "@/components/workshop-benefits"
 import { WorkshopValue } from "@/components/workshop-value"
@@ -43,7 +43,12 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
                 )}
             </main>
             <Footer />
-            <ScaleFormModal isOpen={formModalOpen} onClose={() => setFormModalOpen(false)} />
+            <WorkshopRegistrationModal
+                isOpen={formModalOpen}
+                onClose={() => setFormModalOpen(false)}
+                workshopTitle="Business Constraint-Breaking Workshop"
+                workshopPrice={500}
+            />
         </div>
     )
 }

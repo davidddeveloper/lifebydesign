@@ -13,7 +13,7 @@ export function WorkshopBenefits({ data }: WorkshopBenefitsProps) {
       image: "/images/joeabass-hands-on.jpg"
     },
     {
-      title: "#2: Learn Our 90-Day Constraint-Busting Method",
+      title: "#2: Learn Our 90-Day Constraint-Breaking Method",
       description: "We break down the exact 3-phase system (Diagnose, Design, Deploy) we use to eliminate constraints. You'll see 5 real case studies of businesses that used this method.",
       image: "/images/workshop.jpg"
     },
