@@ -107,6 +107,13 @@ export default function DashboardPage() {
         }
 
         setData(result.data)
+
+        // Track the visit (fire and forget - don't await)
+        fetch(`/api/dashboard/${dashboardId}/track-visit`, {
+          method: 'POST',
+        }).catch(() => {
+          // Silently fail - tracking is not critical
+        })
       } catch (err) {
         setError(err instanceof Error ? err.message : "Something went wrong")
       } finally {
