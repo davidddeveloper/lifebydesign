@@ -76,7 +76,6 @@ export async function POST(request: NextRequest) {
         twelve_month_goal: formData.twelveMonthGoal,
         
         // Metadata
-        dashboard_id: formData.dashboardId,
         ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
         referral_source: request.headers.get('referer'),
