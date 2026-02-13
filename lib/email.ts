@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = 'Startup Bodyshop <hello@startupbodyshop.com>';
+const FROM_EMAIL = 'Startup Bodyshop <hello@mail.startupbodyshop.com>';
 const SITE_URL = 'https://startupbodyshop.com';
 
 // ─── Types ────────────────────────────────────────────────────────
