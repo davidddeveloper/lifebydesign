@@ -33,7 +33,6 @@ interface FormData {
   targetCustomers: string
   yearsOfOperations: string
   businessGoal: string
-  dataConsentAccepted: boolean
   termsAccepted: boolean
   hearAboutUs: string
   otherSource: string
@@ -67,7 +66,6 @@ export function WorkshopRegistrationModal({
     targetCustomers: "",
     yearsOfOperations: "",
     businessGoal: "",
-    dataConsentAccepted: false,
     termsAccepted: false,
     hearAboutUs: "",
     otherSource: "",
@@ -116,7 +114,7 @@ export function WorkshopRegistrationModal({
 
       // Save to server if we have enough data (name + email or phone)
       const hasMinimumData = data.firstName && (data.personalEmail || data.businessEmail || data.phone)
-      if (hasMinimumData && data.dataConsentAccepted) {
+      if (hasMinimumData) {
         try {
           const response = await fetch("/api/workshop-registration", {
             method: "POST",
@@ -172,7 +170,6 @@ export function WorkshopRegistrationModal({
       }
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
-    if (!formData.dataConsentAccepted) newErrors.dataConsentAccepted = "Please accept to continue"
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -211,8 +208,7 @@ export function WorkshopRegistrationModal({
       if (
         updatedData.firstName &&
         (updatedData.personalEmail || updatedData.businessEmail) &&
-        updatedData.phone &&
-        updatedData.dataConsentAccepted
+        updatedData.phone
       ) {
         setTimeout(() => setCurrentStep(2), 300)
       }
@@ -299,7 +295,6 @@ export function WorkshopRegistrationModal({
       targetCustomers: "",
       yearsOfOperations: "",
       businessGoal: "",
-      dataConsentAccepted: false,
       termsAccepted: false,
       hearAboutUs: "",
       otherSource: "",
@@ -434,16 +429,14 @@ export function WorkshopRegistrationModal({
                           className={`w-8 h-8 rounded-full flex items-center justify-center ${
                             formData.firstName &&
                             (formData.personalEmail || formData.businessEmail) &&
-                            formData.phone &&
-                            formData.dataConsentAccepted
+                            formData.phone
                               ? "bg-green-500"
                               : "bg-[#177fc9]"
                           } text-white font-bold`}
                         >
                           {formData.firstName &&
                           (formData.personalEmail || formData.businessEmail) &&
-                          formData.phone &&
-                          formData.dataConsentAccepted ? (
+                          formData.phone ? (
                             <Check className="w-5 h-5" />
                           ) : (
                             "1"
@@ -452,22 +445,11 @@ export function WorkshopRegistrationModal({
                         <h3 className="text-xl font-bold text-gray-900">Personal Information</h3>
                       </div>
 
-                      {/* Data Consent Disclaimer - shown first */}
+                      {/* Data Collection Notice */}
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                        <div className="flex gap-3">
-                          <Checkbox
-                            id="dataConsent"
-                            checked={formData.dataConsentAccepted}
-                            onCheckedChange={(checked) => handleFieldChange("dataConsentAccepted", checked === true)}
-                            className="mt-0.5"
-                          />
-                          <Label htmlFor="dataConsent" className="font-normal cursor-pointer text-sm text-gray-700">
-                            <strong>Data Collection Notice:</strong> We save your responses as you fill out this form to help improve our services and follow up if needed. By checking this box, you consent to this data collection. <span className="text-[#177fc9]">*</span>
-                          </Label>
-                        </div>
-                        {errors.dataConsentAccepted && (
-                          <p className="text-red-500 text-sm mt-2">{errors.dataConsentAccepted}</p>
-                        )}
+                        <p className="text-sm text-gray-700">
+                          <strong>Data Collection Notice:</strong> We save your responses as you fill out this form to help improve our services and follow up if needed.
+                        </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
