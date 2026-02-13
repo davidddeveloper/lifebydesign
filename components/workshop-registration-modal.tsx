@@ -16,7 +16,7 @@ interface WorkshopRegistrationModalProps {
   isOpen: boolean
   onClose: () => void
   workshopTitle?: string
-  workshopPrice?: number // in SLE
+  workshopPrice?: number // in USD (display value, e.g. 100 = $100)
 }
 
 interface FormData {
@@ -44,7 +44,7 @@ export function WorkshopRegistrationModal({
   isOpen,
   onClose,
   workshopTitle = "Business Constraint-Breaking Workshop",
-  workshopPrice = 500 // Default price in SLE
+  workshopPrice = 100 // Default price in USD
 }: WorkshopRegistrationModalProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -248,11 +248,6 @@ export function WorkshopRegistrationModal({
         const result = await response.json()
         setRegistrationId(result.registrationId)
         setSubmitStatus("payment")
-
-        // TODO: Integrate Monime payment here
-        // For now, show payment pending state
-        // Once Monime is integrated:
-        // initiateMonimePayment(result.registrationId, workshopPrice)
       } else {
         setSubmitStatus("error")
       }
@@ -264,14 +259,40 @@ export function WorkshopRegistrationModal({
     }
   }
 
-  // Placeholder for Monime payment integration
   const handleMonimePayment = async () => {
-    // TODO: Implement Monime payment flow
-    // 1. Call Monime API to create payment session
-    // 2. Redirect to Monime payment page or show embedded form
-    // 3. Handle callback to update registration status
+    if (!registrationId) return
 
-    alert("Monime payment integration coming soon! For now, please contact us to complete registration.")
+    setIsSubmitting(true)
+    try {
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          registrationId,
+          workshopTitle,
+          workshopPrice: workshopPrice * 100, // convert dollars to cents (minor units)
+          currency: 'USD',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { checkoutUrl } = await response.json()
+
+      if (checkoutUrl) {
+        // Redirect to Monime hosted checkout
+        window.location.href = checkoutUrl
+      } else {
+        throw new Error('No checkout URL returned')
+      }
+    } catch (error) {
+      console.error('Payment initiation error:', error)
+      alert('Unable to start payment. Please try again or contact us for help.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleClose = () => {
@@ -365,22 +386,29 @@ export function WorkshopRegistrationModal({
                     </p>
 
                     <div className="bg-gray-50 rounded-xl p-6 mb-6 max-w-sm mx-auto">
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex justify-between items-center">
                         <span className="text-gray-600">Workshop Fee</span>
-                        <span className="font-bold text-gray-900">SLE {workshopPrice.toLocaleString()}</span>
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        (~${(workshopPrice / 23.5).toFixed(2)} USD)
+                        <span className="font-bold text-gray-900">${workshopPrice.toLocaleString()} USD</span>
                       </div>
                     </div>
 
                     <Button
                       onClick={handleMonimePayment}
                       size="lg"
-                      className="w-full max-w-sm bg-[#177fc9] hover:bg-[#0f5b90] text-white font-bold text-lg py-6 rounded-full"
+                      disabled={isSubmitting}
+                      className="w-full max-w-sm bg-[#177fc9] hover:bg-[#0f5b90] text-white font-bold text-lg py-6 rounded-full disabled:opacity-50"
                     >
-                      <CreditCard className="w-5 h-5 mr-2" />
-                      Pay with Monime
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Redirecting to payment...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-5 h-5 mr-2" />
+                          Pay with Monime
+                        </>
+                      )}
                     </Button>
 
                     <p className="text-sm text-gray-500 mt-4">
@@ -688,7 +716,7 @@ export function WorkshopRegistrationModal({
                             </div>
                             <div className="flex justify-between pt-2 border-t mt-2">
                               <span className="font-semibold text-gray-900">Total</span>
-                              <span className="font-bold text-[#177fc9]">SLE {workshopPrice.toLocaleString()}</span>
+                              <span className="font-bold text-[#177fc9]">${workshopPrice.toLocaleString()} USD</span>
                             </div>
                           </div>
                         </div>
@@ -723,7 +751,7 @@ export function WorkshopRegistrationModal({
                             ) : (
                               <>
                                 <CreditCard className="w-5 h-5 mr-2" />
-                                Proceed to Payment - SLE {workshopPrice.toLocaleString()}
+                                Proceed to Payment - ${workshopPrice.toLocaleString()} USD
                               </>
                             )}
                           </Button>
