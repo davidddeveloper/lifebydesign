@@ -35,24 +35,16 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ received: true });
       }
 
-      // Find the registration by reference or checkout_session_id
-      let query = supabaseAdmin.from('workshop_registrations');
+      // Update the registration by reference or checkout_session_id
+      const updateData = {
+        status: 'completed',
+        payment_completed_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
 
-      if (reference) {
-        query = query.update({
-          status: 'completed',
-          payment_completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }).eq('registration_id', reference);
-      } else if (checkoutSessionId) {
-        query = query.update({
-          status: 'completed',
-          payment_completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }).eq('checkout_session_id', checkoutSessionId);
-      }
-
-      const { error } = await query;
+      const { error } = reference
+        ? await supabaseAdmin.from('workshop_registrations').update(updateData).eq('registration_id', reference)
+        : await supabaseAdmin.from('workshop_registrations').update(updateData).eq('checkout_session_id', checkoutSessionId);
 
       if (error) {
         console.error('Failed to update registration after payment:', error);
