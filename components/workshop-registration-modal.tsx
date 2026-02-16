@@ -270,8 +270,8 @@ export function WorkshopRegistrationModal({
         body: JSON.stringify({
           registrationId,
           workshopTitle,
-          workshopPrice: workshopPrice * 100, // convert dollars to cents (minor units)
-          currency: 'USD',
+          workshopPrice: workshopPrice * 100, // convert to minor units (cents)
+          currency: 'SLE',
         }),
       })
 
