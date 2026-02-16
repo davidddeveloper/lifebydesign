@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
           {
             name: workshopTitle || 'Workshop Fee',
             quantity: 1,
-            amount: {
+            price: {
               currency: currency || 'USD',
               value: workshopPrice, // already in minor units (cents)
             },
