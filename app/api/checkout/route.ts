@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${MONIME_ACCESS_TOKEN}`,
         'Monime-Space-Id': MONIME_SPACE_ID,
+        'Idempotency-Key': crypto.randomUUID(),
       },
       body: JSON.stringify({
         name: workshopTitle || 'Workshop Registration',
