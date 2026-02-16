@@ -55,12 +55,13 @@ export async function POST(request: NextRequest) {
     }
 
     const session = await checkoutResponse.json();
+    const checkoutSession = session.result;
 
     // Store checkout session ID on the registration
     await supabaseAdmin
       .from('workshop_registrations')
       .update({
-        checkout_session_id: session.id,
+        checkout_session_id: checkoutSession.id,
         status: 'pending_payment',
         updated_at: new Date().toISOString(),
       })
@@ -68,8 +69,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      checkoutUrl: session.redirectUrl,
-      sessionId: session.id,
+      checkoutUrl: checkoutSession.redirectUrl,
+      sessionId: checkoutSession.id,
     });
   } catch (error) {
     console.error('Checkout creation error:', error);
