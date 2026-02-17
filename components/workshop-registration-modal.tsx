@@ -16,7 +16,7 @@ interface WorkshopRegistrationModalProps {
   isOpen: boolean
   onClose: () => void
   workshopTitle?: string
-  workshopPrice?: number // in SLE
+  workshopPrice?: number // in USD (display value, e.g. 100 = $100)
 }
 
 interface FormData {
@@ -33,7 +33,6 @@ interface FormData {
   targetCustomers: string
   yearsOfOperations: string
   businessGoal: string
-  dataConsentAccepted: boolean
   termsAccepted: boolean
   hearAboutUs: string
   otherSource: string
@@ -45,7 +44,7 @@ export function WorkshopRegistrationModal({
   isOpen,
   onClose,
   workshopTitle = "Business Constraint-Breaking Workshop",
-  workshopPrice = 500 // Default price in SLE
+  workshopPrice = 100 // Default price in USD
 }: WorkshopRegistrationModalProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -67,7 +66,6 @@ export function WorkshopRegistrationModal({
     targetCustomers: "",
     yearsOfOperations: "",
     businessGoal: "",
-    dataConsentAccepted: false,
     termsAccepted: false,
     hearAboutUs: "",
     otherSource: "",
@@ -116,7 +114,7 @@ export function WorkshopRegistrationModal({
 
       // Save to server if we have enough data (name + email or phone)
       const hasMinimumData = data.firstName && (data.personalEmail || data.businessEmail || data.phone)
-      if (hasMinimumData && data.dataConsentAccepted) {
+      if (hasMinimumData) {
         try {
           const response = await fetch("/api/workshop-registration", {
             method: "POST",
@@ -172,7 +170,6 @@ export function WorkshopRegistrationModal({
       }
     }
     if (!formData.phone.trim()) newErrors.phone = "Phone number is required"
-    if (!formData.dataConsentAccepted) newErrors.dataConsentAccepted = "Please accept to continue"
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -211,8 +208,7 @@ export function WorkshopRegistrationModal({
       if (
         updatedData.firstName &&
         (updatedData.personalEmail || updatedData.businessEmail) &&
-        updatedData.phone &&
-        updatedData.dataConsentAccepted
+        updatedData.phone
       ) {
         setTimeout(() => setCurrentStep(2), 300)
       }
@@ -252,11 +248,6 @@ export function WorkshopRegistrationModal({
         const result = await response.json()
         setRegistrationId(result.registrationId)
         setSubmitStatus("payment")
-
-        // TODO: Integrate Monime payment here
-        // For now, show payment pending state
-        // Once Monime is integrated:
-        // initiateMonimePayment(result.registrationId, workshopPrice)
       } else {
         setSubmitStatus("error")
       }
@@ -268,14 +259,43 @@ export function WorkshopRegistrationModal({
     }
   }
 
-  // Placeholder for Monime payment integration
   const handleMonimePayment = async () => {
-    // TODO: Implement Monime payment flow
-    // 1. Call Monime API to create payment session
-    // 2. Redirect to Monime payment page or show embedded form
-    // 3. Handle callback to update registration status
+    if (!registrationId) return
 
-    alert("Monime payment integration coming soon! For now, please contact us to complete registration.")
+    setIsSubmitting(true)
+    try {
+      const payload = {
+        registrationId,
+        workshopTitle,
+        workshopPrice: workshopPrice,
+        currency: 'USD',
+      }
+      console.log('Sending checkout payload:', payload)
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { checkoutUrl } = await response.json()
+
+      if (checkoutUrl) {
+        // Redirect to Monime hosted checkout
+        window.location.href = checkoutUrl
+      } else {
+        throw new Error('No checkout URL returned')
+      }
+    } catch (error) {
+      console.error('Payment initiation error:', error)
+      alert('Unable to start payment. Please try again or contact us for help.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const handleClose = () => {
@@ -299,7 +319,6 @@ export function WorkshopRegistrationModal({
       targetCustomers: "",
       yearsOfOperations: "",
       businessGoal: "",
-      dataConsentAccepted: false,
       termsAccepted: false,
       hearAboutUs: "",
       otherSource: "",
@@ -370,22 +389,29 @@ export function WorkshopRegistrationModal({
                     </p>
 
                     <div className="bg-gray-50 rounded-xl p-6 mb-6 max-w-sm mx-auto">
-                      <div className="flex justify-between items-center mb-2">
+                      <div className="flex justify-between items-center">
                         <span className="text-gray-600">Workshop Fee</span>
-                        <span className="font-bold text-gray-900">SLE {workshopPrice.toLocaleString()}</span>
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        (~${(workshopPrice / 23.5).toFixed(2)} USD)
+                        <span className="font-bold text-gray-900">${workshopPrice.toLocaleString()} USD</span>
                       </div>
                     </div>
 
                     <Button
                       onClick={handleMonimePayment}
                       size="lg"
-                      className="w-full max-w-sm bg-[#177fc9] hover:bg-[#0f5b90] text-white font-bold text-lg py-6 rounded-full"
+                      disabled={isSubmitting}
+                      className="w-full max-w-sm bg-[#177fc9] hover:bg-[#0f5b90] text-white font-bold text-lg py-6 rounded-full disabled:opacity-50"
                     >
-                      <CreditCard className="w-5 h-5 mr-2" />
-                      Pay with Monime
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                          Redirecting to payment...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-5 h-5 mr-2" />
+                          Pay with Monime
+                        </>
+                      )}
                     </Button>
 
                     <p className="text-sm text-gray-500 mt-4">
@@ -431,19 +457,16 @@ export function WorkshopRegistrationModal({
                     >
                       <div className="flex items-center gap-3 mb-4">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            formData.firstName &&
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.firstName &&
                             (formData.personalEmail || formData.businessEmail) &&
-                            formData.phone &&
-                            formData.dataConsentAccepted
-                              ? "bg-green-500"
-                              : "bg-[#177fc9]"
-                          } text-white font-bold`}
+                            formData.phone
+                            ? "bg-green-500"
+                            : "bg-[#177fc9]"
+                            } text-white font-bold`}
                         >
                           {formData.firstName &&
-                          (formData.personalEmail || formData.businessEmail) &&
-                          formData.phone &&
-                          formData.dataConsentAccepted ? (
+                            (formData.personalEmail || formData.businessEmail) &&
+                            formData.phone ? (
                             <Check className="w-5 h-5" />
                           ) : (
                             "1"
@@ -452,22 +475,11 @@ export function WorkshopRegistrationModal({
                         <h3 className="text-xl font-bold text-gray-900">Personal Information</h3>
                       </div>
 
-                      {/* Data Consent Disclaimer - shown first */}
+                      {/* Data Collection Notice */}
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                        <div className="flex gap-3">
-                          <Checkbox
-                            id="dataConsent"
-                            checked={formData.dataConsentAccepted}
-                            onCheckedChange={(checked) => handleFieldChange("dataConsentAccepted", checked === true)}
-                            className="mt-0.5"
-                          />
-                          <Label htmlFor="dataConsent" className="font-normal cursor-pointer text-sm text-gray-700">
-                            <strong>Data Collection Notice:</strong> We save your responses as you fill out this form to help improve our services and follow up if needed. By checking this box, you consent to this data collection. <span className="text-[#177fc9]">*</span>
-                          </Label>
-                        </div>
-                        {errors.dataConsentAccepted && (
-                          <p className="text-red-500 text-sm mt-2">{errors.dataConsentAccepted}</p>
-                        )}
+                        <p className="text-sm text-gray-700">
+                          <strong>Data Collection Notice:</strong> We save your responses as you fill out this form to help improve our services and follow up if needed.
+                        </p>
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -554,11 +566,10 @@ export function WorkshopRegistrationModal({
                       >
                         <div className="flex items-center gap-3 mb-4">
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              formData.businessName && formData.yearsOfOperations
-                                ? "bg-green-500"
-                                : "bg-[#177fc9]"
-                            } text-white font-bold`}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.businessName && formData.yearsOfOperations
+                              ? "bg-green-500"
+                              : "bg-[#177fc9]"
+                              } text-white font-bold`}
                           >
                             {formData.businessName && formData.yearsOfOperations ? (
                               <Check className="w-5 h-5" />
@@ -619,9 +630,8 @@ export function WorkshopRegistrationModal({
                             id="yearsOfOperations"
                             value={formData.yearsOfOperations}
                             onChange={(e) => handleFieldChange("yearsOfOperations", e.target.value)}
-                            className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${
-                              errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
-                            } focus:outline-none focus:border-[#177fc9]`}
+                            className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
+                              } focus:outline-none focus:border-[#177fc9]`}
                           >
                             <option value="">Select years in business...</option>
                             <option value="Pre-launch">Pre-launch (planning stage)</option>
@@ -706,7 +716,7 @@ export function WorkshopRegistrationModal({
                             </div>
                             <div className="flex justify-between pt-2 border-t mt-2">
                               <span className="font-semibold text-gray-900">Total</span>
-                              <span className="font-bold text-[#177fc9]">SLE {workshopPrice.toLocaleString()}</span>
+                              <span className="font-bold text-[#177fc9]">${workshopPrice.toLocaleString()} USD</span>
                             </div>
                           </div>
                         </div>
@@ -741,7 +751,7 @@ export function WorkshopRegistrationModal({
                             ) : (
                               <>
                                 <CreditCard className="w-5 h-5 mr-2" />
-                                Proceed to Payment - SLE {workshopPrice.toLocaleString()}
+                                Proceed to Payment - ${workshopPrice.toLocaleString()} USD
                               </>
                             )}
                           </Button>
