@@ -264,15 +264,18 @@ export function WorkshopRegistrationModal({
 
     setIsSubmitting(true)
     try {
+      const payload = {
+        registrationId,
+        workshopTitle,
+        workshopPrice: workshopPrice,
+        currency: 'USD',
+      }
+      console.log('Sending checkout payload:', payload)
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          registrationId,
-          workshopTitle,
-          workshopPrice: workshopPrice * 100, // convert to minor units (cents)
-          currency: 'SLE',
-        }),
+        body: JSON.stringify(payload),
       })
 
       if (!response.ok) {
@@ -454,17 +457,16 @@ export function WorkshopRegistrationModal({
                     >
                       <div className="flex items-center gap-3 mb-4">
                         <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                            formData.firstName &&
+                          className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.firstName &&
                             (formData.personalEmail || formData.businessEmail) &&
                             formData.phone
-                              ? "bg-green-500"
-                              : "bg-[#177fc9]"
-                          } text-white font-bold`}
+                            ? "bg-green-500"
+                            : "bg-[#177fc9]"
+                            } text-white font-bold`}
                         >
                           {formData.firstName &&
-                          (formData.personalEmail || formData.businessEmail) &&
-                          formData.phone ? (
+                            (formData.personalEmail || formData.businessEmail) &&
+                            formData.phone ? (
                             <Check className="w-5 h-5" />
                           ) : (
                             "1"
@@ -564,11 +566,10 @@ export function WorkshopRegistrationModal({
                       >
                         <div className="flex items-center gap-3 mb-4">
                           <div
-                            className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                              formData.businessName && formData.yearsOfOperations
-                                ? "bg-green-500"
-                                : "bg-[#177fc9]"
-                            } text-white font-bold`}
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${formData.businessName && formData.yearsOfOperations
+                              ? "bg-green-500"
+                              : "bg-[#177fc9]"
+                              } text-white font-bold`}
                           >
                             {formData.businessName && formData.yearsOfOperations ? (
                               <Check className="w-5 h-5" />
@@ -629,9 +630,8 @@ export function WorkshopRegistrationModal({
                             id="yearsOfOperations"
                             value={formData.yearsOfOperations}
                             onChange={(e) => handleFieldChange("yearsOfOperations", e.target.value)}
-                            className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${
-                              errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
-                            } focus:outline-none focus:border-[#177fc9]`}
+                            className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
+                              } focus:outline-none focus:border-[#177fc9]`}
                           >
                             <option value="">Select years in business...</option>
                             <option value="Pre-launch">Pre-launch (planning stage)</option>

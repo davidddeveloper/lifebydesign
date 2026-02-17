@@ -8,13 +8,53 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://startupbodyshop.co
 
 export async function POST(request: NextRequest) {
   try {
-    const { registrationId, workshopTitle, workshopPrice, currency } = await request.json();
+    const body = await request.json();
+    console.log('Checkout Request Body:', body);
+    const { registrationId, workshopTitle, workshopPrice, currency } = body;
+
+    if (!MONIME_ACCESS_TOKEN || !MONIME_SPACE_ID) {
+      console.error('Missing Monime environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
 
     if (!registrationId || !workshopPrice) {
       return NextResponse.json(
         { error: 'Missing required fields: registrationId, workshopPrice' },
         { status: 400 }
       );
+    }
+
+    // Currency Conversion Logic
+    // Default to SLE if not specified, but we expect input in USD or SLE
+    // If input currency is USD, convert to SLE
+    // Conversion rate: 1 USD = 23 SLE  (as per requirement: $100 -> ~2300 SLE)
+    // Monime expects amounts in minor units (cents)
+
+    let finalCurrency = 'SLE';
+    let finalAmountMinor = 0;
+
+    if (currency === 'USD') {
+      const rate = 23;
+      const amountSLE = workshopPrice * rate;
+      finalAmountMinor = Math.round(amountSLE * 100);
+    } else {
+      // Assume input is already in minor units of SLE or exact amount if SLE is explicitly passed differently
+      // But for this specific integration, we know frontend sends major units
+      // If frontend sends SLE major units:
+      if (currency === 'SLE') {
+        finalAmountMinor = Math.round(workshopPrice * 100);
+      } else {
+        // Fallback/Default behavior matches previous implementation
+        // Assuming previous implementation expected minor units directly if no currency handling logic existed
+        // However, previous code comments said "already in minor units".
+        // We will standardise on frontend sending major units USD.
+        const rate = 23;
+        const amountSLE = workshopPrice * rate;
+        finalAmountMinor = Math.round(amountSLE * 100); // Treating unspecified currency as USD 100 -> 2300 SLE
+      }
     }
 
     // Create Monime checkout session
@@ -35,8 +75,8 @@ export async function POST(request: NextRequest) {
             name: workshopTitle || 'Workshop Fee',
             quantity: 1,
             price: {
-              currency: currency || 'SLE',
-              value: workshopPrice, // already in minor units (cents)
+              currency: finalCurrency,
+              value: finalAmountMinor,
             },
           },
         ],
