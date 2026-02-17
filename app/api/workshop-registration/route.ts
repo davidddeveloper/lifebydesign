@@ -33,13 +33,19 @@ export async function POST(request: NextRequest) {
       otherSource,
       workshopTitle,
       workshopPrice,
-      status = 'in_progress',
+      // Security: Sanitize status to prevent spoofing 'completed' or 'paid'
+      status: rawStatus = 'in_progress',
       currentStep = 1,
       submittedAt,
     } = data;
 
+    // Only allow specific statuses from client-side
+    const ALLOWED_CLIENT_STATUSES = ['in_progress', 'pending_payment'];
+    const status = ALLOWED_CLIENT_STATUSES.includes(rawStatus) ? rawStatus : 'in_progress';
+
     // Prepare the record
     const record = {
+      // ... (rest is same, but I need to map the lines correctly)
       first_name: firstName,
       last_name: lastName,
       full_name: fullName || `${firstName} ${lastName}`.trim(),
@@ -103,6 +109,28 @@ export async function POST(request: NextRequest) {
       }
 
       result = created;
+    }
+
+
+
+    // Send payment reminder email if status is pending_payment
+    // and we haven't already sent it (optimally we'd check, but for now just send)
+    // We import dynamically to avoid circular deps if any (though lib/email is leaf)
+    if (result.status === 'pending_payment') {
+      try {
+        const { sendEmail } = await import('@/lib/email');
+        const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.startupbodyshop.com';
+        const resumeLink = `${SITE_URL}/workshops?resume_registration=${result.registration_id}`;
+
+        await sendEmail('payment_reminder', {
+          email: result.personal_email || result.business_email,
+          name: result.first_name || 'Valued Customer',
+          businessName: result.business_name,
+        }, { body: resumeLink }); // Passing link as body for this template
+      } catch (emailError) {
+        console.error('Failed to send payment reminder email:', emailError);
+        // Don't fail the request, just log
+      }
     }
 
     return NextResponse.json({

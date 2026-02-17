@@ -17,6 +17,7 @@ import {
   AlertCircle,
   RefreshCw,
 } from "lucide-react"
+import { EmailEditor } from "@/components/admin/email-editor"
 
 // ─── Types ───────────────────────────────────────────────────────
 interface Contact {
@@ -144,6 +145,7 @@ export default function EmailManagementPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null)
   const [customSubject, setCustomSubject] = useState("")
   const [customBody, setCustomBody] = useState("")
+  const [attachments, setAttachments] = useState<{ name: string; content: string; type: string; size: number }[]>([])
   const [sending, setSending] = useState(false)
 
   // Fetch contacts
@@ -253,6 +255,7 @@ export default function EmailManagementPage() {
           templateId: selectedTemplate.id,
           customSubject: selectedTemplate.id === "custom" ? customSubject : undefined,
           customBody: selectedTemplate.id === "custom" ? customBody : undefined,
+          attachments: selectedTemplate.id === "custom" ? attachments.map(a => ({ filename: a.name, content: a.content })) : undefined
         }),
       })
 
@@ -536,11 +539,10 @@ export default function EmailManagementPage() {
                     <button
                       key={template.id}
                       onClick={() => setSelectedTemplate(template)}
-                      className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-colors ${
-                        selectedTemplate?.id === template.id
-                          ? "border-[#177fc9] bg-[#177fc9]/5"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                      className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-colors ${selectedTemplate?.id === template.id
+                        ? "border-[#177fc9] bg-[#177fc9]/5"
+                        : "border-gray-200 hover:border-gray-300"
+                        }`}
                     >
                       <div className="font-medium text-gray-900">{template.name}</div>
                       <div className="text-sm text-gray-500">{template.description}</div>
@@ -567,12 +569,10 @@ export default function EmailManagementPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Message
                     </label>
-                    <textarea
-                      value={customBody}
-                      onChange={(e) => setCustomBody(e.target.value)}
-                      placeholder="Email body... Use {{name}}, {{businessName}}, {{email}} for personalization"
-                      rows={6}
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#177fc9]"
+                    <EmailEditor
+                      initialContent={customBody}
+                      onChange={setCustomBody}
+                      onAttachmentsChange={setAttachments}
                     />
                   </div>
                 </>

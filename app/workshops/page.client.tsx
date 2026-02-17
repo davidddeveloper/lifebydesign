@@ -21,14 +21,23 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
     const [paymentStatus, setPaymentStatus] = useState<"success" | "cancelled" | null>(null)
     const searchParams = useSearchParams()
 
+    const [resumeId, setResumeId] = useState<string | null>(null)
+
     useEffect(() => {
         const payment = searchParams.get("payment")
+        const resume = searchParams.get("resume_registration")
+
         if (payment === "success") {
             setPaymentStatus("success")
             // Clear saved registration progress
-            try { localStorage.removeItem("sbs_workshop_registration_progress") } catch {}
+            try { localStorage.removeItem("sbs_workshop_registration_progress") } catch { }
         } else if (payment === "cancelled") {
             setPaymentStatus("cancelled")
+        }
+
+        if (resume) {
+            setResumeId(resume)
+            setFormModalOpen(true)
         }
     }, [searchParams])
 
@@ -80,6 +89,7 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
                 onClose={() => setFormModalOpen(false)}
                 workshopTitle="Business Constraint-Breaking Workshop"
                 workshopPrice={100}
+                resumeId={resumeId}
             />
         </div>
     )

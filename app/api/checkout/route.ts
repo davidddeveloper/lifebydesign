@@ -4,7 +4,7 @@ import { supabaseAdmin } from '@/lib/supabase';
 const MONIME_API_URL = 'https://api.monime.io';
 const MONIME_ACCESS_TOKEN = process.env.MONIME_ACCESS_TOKEN!;
 const MONIME_SPACE_ID = process.env.MONIME_SPACE_ID!;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://startupbodyshop.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.startupbodyshop.com';
 
 export async function POST(request: NextRequest) {
   try {
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
             },
           },
         ],
-        successUrl: `${SITE_URL}/workshops?payment=success&registration=${registrationId}`,
-        cancelUrl: `${SITE_URL}/workshops?payment=cancelled&registration=${registrationId}`,
+        successUrl: `${SITE_URL}/api/payment/return?status=success&registration=${registrationId}`,
+        cancelUrl: `${SITE_URL}/api/payment/return?status=cancelled&registration=${registrationId}`,
       }),
     });
 

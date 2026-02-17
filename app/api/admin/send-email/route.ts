@@ -4,17 +4,23 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { sendEmail, type TemplateId, type EmailRecipient } from '@/lib/email';
 
+interface Attachment {
+  filename: string;
+  content: string; // Base64 content
+}
+
 interface SendEmailRequest {
   contactIds: string[];
   templateId: TemplateId;
   customSubject?: string;
   customBody?: string;
+  attachments?: Attachment[];
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body: SendEmailRequest = await request.json();
-    const { contactIds, templateId, customSubject, customBody } = body;
+    const { contactIds, templateId, customSubject, customBody, attachments } = body;
 
     if (!contactIds || contactIds.length === 0) {
       return NextResponse.json(
@@ -73,6 +79,7 @@ export async function POST(request: NextRequest) {
             name: data.full_name || `${data.first_name || ''} ${data.last_name || ''}`.trim(),
             email: data.personal_email || data.business_email,
             businessName: data.business_name,
+            registrationId: data.registration_id,
           };
         }
 
@@ -83,10 +90,21 @@ export async function POST(request: NextRequest) {
         }
 
         // Send via Resend
+        // Process attachments: Convert Base64 string to Buffer
+        const processedAttachments = attachments?.map(att => {
+          // Remove data:image/png;base64, prefix if present
+          const base64Content = att.content.split(',')[1] || att.content;
+          return {
+            filename: att.filename,
+            content: Buffer.from(base64Content, 'base64'),
+          };
+        });
+
         const result = await sendEmail(
           templateId,
           recipient,
-          templateId === 'custom' ? { subject: customSubject, body: customBody } : undefined
+          templateId === 'custom' ? { subject: customSubject, body: customBody } : undefined,
+          processedAttachments
         );
 
         if (!result.success) {
