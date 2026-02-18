@@ -17,6 +17,7 @@ interface WorkshopRegistrationModalProps {
   onClose: () => void
   workshopTitle?: string
   workshopPrice?: number // in USD (display value, e.g. 100 = $100)
+  resumeId?: string | null
 }
 
 interface FormData {
@@ -44,7 +45,8 @@ export function WorkshopRegistrationModal({
   isOpen,
   onClose,
   workshopTitle = "Business Constraint-Breaking Workshop",
-  workshopPrice = 100 // Default price in USD
+  workshopPrice = 100, // Default price in USD
+  resumeId
 }: WorkshopRegistrationModalProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -73,26 +75,71 @@ export function WorkshopRegistrationModal({
 
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({})
 
-  // Load saved progress on mount
+  // Load saved progress on mount or when resumeId changes
   useEffect(() => {
     if (isOpen) {
-      try {
-        const savedData = localStorage.getItem(STORAGE_KEY)
-        if (savedData) {
-          const parsed = JSON.parse(savedData)
-          setFormData(prev => ({ ...prev, ...parsed.formData }))
-          if (parsed.registrationId) {
-            setRegistrationId(parsed.registrationId)
-          }
-          if (parsed.currentStep) {
-            setCurrentStep(parsed.currentStep)
+      const loadResumeData = async () => {
+        if (resumeId) {
+          try {
+            const response = await fetch(`/api/workshop-registration?id=${resumeId}`)
+            if (response.ok) {
+              const data = await response.json()
+              if (data.success && data.registration) {
+                const reg = data.registration
+                setFormData(prev => ({
+                  ...prev,
+                  firstName: reg.first_name || "",
+                  lastName: reg.last_name || "",
+                  personalEmail: reg.personal_email || "",
+                  businessEmail: reg.business_email || "",
+                  phone: reg.phone || "",
+                  countryCode: reg.country_code || "+232",
+                  businessName: reg.business_name || "",
+                  websiteLink: reg.website_link || "",
+                  businessSnapshot: reg.business_snapshot || "",
+                  whatYouSell: reg.what_you_sell || "",
+                  targetCustomers: reg.target_customers || "",
+                  yearsOfOperations: reg.years_of_operations || "",
+                  businessGoal: reg.business_goal || "",
+                  hearAboutUs: reg.hear_about_us || "",
+                  otherSource: reg.other_source || "",
+                  // If retrieving from DB, assume terms were accepted previously or force re-accept? 
+                  // Let's assume re-accept for safety or just true if status is pending_payment
+                  termsAccepted: true,
+                }))
+                setRegistrationId(reg.registration_id)
+                // If they are resuming, likely they want to pay.
+                if (reg.status === 'pending_payment' || reg.status === 'in_progress') {
+                  setCurrentStep(3)
+                }
+                return // Successfully loaded from server, skip local storage
+              }
+            }
+          } catch (error) {
+            console.error("Error fetching registration:", error)
           }
         }
-      } catch (error) {
-        console.error("Error restoring workshop registration progress:", error)
+
+        // Fallback to local storage if no resumeId or fetch failed
+        try {
+          const savedData = localStorage.getItem(STORAGE_KEY)
+          if (savedData) {
+            const parsed = JSON.parse(savedData)
+            setFormData(prev => ({ ...prev, ...parsed.formData }))
+            if (parsed.registrationId) {
+              setRegistrationId(parsed.registrationId)
+            }
+            if (parsed.currentStep) {
+              setCurrentStep(parsed.currentStep)
+            }
+          }
+        } catch (error) {
+          console.error("Error restoring workshop registration progress:", error)
+        }
       }
+      loadResumeData()
     }
-  }, [isOpen])
+  }, [isOpen, resumeId])
 
   // Debounced save to localStorage and server
   const saveProgress = useCallback(async (data: FormData, step: number, regId: string | null) => {

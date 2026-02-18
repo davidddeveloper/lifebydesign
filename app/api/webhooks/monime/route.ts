@@ -36,18 +36,40 @@ export async function POST(request: NextRequest) {
       }
 
       // Update the registration by reference or checkout_session_id
+      const { data: registration, error: fetchError } = reference
+        ? await supabaseAdmin.from('workshop_registrations').select('*').eq('registration_id', reference).single()
+        : await supabaseAdmin.from('workshop_registrations').select('*').eq('checkout_session_id', checkoutSessionId).single();
+
+      if (fetchError || !registration) {
+        console.error('Failed to fetch registration for webhook:', fetchError);
+        return NextResponse.json({ received: true });
+      }
+
       const updateData = {
         status: 'completed',
         payment_completed_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
 
-      const { error } = reference
-        ? await supabaseAdmin.from('workshop_registrations').update(updateData).eq('registration_id', reference)
-        : await supabaseAdmin.from('workshop_registrations').update(updateData).eq('checkout_session_id', checkoutSessionId);
+      const { error: updateError } = await supabaseAdmin
+        .from('workshop_registrations')
+        .update(updateData)
+        .eq('registration_id', registration.registration_id);
 
-      if (error) {
-        console.error('Failed to update registration after payment:', error);
+      if (updateError) {
+        console.error('Failed to update registration after payment:', updateError);
+      } else {
+        // Send confirmation email
+        const { sendEmail } = await import('@/lib/email');
+        const emailResult = await sendEmail('workshop_confirmation', {
+          email: registration.email || registration.personal_email || registration.business_email,
+          name: registration.first_name || registration.full_name || 'Valued Customer',
+          businessName: registration.business_name,
+        });
+
+        if (!emailResult.success) {
+          console.error('Failed to send confirmation email:', emailResult.error);
+        }
       }
     }
 

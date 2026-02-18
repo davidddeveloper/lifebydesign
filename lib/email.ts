@@ -17,6 +17,7 @@ export interface EmailRecipient {
   dashboardId?: string;
   primaryConstraint?: string;
   primaryScore?: number;
+  registrationId?: string;
 }
 
 export type TemplateId =
@@ -25,6 +26,7 @@ export type TemplateId =
   | 'dormant_reactivation'
   | 'workshop_reminder'
   | 'payment_reminder'
+  | 'workshop_confirmation'
   | 'custom';
 
 interface SendResult {
@@ -218,6 +220,8 @@ function getTemplate(
 
     // ── Payment reminder ───────────────────────────────────
     case 'payment_reminder':
+      const regId = recipient.registrationId || customData?.body; // flexible fallback
+      const resumeLink = regId ? `${SITE_URL}/workshops?resume_registration=${regId}` : `${SITE_URL}/workshops`;
       return {
         subject: `Complete your workshop registration`,
         html: wrapInLayout(`
@@ -226,13 +230,32 @@ function getTemplate(
             We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet.
           </p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            Your spot is reserved, but we can only hold it for a limited time.
+            Your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
           </p>
-          ${ctaButton('Complete Registration', `${SITE_URL}/workshops`)}
+          ${ctaButton('Resume Payment', resumeLink)}
           <p style="margin:0;font-size:14px;color:#6b7280;">
             Need help? Reply to this email or
             <a href="https://wa.me/23230600600" style="color:#177fc9;text-decoration:none;">WhatsApp us</a>.
           </p>
+        `),
+      };
+
+    // ── Workshop Confirmation ──────────────────────────────
+    case 'workshop_confirmation':
+      return {
+        subject: `StartUp Bodyshop Workshop Confirmed!`,
+        html: wrapInLayout(`
+          <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            We have confirmed your payment for the <strong>Business Constraint-Breaking Workshop</strong>.
+          </p>
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            We look forward to seeing you there! We will send you more details about the venue and schedule closer to the date.
+          </p>
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            If you have any questions in the meantime, feel free to reply to this email.
+          </p>
+          ${ctaButton('View Workshop Details', `${SITE_URL}/workshops`)}
         `),
       };
 
@@ -244,12 +267,12 @@ function getTemplate(
           <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
           <div style="font-size:15px;color:#374151;line-height:1.6;white-space:pre-line;">
             ${(customData?.body || '')
-              .replace(/{{name}}/g, name)
-              .replace(/{{businessName}}/g, biz)
-              .replace(/{{dashboardId}}/g, recipient.dashboardId || '')
-              .replace(/{{primaryConstraint}}/g, constraint)
-              .replace(/{{primaryScore}}/g, String(recipient.primaryScore || ''))
-              .replace(/\n/g, '<br>')}
+            .replace(/{{name}}/g, name)
+            .replace(/{{businessName}}/g, biz)
+            .replace(/{{dashboardId}}/g, recipient.dashboardId || '')
+            .replace(/{{primaryConstraint}}/g, constraint)
+            .replace(/{{primaryScore}}/g, String(recipient.primaryScore || ''))
+            .replace(/\n/g, '<br>')}
           </div>
         `),
       };
@@ -261,7 +284,8 @@ function getTemplate(
 export async function sendEmail(
   templateId: TemplateId,
   recipient: EmailRecipient,
-  customData?: { subject?: string; body?: string }
+  customData?: { subject?: string; body?: string },
+  attachments?: { filename: string; content: string | Buffer }[]
 ): Promise<SendResult> {
   try {
     const { subject, html } = getTemplate(templateId, recipient, customData);
@@ -271,6 +295,7 @@ export async function sendEmail(
       to: recipient.email,
       subject,
       html,
+      attachments,
     });
 
     if (error) {
