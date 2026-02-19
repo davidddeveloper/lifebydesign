@@ -151,13 +151,13 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
   }
 
   const steps = [
-    { title: "Basic Info", short: "Info", fields: "basic" },
-    { title: "Your Market (WHO)", short: "Market", fields: "who" },
-    { title: "Your Offer (WHAT)", short: "Offer", fields: "what" },
-    { title: "Your Traffic (LEADS)", short: "Traffic", fields: "traffic" },
-    { title: "Your Sales (CONVERSION)", short: "Sales", fields: "sell" },
-    { title: "Your Operations (DELIVERY)", short: "Ops", fields: "deliver" },
-    { title: "Final Questions", short: "Final", fields: "final" },
+    { title: "Basic Info", short: "Info", fields: "basic", intro: "" },
+    { title: "Your Market", short: "Market", fields: "who", intro: "Let's look at who you're selling to and whether you're reaching the right people." },
+    { title: "Your Offer", short: "Offer", fields: "what", intro: "Now let's look at what you're selling and whether it's priced and packaged to grow." },
+    { title: "Your Traffic", short: "Traffic", fields: "traffic", intro: "This is about how consistently people find out you exist." },
+    { title: "Your Sales", short: "Sales", fields: "sell", intro: "Let's look at what happens between someone showing interest and actually paying you." },
+    { title: "Your Operations", short: "Ops", fields: "deliver", intro: "This is about whether your business can grow without burning you out." },
+    { title: "Almost Done", short: "Final", fields: "final", intro: "Three final questions to make your diagnosis as accurate as possible." },
   ]
 
   const stepDescriptions: Record<string, string> = {
@@ -364,7 +364,7 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
           )}
         </AnimatePresence>
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <motion.h1
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -374,10 +374,23 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             <span className="text-[#177fc9]">Audit</span>
           </motion.h1>
           <p className="text-xl text-gray-600 mb-2">
-            Identify the ONE thing holding you back from a more substantial monthly revenue
+            Find the #1 bottleneck keeping your revenue stuck — and exactly what to fix first
           </p>
-          <p className="text-gray-500">⏱️ Takes 15 minutes • 🎯 Get instant results</p>
+          <p className="text-gray-500">Takes 15 minutes · Get your diagnosis instantly</p>
         </div>
+
+        {/* Context Block */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="bg-blue-50 border border-blue-100 rounded-xl px-6 py-5 mb-8 text-center"
+        >
+          <p className="text-gray-700 text-sm leading-relaxed mb-2">
+            Your business doesn't have 10 problems. It has <strong>ONE constraint</strong> that's blocking everything else. This audit scores your business across 5 growth levers, pinpoints your weakest link, and tells you exactly where to focus your next 90 days.
+          </p>
+          <p className="text-xs text-[#177fc9] font-semibold">Used by 3,000+ businesses across Sierra Leone.</p>
+        </motion.div>
 
         {/* Progress Bar */}
         <div className="mb-8">
@@ -426,10 +439,14 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
           exit={{ opacity: 0, x: -20 }}
           className="bg-white rounded-2xl shadow-2xl p-8 md:p-12 border border-gray-100"
         >
-          <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center">
+          <h2 className="text-3xl font-bold text-gray-900 mb-2 flex items-center">
             <span className="mr-3">{getStepIcon(currentStep)}</span>
             {steps[currentStep].title}
           </h2>
+          {steps[currentStep].intro && (
+            <p className="text-gray-500 text-base mb-6">{steps[currentStep].intro}</p>
+          )}
+          {!steps[currentStep].intro && <div className="mb-6" />}
 
           <AnimatePresence mode="wait">
             {currentStep === 0 && <BasicInfoStep formData={formData} onChange={handleInputChange} />}

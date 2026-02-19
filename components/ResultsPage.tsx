@@ -2,7 +2,7 @@
 // @ts-nocheck
 "use client"
 
-import { useEffect, useState, useRef, useCallback } from "react"
+import { useEffect, useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Radar } from "react-chartjs-2"
 import { Download, ChevronLeft, ChevronRight } from "lucide-react"
@@ -59,6 +59,47 @@ interface ResultsPageProps {
     dashboard_id: string
     created_at: string
   }
+}
+
+// TODO: Replace with your actual Calendly URL
+const CALENDLY_URL = "https://calendly.com/startupbodyshop"
+
+const constraintCopy: Record<string, { headline: string; explanation: string; whatFixingLooksLike: string }> = {
+  "WHO (Market)": {
+    headline: "WHO You're Selling To",
+    explanation:
+      "You're working hard, but you're selling to too broad an audience — or the wrong one. When your ideal customer isn't clearly defined, your marketing, pricing, and sales all suffer. Narrowing your focus is the fastest lever to pull.",
+    whatFixingLooksLike:
+      "Businesses that sharpen their market focus typically see conversion rates jump from under 10% to over 30% — same effort, 3x the customers.",
+  },
+  "WHAT (Offer)": {
+    headline: "WHAT You're Selling",
+    explanation:
+      "Your offer isn't doing the heavy lifting it should. Whether it's pricing, packaging, or proof — something about your offer is leaving money on the table. Customers aren't seeing enough reason to pay what you're worth.",
+    whatFixingLooksLike:
+      "When businesses restructure their offer with better packaging, guarantees, and proof, price increases of 50–100% become possible without losing customers.",
+  },
+  "HOW THEY FIND YOU (Traffic)": {
+    headline: "HOW THEY FIND YOU",
+    explanation:
+      "You have a good product and you can close when you get the chance — but not enough people know you exist. Your lead flow is unpredictable, which makes your revenue unpredictable. You need a system, not luck.",
+    whatFixingLooksLike:
+      "Businesses that build a repeatable lead system go from 5–10 random leads per month to 30–50+ predictable ones — without spending more.",
+  },
+  "HOW YOU SELL (Conversion)": {
+    headline: "HOW YOU SELL",
+    explanation:
+      "People are finding you, but too many are walking away without buying. The gap between interest and payment is where your revenue is leaking. A stronger sales process fixes this without needing a single extra lead.",
+    whatFixingLooksLike:
+      "Businesses that implement a structured sales process typically double their close rate — going from 10–15% to 35–40% on the same leads.",
+  },
+  "HOW YOU DELIVER (Operations)": {
+    headline: "HOW YOU DELIVER",
+    explanation:
+      "Your business is too dependent on you. Without systems, you can't scale — and you're probably working harder than you should for the margins you're getting. Growth right now would just mean more stress, not more profit.",
+    whatFixingLooksLike:
+      "Businesses that systemize their operations see profit margins improve by 10–20 percentage points and can scale without the founder working 60-hour weeks.",
+  },
 }
 
 // ─── Currency Toggle ─────────────────────────────────────────
@@ -379,32 +420,22 @@ function PDFPreview({ data, onDownload, isGenerating }: {
   )
 }
 
-// ─── Personalized Solution CTA ───────────────────────────────
-function PersonalizedSolutionCTA() {
-  const [clicked, setClicked] = useState(false)
-
-  const handleClick = useCallback(() => {
-    setClicked(true)
-    setTimeout(() => setClicked(false), 2000)
-  }, [])
-
+// ─── Book Call CTA ───────────────────────────────────────────
+function BookCallCTA() {
   return (
-    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
-      <h3 className="text-lg font-bold text-gray-900 mb-2">Want a Personalized Solution?</h3>
-      <p className="text-sm text-gray-600 mb-4">
-        Get expert help to break through your constraint. Our team will reach out with a tailored plan.
+    <div className="bg-gradient-to-br from-[#177fc9] to-[#0f5b90] rounded-xl p-6 text-white">
+      <h3 className="text-lg font-bold mb-3">What to do next</h3>
+      <p className="text-sm text-blue-100 leading-relaxed mb-5">
+        We've helped businesses like yours fix this exact constraint and see 30–100% revenue growth in 90 days. The next step is a free 30-minute diagnostic call where we walk through your results and map out your 90-day fix.
       </p>
-      <button
-        onClick={handleClick}
-        disabled={clicked}
-        className={`w-full py-3 rounded-lg font-semibold text-sm transition-all ${
-          clicked
-            ? "bg-green-100 text-green-700"
-            : "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700"
-        }`}
+      <a
+        href={CALENDLY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full py-3 bg-white text-[#177fc9] font-bold rounded-lg text-center hover:bg-blue-50 transition-colors"
       >
-        {clicked ? "Request Sent!" : "Get a Personalized Solution"}
-      </button>
+        Book Your Free Diagnostic Call
+      </a>
     </div>
   )
 }
@@ -588,12 +619,33 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               className="bg-white rounded-xl border border-gray-200 p-6"
             >
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Your #1 Constraint</p>
-              <h2 className="text-3xl font-bold text-[#177fc9] mb-3">{data.final_constraint}</h2>
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-sm text-gray-500">Constraint Score</span>
-                <span className="text-xl font-bold text-gray-900">{data.primary_score}/10</span>
-              </div>
-              <p className="text-sm text-gray-600 leading-relaxed">{data.reasoning}</p>
+              <h2 className="text-3xl font-bold text-[#177fc9] mb-2">
+                {constraintCopy[data.final_constraint]?.headline || data.final_constraint}
+              </h2>
+              <p className="text-base text-gray-700 font-medium mb-4">
+                This is the bottleneck limiting your growth. Fix this first, and the rest gets easier.
+              </p>
+              <p className="text-sm text-gray-600 mb-4">
+                Based on your answers, your business scored lowest on{" "}
+                <strong>{constraintCopy[data.final_constraint]?.headline || data.final_constraint}</strong> — scoring{" "}
+                <strong>{data.primary_score} out of 10</strong>.
+              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-4">{data.reasoning}</p>
+              {constraintCopy[data.final_constraint] && (
+                <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 space-y-3">
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {constraintCopy[data.final_constraint].explanation}
+                  </p>
+                  <div className="pt-3 border-t border-blue-100">
+                    <p className="text-xs font-semibold text-[#177fc9] uppercase tracking-wider mb-1">
+                      What fixing it looks like
+                    </p>
+                    <p className="text-sm text-gray-700 leading-relaxed">
+                      {constraintCopy[data.final_constraint].whatFixingLooksLike}
+                    </p>
+                  </div>
+                </div>
+              )}
             </motion.div>
 
             {/* Scorecard */}
@@ -742,7 +794,7 @@ export default function ResultsPage({ data }: ResultsPageProps) {
               animate={revealed ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
-              <PersonalizedSolutionCTA />
+              <BookCallCTA />
             </motion.div>
             {/* Footer inside scroll area */}
             <div className="pt-6 border-t border-gray-200 mt-2">
