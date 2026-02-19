@@ -73,6 +73,36 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    else if (eventType === 'payment.failed' || eventType === 'checkout_session.expired') {
+      const reference = event.data?.reference || event.data?.metadata?.registrationId;
+      const checkoutSessionId = event.data?.id || event.data?.checkoutSessionId;
+
+      if (reference || checkoutSessionId) {
+        const { data: registration } = reference
+          ? await supabaseAdmin.from('workshop_registrations').select('*').eq('registration_id', reference).single()
+          : await supabaseAdmin.from('workshop_registrations').select('*').eq('checkout_session_id', checkoutSessionId).single();
+
+        if (registration) {
+          await supabaseAdmin
+            .from('workshop_registrations')
+            .update({
+              status: 'failed',
+              updated_at: new Date().toISOString(),
+            })
+            .eq('registration_id', registration.registration_id);
+
+          const { sendEmail } = await import('@/lib/email');
+          await sendEmail('payment_failed', {
+            email: registration.email || registration.personal_email || registration.business_email,
+            name: registration.first_name || registration.full_name || 'Valued Customer',
+            paymentLink: registration.checkout_url,
+          });
+        }
+      }
+    }
+
+
+
     return NextResponse.json({ received: true });
   } catch (error) {
     console.error('Webhook processing error:', error);
