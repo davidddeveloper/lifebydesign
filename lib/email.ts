@@ -18,6 +18,7 @@ export interface EmailRecipient {
   primaryConstraint?: string;
   primaryScore?: number;
   registrationId?: string;
+  paymentLink?: string;
 }
 
 export type TemplateId =
@@ -27,6 +28,7 @@ export type TemplateId =
   | 'workshop_reminder'
   | 'payment_reminder'
   | 'workshop_confirmation'
+  | 'payment_failed'
   | 'custom';
 
 interface SendResult {
@@ -259,6 +261,27 @@ function getTemplate(
         `),
       };
 
+    // ── Payment Failed ─────────────────────────────────────
+    case 'payment_failed':
+      const regIdForPaymentFailed = recipient.registrationId || customData?.body;
+      const resumeLinkForPaymentFailed = recipient.paymentLink || (regIdForPaymentFailed ? `${SITE_URL}/workshops?resume_registration=${regIdForPaymentFailed}` : `${SITE_URL}/workshops`);
+      return {
+        subject: `Payment Failed for Workshop`,
+        html: wrapInLayout(`
+          <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet.
+          </p>
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            Your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
+          </p>
+          ${ctaButton('Resume Payment', resumeLinkForPaymentFailed)}
+          <p style="margin:0;font-size:14px;color:#6b7280;">
+            Need help? Reply to this email or
+            <a href="https://wa.me/23230600600" style="color:#177fc9;text-decoration:none;">WhatsApp us</a>.
+          </p>
+        `),
+      };
     // ── Custom email ───────────────────────────────────────
     case 'custom':
       return {
@@ -285,7 +308,7 @@ export async function sendEmail(
   templateId: TemplateId,
   recipient: EmailRecipient,
   customData?: { subject?: string; body?: string },
-  attachments?: { filename: string; content: string | Buffer }[]
+  attachments?: { filename: string; content: string | Buffer }[],
 ): Promise<SendResult> {
   try {
     const { subject, html } = getTemplate(templateId, recipient, customData);

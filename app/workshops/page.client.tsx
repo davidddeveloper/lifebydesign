@@ -88,7 +88,7 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
                 isOpen={formModalOpen}
                 onClose={() => setFormModalOpen(false)}
                 workshopTitle="Business Constraint-Breaking Workshop"
-                workshopPrice={100}
+                workshopPrice={1}
                 resumeId={resumeId}
             />
         </div>

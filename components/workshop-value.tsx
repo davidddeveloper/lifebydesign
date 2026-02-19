@@ -54,7 +54,7 @@ export function WorkshopValue({ data }: WorkshopValueProps) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         workshopTitle="Business Constraint-Breaking Workshop"
-        workshopPrice={100}
+        workshopPrice={1}
       />
     </>
   )
