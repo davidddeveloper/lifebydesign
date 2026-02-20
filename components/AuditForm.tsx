@@ -379,6 +379,19 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
           <p className="text-gray-500">Takes 15 minutes • Get your diagnosis instantly</p>
         </div>
 
+        {/* Context Block */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15 }}
+          className="bg-blue-50 border border-blue-100 rounded-xl px-6 py-5 mb-8 text-center"
+        >
+          <p className="text-gray-700 text-sm leading-relaxed mb-2">
+            Your business doesn't have 10 problems. It has <strong>ONE constraint</strong> that's blocking everything else. This audit scores your business across 5 growth levers, pinpoints your weakest link, and tells you exactly where to focus your next 90 days.
+          </p>
+          <p className="text-xs text-[#177fc9] font-semibold">Trusted by businesses across Sierra Leone.</p>
+        </motion.div>
+
         {/* Progress Bar */}
         <div className="mb-8">
           <div className="flex justify-between items-center mb-2">
