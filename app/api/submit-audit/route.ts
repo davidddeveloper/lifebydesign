@@ -89,7 +89,11 @@ export async function POST(request: NextRequest) {
     }
     
     // 2. Send to n8n webhook for AI analysis
-    const n8nResponse = await fetch(process.env.N8N_WEBHOOK_URL!, {
+    if (!process.env.N8N_WEBHOOK_URL) {
+      throw new Error('N8N_WEBHOOK_URL environment variable is not set');
+    }
+
+    const n8nResponse = await fetch(process.env.N8N_WEBHOOK_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -98,8 +102,23 @@ export async function POST(request: NextRequest) {
         dashboardId: auditData.dashboard_id,
       }),
     });
-    
-    const n8nResults = await n8nResponse.json();
+
+    const n8nText = await n8nResponse.text();
+
+    if (!n8nText || n8nText.trim() === '') {
+      throw new Error(`n8n returned an empty response (HTTP ${n8nResponse.status}). Check your n8n workflow is returning data.`);
+    }
+
+    let n8nResults: any;
+    try {
+      n8nResults = JSON.parse(n8nText);
+    } catch {
+      throw new Error(`n8n returned non-JSON response (HTTP ${n8nResponse.status}): ${n8nText.slice(0, 300)}`);
+    }
+
+    if (!n8nResponse.ok) {
+      throw new Error(`n8n webhook failed with HTTP ${n8nResponse.status}: ${n8nText.slice(0, 300)}`);
+    }
 
     console.log('N8N RESULTS:', JSON.stringify(n8nResults, null, 2));
 
@@ -296,9 +315,10 @@ export async function POST(request: NextRequest) {
     });
     
   } catch (error) {
-    console.error('Error:', error);
+    const message = error instanceof Error ? error.message : 'Failed to process audit';
+    console.error('Submit audit error:', message);
     return NextResponse.json(
-      { error: 'Failed to process audit' },
+      { error: message },
       { status: 500 }
     );
   }

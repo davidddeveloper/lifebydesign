@@ -24,7 +24,11 @@ export default function Home() {
 
       const results = await response.json()
 
-      // Validate that results.fields exists
+      // Surface server-side errors clearly
+      if (!response.ok || results.error) {
+        throw new Error(results.error || `Server error ${response.status}`)
+      }
+
       if (!results.fields) {
         throw new Error("Invalid response: missing fields")
       }
