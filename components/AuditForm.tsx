@@ -14,74 +14,74 @@ interface AuditFormProps {
 
 // Initial form state - extracted for reuse
 const initialFormData = {
-    // Basic Info
-    businessName: "",
-    ownerName: "",
-    phone: "",
-    email: "",
-    industry: "",
-    yearsInBusiness: "",
-    monthlyRevenue: "",
-    numberOfCustomers: "",
-    teamSize: "",
+  // Basic Info
+  businessName: "",
+  ownerName: "",
+  phone: "",
+  email: "",
+  industry: "",
+  yearsInBusiness: "",
+  monthlyRevenue: "",
+  numberOfCustomers: "",
+  teamSize: "",
 
-    // Lever 1: WHO
-    idealCustomer: "",
-    customerTypes: "",
-    newCustomersLastMonth: "",
-    customerSource: [],
-    conversionRate: "",
-    biggestProblem: "",
-    turnDownBadFits: "",
+  // Lever 1: WHO
+  idealCustomer: "",
+  customerTypes: "",
+  newCustomersLastMonth: "",
+  customerSource: [],
+  conversionRate: "",
+  biggestProblem: "",
+  turnDownBadFits: "",
 
-    // Lever 2: WHAT
-    mainProblemSolved: "",
-    solution: "",
-    avgTransactionValue: "",
-    pricingVsCompetitors: "",
-    customerSatisfaction: "",
-    referralFrequency: "",
-    doublePriceScenario: "",
-    proofLevel: "",
+  // Lever 2: WHAT
+  mainProblemSolved: "",
+  solution: "",
+  avgTransactionValue: "",
+  pricingVsCompetitors: "",
+  customerSatisfaction: "",
+  referralFrequency: "",
+  doublePriceScenario: "",
+  proofLevel: "",
 
-    // Lever 3: HOW YOU SELL
-    closingMethod: [],
-    hasSalesScript: "",
-    salesConversations: "",
-    conversionToCustomer: "",
-    timeToClose: "",
-    reasonsNotBuying: "",
-    followUpSystem: "",
+  // Lever 3: HOW YOU SELL
+  closingMethod: [],
+  hasSalesScript: "",
+  salesConversations: "",
+  conversionToCustomer: "",
+  timeToClose: "",
+  reasonsNotBuying: "",
+  followUpSystem: "",
 
-    // Lever 4: HOW THEY FIND YOU
-    trafficReferrals: "",
-    trafficSocial: "",
-    trafficAds: "",
-    trafficPartnerships: "",
-    trafficWalkIns: "",
-    trafficOther: "",
-    primarySocialPlatform: "",
-    postingFrequency: "",
-    weeklyReach: "",
-    monthlyLeads: "",
-    leadPredictability: "",
-    hasLeadMagnet: "",
+  // Lever 4: HOW THEY FIND YOU
+  trafficReferrals: "",
+  trafficSocial: "",
+  trafficAds: "",
+  trafficPartnerships: "",
+  trafficWalkIns: "",
+  trafficOther: "",
+  primarySocialPlatform: "",
+  postingFrequency: "",
+  weeklyReach: "",
+  monthlyLeads: "",
+  leadPredictability: "",
+  hasLeadMagnet: "",
 
-    // Lever 5: HOW YOU DELIVER
-    businessWithoutYou: "",
-    writtenProcedures: "",
-    canDelegateEasily: "",
-    repeatPurchases: "",
-    hasUpsells: "",
-    trackNumbers: "",
-    profitMargin: "",
-    hoursPerWeek: "",
-    timeOnVsIn: "",
+  // Lever 5: HOW YOU DELIVER
+  businessWithoutYou: "",
+  writtenProcedures: "",
+  canDelegateEasily: "",
+  repeatPurchases: "",
+  hasUpsells: "",
+  trackNumbers: "",
+  profitMargin: "",
+  hoursPerWeek: "",
+  timeOnVsIn: "",
 
-    // Final Questions
-    topChallenge: "",
-    oneThingToFix: "",
-    twelveMonthGoal: "",
+  // Final Questions
+  topChallenge: "",
+  oneThingToFix: "",
+  twelveMonthGoal: "",
 }
 
 export default function AuditForm({ onSubmit }: AuditFormProps) {
@@ -374,9 +374,9 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             <span className="text-[#177fc9]">Audit</span>
           </motion.h1>
           <p className="text-xl text-gray-600 mb-2">
-            Identify the ONE thing holding you back from a more substantial monthly revenue
+            Find the #1 bottleneck keeping your revenue stuck — and exactly what to fix first
           </p>
-          <p className="text-gray-500">⏱️ Takes 15 minutes • 🎯 Get instant results</p>
+          <p className="text-gray-500">Takes 15 minutes • Get your diagnosis instantly</p>
         </div>
 
         {/* Progress Bar */}
@@ -401,13 +401,12 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
                 key={index}
                 type="button"
                 onClick={() => handleGoToStep(index)}
-                className={`text-xs text-left transition-colors cursor-pointer ${
-                  index === currentStep
-                    ? "text-[#177fc9] font-semibold"
-                    : index < currentStep
-                      ? "text-[#0f5b90]"
-                      : "text-gray-400 hover:text-gray-600"
-                }`}
+                className={`text-xs text-left transition-colors cursor-pointer ${index === currentStep
+                  ? "text-[#177fc9] font-semibold"
+                  : index < currentStep
+                    ? "text-[#0f5b90]"
+                    : "text-gray-400 hover:text-gray-600"
+                  }`}
                 title={stepDescriptions[step.fields] ?? step.title}
                 aria-current={index === currentStep ? "step" : undefined}
               >
@@ -446,11 +445,10 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
             <button
               onClick={handlePrevious}
               disabled={currentStep === 0}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
-                currentStep === 0
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${currentStep === 0
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
             >
               ← Previous
             </button>
@@ -459,13 +457,12 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
               <button
                 onClick={handleSubmit}
                 disabled={!isFormValid()}
-                className={`px-8 py-3 rounded-lg font-bold text-lg transition-all ${
-                  isFormValid()
-                    ? "bg-gradient-to-r from-[#177fc9] to-[#42adff] text-white hover:from-[#42adff] hover:to-[#177fc9] transform hover:scale-105 shadow-lg cursor-pointer"
-                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
+                className={`px-8 py-3 rounded-lg font-bold text-lg transition-all ${isFormValid()
+                  ? "bg-gradient-to-r from-[#177fc9] to-[#42adff] text-white hover:from-[#42adff] hover:to-[#177fc9] transform hover:scale-105 shadow-lg cursor-pointer"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                  }`}
               >
-                🎯 Get My Results
+                Get My Diagnosis
               </button>
             ) : (
               <button
@@ -480,7 +477,7 @@ export default function AuditForm({ onSubmit }: AuditFormProps) {
 
         {/* Trust Indicators */}
         <div className="mt-8 text-center text-gray-500 text-sm">
-          <p>🔒 Your data is secure • 🎁 100% Free • ⚡ Instant results</p>
+          <p>Your data is secure • 100% Free • Instant results</p>
         </div>
       </div>
     </div>
@@ -728,19 +725,19 @@ function WhatStep({ formData, onChange }: any) {
         ]}
         required
       />
-        <FormRadio
-          label="If you doubled your prices tomorrow, what would happen?"
-          value={formData.doublePriceScenario}
-          onChange={(v: any) => onChange("doublePriceScenario", v)}
-          options={[
-            { value: "lose_all", label: "We'd lose all our customers" },
-            { value: "lose_most", label: "We'd lose most customers" },
-            { value: "lose_some", label: "We'd lose some, but keep core clients" },
-            { value: "nothing", label: "Nothing - we're worth it" },
-            { value: "still_value", label: "Customers would still see it as good value" },
-          ]}
-          required
-        />
+      <FormRadio
+        label="If you doubled your prices tomorrow, what would happen?"
+        value={formData.doublePriceScenario}
+        onChange={(v: any) => onChange("doublePriceScenario", v)}
+        options={[
+          { value: "lose_all", label: "We'd lose all our customers" },
+          { value: "lose_most", label: "We'd lose most customers" },
+          { value: "lose_some", label: "We'd lose some, but keep core clients" },
+          { value: "nothing", label: "Nothing - we're worth it" },
+          { value: "still_value", label: "Customers would still see it as good value" },
+        ]}
+        required
+      />
       <FormRadio
         label="Do you have proof your solution works? (testimonials, case studies, results)"
         value={formData.proofLevel}
@@ -837,7 +834,7 @@ function TrafficStep({ formData, onChange }: any) {
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6">
       <p className="text-sm font-bold">What percentage of your customers come from each source? *</p>
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-        
+
         <p className="text-sm text-gray-700">
           <strong>Note:</strong> The percentages below should add up to 100%
         </p>
@@ -886,7 +883,7 @@ function TrafficStep({ formData, onChange }: any) {
           placeholder="e.g., 0"
         />
       </div>
-      
+
       <FormRadio
         label="Which social media platform do you use most for business?"
         value={formData.primarySocialPlatform}
@@ -901,7 +898,7 @@ function TrafficStep({ formData, onChange }: any) {
         ]}
         required
       />
-              
+
       <FormRadio
         label="How often do you post content about your business?"
         value={formData.postingFrequency}
@@ -996,18 +993,18 @@ function DeliverStep({ formData, onChange }: any) {
         ]}
         required
       />
-        <FormRadio
-          label="Could someone new use your procedures to deliver your service without asking you questions?"
-          value={formData.canDelegateEasily}
-          onChange={(v: any) => onChange("canDelegateEasily", v)}
-          options={[
-            { value: "no_way", label: "No way" },
-            { value: "lots_questions", label: "With lots of questions" },
-            { value: "minimal_questions", label: "With minimal questions" },
-            { value: "yes_completely", label: "Yes, completely" },
-          ]}
-          required
-        />
+      <FormRadio
+        label="Could someone new use your procedures to deliver your service without asking you questions?"
+        value={formData.canDelegateEasily}
+        onChange={(v: any) => onChange("canDelegateEasily", v)}
+        options={[
+          { value: "no_way", label: "No way" },
+          { value: "lots_questions", label: "With lots of questions" },
+          { value: "minimal_questions", label: "With minimal questions" },
+          { value: "yes_completely", label: "Yes, completely" },
+        ]}
+        required
+      />
       <FormRadio
         label="How many times does the average customer buy from you?"
         value={formData.repeatPurchases}
@@ -1217,9 +1214,8 @@ function FormRadio({ label, value, onChange, options, required = false }: any) {
         {options.map((option: any) => (
           <label
             key={option.value}
-            className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-              value === option.value ? "border-[#177fc9] bg-blue-50" : "border-gray-200 hover:border-blue-300"
-            }`}
+            className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${value === option.value ? "border-[#177fc9] bg-blue-50" : "border-gray-200 hover:border-blue-300"
+              }`}
           >
             <input
               type="radio"
