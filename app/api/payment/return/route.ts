@@ -9,8 +9,11 @@ export async function POST(request: NextRequest) {
 }
 
 async function handleReturn(request: NextRequest) {
+    console.log('this is the request', request)
     try {
         const url = new URL(request.url);
+
+        console.log('this is the url', url)
         const searchParams = url.searchParams;
 
         // Extract parameters common to Monime redirects
@@ -27,6 +30,8 @@ async function handleReturn(request: NextRequest) {
         // but for now relying on query params (which they usually append) is safer for the redirect.
         // If query params are missing in POST, we might need to parse body, but typically 
         // payment gateways append status to the URL even for POSTs.
+
+        console.log('this is the destination url', destinationUrl)
 
         // Use 303 See Other to force a GET request to the destination
         return NextResponse.redirect(destinationUrl, 303);

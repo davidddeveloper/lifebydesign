@@ -6,7 +6,7 @@ import { sanityWriteClient } from '@/lib/sanity';
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.json();
-    
+
     // 1. Save raw form data to Supabase FIRST
     const { data: auditData, error: auditError } = await supabaseAdmin
       .from('audits')
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         monthly_revenue: parseInt(formData.monthlyRevenue),
         number_of_customers: parseInt(formData.numberOfCustomers) || null,
         team_size: parseInt(formData.teamSize) || null,
-        
+
         // WHO
         ideal_customer: formData.idealCustomer,
         customer_types: formData.customerTypes,
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         conversion_rate: formData.conversionRate,
         biggest_problem: formData.biggestProblem,
         turn_down_bad_fits: formData.turnDownBadFits,
-        
+
         // WHAT
         main_problem_solved: formData.mainProblemSolved,
         solution: formData.solution,
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         customer_satisfaction: formData.customerSatisfaction,
         referral_frequency: formData.referralFrequency,
         proof_level: formData.proofLevel,
-        
+
         // SELL
         has_sales_script: formData.hasSalesScript,
         sales_conversations: formData.salesConversations,
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         time_to_close: formData.timeToClose,
         reasons_not_buying: formData.reasonsNotBuying,
         follow_up_system: formData.followUpSystem,
-        
+
         // TRAFFIC
         traffic_referrals: parseInt(formData.trafficReferrals) || 0,
         traffic_social: parseInt(formData.trafficSocial) || 0,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
         monthly_leads: formData.monthlyLeads,
         lead_predictability: formData.leadPredictability,
         has_lead_magnet: formData.hasLeadMagnet,
-        
+
         // OPERATIONS
         business_without_you: formData.businessWithoutYou,
         written_procedures: formData.writtenProcedures,
@@ -69,12 +69,12 @@ export async function POST(request: NextRequest) {
         profit_margin: formData.profitMargin,
         hours_per_week: formData.hoursPerWeek,
         time_on_vs_in: formData.timeOnVsIn,
-        
+
         // FINAL
         top_challenge: formData.topChallenge,
         one_thing_to_fix: formData.oneThingToFix,
         twelve_month_goal: formData.twelveMonthGoal,
-        
+
         // Metadata
         ip_address: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip'),
         user_agent: request.headers.get('user-agent'),
@@ -82,12 +82,12 @@ export async function POST(request: NextRequest) {
       })
       .select()
       .single();
-    
+
     if (auditError) {
       console.error('Supabase error:', auditError);
       throw auditError;
     }
-    
+
     // 2. Send to n8n webhook for AI analysis
     const n8nResponse = await fetch(process.env.N8N_WEBHOOK_URL!, {
       method: 'POST',
@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
         dashboardId: auditData.dashboard_id,
       }),
     });
-    
+
     const n8nResults = await n8nResponse.json();
 
     console.log('N8N RESULTS:', JSON.stringify(n8nResults, null, 2));
@@ -167,7 +167,7 @@ export async function POST(request: NextRequest) {
       .eq('id', auditData.id)
       .select()
       .single();
-    
+
     if (updateError) {
       console.error('Update error:', updateError);
       throw updateError;
@@ -294,7 +294,7 @@ export async function POST(request: NextRequest) {
       success: true,
       fields: updatedAudit,
     });
-    
+
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json(

@@ -13,8 +13,13 @@ function verifySignature(payload: string, signature: string): boolean {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('this is the request in api/webhooks/monime', request)
+
     const rawBody = await request.text();
     const signature = request.headers.get('monime-signature') || '';
+
+    console.log('this is the raw body', rawBody)
+    console.log('this is the signature', signature)
 
     // Verify webhook signature
     if (MONIME_WEBHOOK_SECRET && !verifySignature(rawBody, signature)) {
