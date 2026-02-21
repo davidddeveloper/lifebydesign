@@ -27,6 +27,8 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
         const payment = searchParams.get("payment")
         const resume = searchParams.get("resume_registration")
 
+        console.log(payment, resume, 'lol')
+
         if (payment === "success") {
             setPaymentStatus("success")
             // Clear saved registration progress
