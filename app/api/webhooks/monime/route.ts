@@ -4,11 +4,24 @@ import { createHmac } from 'crypto';
 
 const MONIME_WEBHOOK_SECRET = process.env.MONIME_WEBHOOK_SECRET!;
 
-function verifySignature(payload: string, signature: string): boolean {
+function verifySignature(rawBody: string, signatureHeader: string): boolean {
+  // Monime signature header format: "t=<timestamp>,v1=<base64-hmac>"
+  const parts: Record<string, string> = {};
+  signatureHeader.split(',').forEach(part => {
+    const idx = part.indexOf('=');
+    if (idx > 0) parts[part.slice(0, idx)] = part.slice(idx + 1);
+  });
+
+  const timestamp = parts['t'];
+  const v1 = parts['v1'];
+  if (!timestamp || !v1) return false;
+
+  // Signed payload is: "{timestamp}.{rawBody}"
+  const signedPayload = `${timestamp}.${rawBody}`;
   const expected = createHmac('sha256', MONIME_WEBHOOK_SECRET)
-    .update(payload)
-    .digest('hex');
-  return expected === signature;
+    .update(signedPayload)
+    .digest('base64');
+  return expected === v1;
 }
 
 export async function POST(request: NextRequest) {
@@ -23,7 +36,8 @@ export async function POST(request: NextRequest) {
     }
 
     const event = JSON.parse(rawBody);
-    const eventType = event.type;
+    // Monime payload structure: { "event": { "name": "checkout_session.completed" }, "data": {...} }
+    const eventType = event.event?.name;
 
     if (eventType === 'payment.created' || eventType === 'checkout_session.completed') {
       // Extract the reference (our registrationId) from the event
