@@ -15,37 +15,48 @@ export default function Home() {
     setIsAnalyzing(true)
 
     try {
-      // Send to n8n webhook
+      // Send to API route
       const response = await fetch("/api/submit-audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       })
 
-      const results = await response.json()
+      // Safely read body as text first to avoid JSON.parse crash on empty/error responses
+      const rawText = await response.text()
+      let results: any = {}
+      if (rawText.trim()) {
+        try {
+          results = JSON.parse(rawText)
+        } catch {
+          throw new Error(`Server returned non-JSON response (status ${response.status})`)
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error(results?.error || `Request failed with status ${response.status}`)
+      }
 
       // Validate that results.fields exists
       if (!results.fields) {
         throw new Error("Invalid response: missing fields")
       }
 
-      // Parse JSON string fields if needed
+      // Safely parse JSON string fields — individual field failures won't crash the whole submit
       const fields = results.fields
+      const safeFieldParse = (val: unknown, fallback: unknown): unknown => {
+        if (typeof val === "string" && val.trim()) {
+          try { return JSON.parse(val) } catch { return fallback }
+        }
+        return val ?? fallback
+      }
+
       const parsedFields = {
         ...fields,
-        evidence_points:
-          typeof fields.evidence_points === "string"
-            ? JSON.parse(fields.evidence_points)
-            : fields.evidence_points || [],
-        scores: typeof fields.scores === "string" ? JSON.parse(fields.scores) : fields.scores || {},
-        revenue_impact:
-          typeof fields.revenue_impact === "string"
-            ? JSON.parse(fields.revenue_impact)
-            : fields.revenue_impact || {},
-        quick_win:
-          typeof fields.quick_win === "string"
-            ? JSON.parse(fields.quick_win)
-            : fields.quick_win || {},
+        evidence_points: safeFieldParse(fields.evidence_points, []),
+        scores: safeFieldParse(fields.scores, {}),
+        revenue_impact: safeFieldParse(fields.revenue_impact, {}),
+        quick_win: safeFieldParse(fields.quick_win, {}),
       }
 
       setAuditResults(parsedFields)
@@ -53,7 +64,7 @@ export default function Home() {
       console.log("Audit submitted successfully:", results, parsedFields)
     } catch (error) {
       console.error("Error submitting audit:", error)
-      alert("Something went wrong. Please try again.")
+      alert(error instanceof Error ? error.message : "Something went wrong. Please try again.")
     } finally {
       setIsAnalyzing(false)
     }
@@ -179,13 +190,12 @@ function AnalyzingScreen() {
                   }}
                   className="flex items-center gap-3"
                 >
-                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 ${
-                    i < currentStep
-                      ? "bg-green-100 text-green-600"
-                      : i === currentStep
-                        ? "bg-[#177fc9] text-white"
-                        : "bg-gray-100 text-gray-400"
-                  }`}>
+                  <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors duration-300 ${i < currentStep
+                    ? "bg-green-100 text-green-600"
+                    : i === currentStep
+                      ? "bg-[#177fc9] text-white"
+                      : "bg-gray-100 text-gray-400"
+                    }`}>
                     {i < currentStep ? (
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -194,9 +204,8 @@ function AnalyzingScreen() {
                       i + 1
                     )}
                   </div>
-                  <span className={`text-sm ${
-                    i === currentStep ? "font-semibold text-gray-900" : i < currentStep ? "text-gray-500" : "text-gray-400"
-                  }`}>
+                  <span className={`text-sm ${i === currentStep ? "font-semibold text-gray-900" : i < currentStep ? "text-gray-500" : "text-gray-400"
+                    }`}>
                     {step.label}
                     {i === currentStep && (
                       <motion.span
