@@ -645,14 +645,14 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             >
               <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-2">Your #1 Constraint</p>
               <h2 className="text-3xl font-bold text-[#177fc9] mb-2">
-                {constraintCopy[data.final_constraint]?.headline || data.final_constraint}
+                {data.final_constraint}
               </h2>
               <p className="text-base text-gray-700 font-medium mb-4">
                 This is the bottleneck limiting your growth. Fix this first, and the rest gets easier.
               </p>
               <p className="text-sm text-gray-600 mb-4">
                 Based on your answers, your business scored lowest on{" "}
-                <strong>{constraintCopy[data.final_constraint]?.headline || data.final_constraint}</strong> — scoring{" "}
+                <strong>{data.final_constraint}</strong> — scoring{" "}
                 <strong>{data.primary_score} out of 10</strong>.
               </p>
               <p className="text-sm text-gray-600 leading-relaxed mb-4">{data.reasoning}</p>
