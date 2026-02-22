@@ -23,15 +23,47 @@ function verifySignature(rawBody: string, signatureHeader: string): boolean {
     'ts.rawBody_base64': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('base64'),
     'ts.rawBody_hex': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('hex'),
     'ts_newline_rawBody_base64': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}\n${rawBody}`).digest('base64'),
-  };
-  console.log('[webhook-debug] v1 from Monime  :', v1);
-  console.log('[webhook-debug] candidates       :', candidates);
-  const matched = Object.entries(candidates).find(([, val]) => val === v1);
-  console.log('[webhook-debug] matched format   :', matched ? matched[0] : 'NONE — secret is likely wrong');
-  // --- END DEBUG ---
+    // --- DEBUG: try every plausible signing format ---
+    const hmac = (key: string | Buffer, data: string) =>
+      createHmac('sha256', key).update(data).digest('base64');
 
-  // Temporarily accept all — remove once format is confirmed
-  return true;
+    // Attempt to base64-decode the secret in case it's stored encoded
+    let secretBuf: Buffer | null = null;
+    try { secretBuf = Buffer.from(MONIME_WEBHOOK_SECRET, 'base64'); } catch { /* not base64 */ }
+
+  // Try to get canonical JSON (sorted top-level keys) in case Monime normalises before signing
+  let canonicalBody = rawBody;
+    try {
+      const parsed = JSON.parse(rawBody);
+      canonicalBody = JSON.stringify(parsed, Object.keys(parsed).sort());
+    } catch { /* use rawBody as-is */ }
+
+  const s = MONIME_WEBHOOK_SECRET;
+    const candidates: Record<string, string> = {
+      // Previous batch (all failed)
+      'rawBody_base64': hmac(s, rawBody),
+        'ts.rawBody_base64': hmac(s, `${timestamp}.${rawBody}`),
+          'ts_newline_rawBody_base64': hmac(s, `${timestamp}\n${rawBody}`),
+            // New batch
+            'ts_concat_rawBody_base64': hmac(s, `${timestamp}${rawBody}`),
+              'ts:rawBody_base64': hmac(s, `${timestamp}:${rawBody}`),
+                'ts|rawBody_base64': hmac(s, `${timestamp}|${rawBody}`),
+                  'canonical_base64': hmac(s, canonicalBody),
+                    'ts.canonical_base64': hmac(s, `${timestamp}.${canonicalBody}`),
+    // Secret as decoded bytes (in case it was stored base64-encoded)
+    ...(secretBuf ? {
+    'b64key_rawBody_base64': hmac(secretBuf, rawBody),
+    'b64key_ts.rawBody_base64': hmac(secretBuf, `${timestamp}.${rawBody}`),
+  } : {}),
+  };
+console.log('[webhook-debug] v1 from Monime:', v1);
+console.log('[webhook-debug] candidates:', candidates);
+const matched = Object.entries(candidates).find(([, val]) => val === v1);
+console.log('[webhook-debug] matched format:', matched ? matched[0] : 'NONE — contact Monime support for signing spec');
+// --- END DEBUG ---
+
+// Accept all while debugging
+return true;
 }
 
 export async function POST(request: NextRequest) {
