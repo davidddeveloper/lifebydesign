@@ -270,10 +270,14 @@ function getTemplate(
         html: wrapInLayout(`
           <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet.
+            We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet. 
+          </p>
+
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            Your Payment failed and we couldn't process it.
           </p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            Your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
+            Note that your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
           </p>
           ${ctaButton('Resume Payment', resumeLinkForPaymentFailed)}
           <p style="margin:0;font-size:14px;color:#6b7280;">
