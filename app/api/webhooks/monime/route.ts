@@ -18,10 +18,10 @@ function verifySignature(rawBody: string, signatureHeader: string): boolean {
 
   // --- DEBUG: try every plausible signing format to identify correct one ---
   const candidates = {
-    'rawBody_base64':          createHmac('sha256', MONIME_WEBHOOK_SECRET).update(rawBody).digest('base64'),
-    'rawBody_hex':             createHmac('sha256', MONIME_WEBHOOK_SECRET).update(rawBody).digest('hex'),
-    'ts.rawBody_base64':       createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('base64'),
-    'ts.rawBody_hex':          createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('hex'),
+    'rawBody_base64': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(rawBody).digest('base64'),
+    'rawBody_hex': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(rawBody).digest('hex'),
+    'ts.rawBody_base64': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('base64'),
+    'ts.rawBody_hex': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}.${rawBody}`).digest('hex'),
     'ts_newline_rawBody_base64': createHmac('sha256', MONIME_WEBHOOK_SECRET).update(`${timestamp}\n${rawBody}`).digest('base64'),
   };
   console.log('[webhook-debug] v1 from Monime  :', v1);
@@ -53,6 +53,8 @@ export async function POST(request: NextRequest) {
     const event = JSON.parse(rawBody);
     // Monime payload structure: { "event": { "name": "checkout_session.completed" }, "data": {...} }
     const eventType = event.event?.name;
+
+    console.log(event, 'this is the event')
 
     if (eventType === 'payment.created' || eventType === 'checkout_session.completed') {
       // Extract the reference (our registrationId) from the event
@@ -116,6 +118,7 @@ export async function POST(request: NextRequest) {
             .from('workshop_registrations')
             .update({
               status: 'failed',
+              payment_status: 'failed',
               updated_at: new Date().toISOString(),
             })
             .eq('registration_id', registration.registration_id);
