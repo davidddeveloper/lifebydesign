@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     let finalAmountMinor = 0;
 
     if (currency === 'USD') {
-      const rate = 23;
+      const rate = 24;
       const amountSLE = workshopPrice * rate;
       finalAmountMinor = Math.round(amountSLE * 100);
     } else {
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
         // Assuming previous implementation expected minor units directly if no currency handling logic existed
         // However, previous code comments said "already in minor units".
         // We will standardise on frontend sending major units USD.
-        const rate = 23;
+        const rate = 24;
         const amountSLE = workshopPrice * rate;
         finalAmountMinor = Math.round(amountSLE * 100); // Treating unspecified currency as USD 100 -> 2300 SLE
       }

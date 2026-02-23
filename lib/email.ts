@@ -19,6 +19,7 @@ export interface EmailRecipient {
   primaryScore?: number;
   registrationId?: string;
   paymentLink?: string;
+  workshopTitle?: string;
 }
 
 export type TemplateId =
@@ -224,17 +225,19 @@ function getTemplate(
     case 'payment_reminder':
       const regId = recipient.registrationId || customData?.body; // flexible fallback
       const resumeLink = regId ? `${SITE_URL}/workshops?resume_registration=${regId}` : `${SITE_URL}/workshops`;
+      const reminderTitle = recipient.workshopTitle || 'Business Constraint-Breaking Workshop';
+      const isVipReminder = reminderTitle === 'VIP Consultation';
       return {
-        subject: `Complete your workshop registration`,
+        subject: isVipReminder ? `Complete your VIP Consultation booking` : `Complete your workshop registration`,
         html: wrapInLayout(`
           <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet.
+            We noticed you started ${isVipReminder ? 'booking your <strong>VIP Consultation</strong>' : 'registering for our <strong>Business Constraint-Breaking Workshop</strong>'} but haven&apos;t completed payment yet.
           </p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
             Your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
           </p>
-          ${ctaButton('Resume Payment', resumeLink)}
+          ${ctaButton(isVipReminder ? 'Complete VIP Booking' : 'Resume Payment', resumeLink)}
           <p style="margin:0;font-size:14px;color:#6b7280;">
             Need help? Reply to this email or
             <a href="https://wa.me/23230600600" style="color:#177fc9;text-decoration:none;">WhatsApp us</a>.
@@ -242,22 +245,30 @@ function getTemplate(
         `),
       };
 
-    // ── Workshop Confirmation ──────────────────────────────
+    // ── Workshop / VIP Confirmation ────────────────────────
     case 'workshop_confirmation':
+      const confirmTitle = recipient.workshopTitle || 'Business Constraint-Breaking Workshop';
+      const isVipConfirm = confirmTitle === 'VIP Consultation';
       return {
-        subject: `StartUp Bodyshop Workshop Confirmed!`,
+        subject: isVipConfirm ? `Your VIP Consultation is Confirmed!` : `StartUp Bodyshop Workshop Confirmed!`,
         html: wrapInLayout(`
           <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            We have confirmed your payment for the <strong>Business Constraint-Breaking Workshop</strong>.
+            We have confirmed your payment for the <strong>${confirmTitle}</strong>.
           </p>
+          ${isVipConfirm ? `
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            We will reach out shortly to schedule your private 1-on-1 session at a time that works for you.
+          </p>
+          ` : `
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
             We look forward to seeing you there! We will send you more details about the venue and schedule closer to the date.
           </p>
+          `}
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
             If you have any questions in the meantime, feel free to reply to this email.
           </p>
-          ${ctaButton('View Workshop Details', `${SITE_URL}/workshops`)}
+          ${ctaButton(isVipConfirm ? 'Learn More' : 'View Workshop Details', `${SITE_URL}/workshops`)}
         `),
       };
 
@@ -265,21 +276,22 @@ function getTemplate(
     case 'payment_failed':
       const regIdForPaymentFailed = recipient.registrationId || customData?.body;
       const resumeLinkForPaymentFailed = recipient.paymentLink || (regIdForPaymentFailed ? `${SITE_URL}/workshops?resume_registration=${regIdForPaymentFailed}` : `${SITE_URL}/workshops`);
+      const failedTitle = recipient.workshopTitle || 'Business Constraint-Breaking Workshop';
+      const isVipFailed = failedTitle === 'VIP Consultation';
       return {
-        subject: `Payment Failed for Workshop`,
+        subject: isVipFailed ? `Payment Failed for VIP Consultation` : `Payment Failed for Workshop`,
         html: wrapInLayout(`
           <p style="margin:0 0 16px;font-size:16px;color:#111827;">Hi ${name},</p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            We noticed you started registering for our <strong>Business Constraint-Breaking Workshop</strong> but haven't completed payment yet. 
-          </p>
-
-          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            Your Payment failed and we couldn't process it.
+            We noticed your payment for the <strong>${failedTitle}</strong> was not completed.
           </p>
           <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
-            Note that your spot is reserved, but we can only hold it for a limited time. Click the button below to resume your payment.
+            Your payment failed and we couldn&apos;t process it.
           </p>
-          ${ctaButton('Resume Payment', resumeLinkForPaymentFailed)}
+          <p style="margin:0 0 16px;font-size:15px;color:#374151;line-height:1.6;">
+            Your spot is reserved, but we can only hold it for a limited time. Click the button below to retry your payment.
+          </p>
+          ${ctaButton(isVipFailed ? 'Retry VIP Booking' : 'Resume Payment', resumeLinkForPaymentFailed)}
           <p style="margin:0;font-size:14px;color:#6b7280;">
             Need help? Reply to this email or
             <a href="https://wa.me/23230600600" style="color:#177fc9;text-decoration:none;">WhatsApp us</a>.

@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
           email: registration.personal_email || registration.business_email,
           name: registration.first_name || registration.full_name || 'Valued Customer',
           businessName: registration.business_name,
+          workshopTitle: registration.workshop_title,
         });
         if (!success) console.error('[monime-webhook] confirmation email failed:', emailError);
       }
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
           name: registration.first_name || registration.full_name || 'Valued Customer',
           businessName: registration.business_name,
           registrationId: registration.registration_id,
+          workshopTitle: registration.workshop_title,
         }, { body: resumeLink });
       }
     }
