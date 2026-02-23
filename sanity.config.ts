@@ -70,6 +70,11 @@ export default defineConfig({
           enable: '/api/draft',
         },
       },
+      allowOrigins: [
+        'https://startupbodyshop.com',
+        'https://www.startupbodyshop.com',
+        'http://localhost:3000',
+      ],
     }),
     visionTool({ defaultApiVersion: apiVersion }),
   ],
