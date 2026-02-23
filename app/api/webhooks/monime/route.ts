@@ -75,12 +75,12 @@ export async function POST(request: NextRequest) {
       const { data: registration } = reference
         ? await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
           .eq('registration_id', reference)
           .single()
         : await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
           .eq('checkout_session_id', checkoutSessionId)
           .single();
 
