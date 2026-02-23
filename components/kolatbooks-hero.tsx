@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import type { ProductHeroSection } from "@/sanity/lib/types"
+import type { KolatHeroData } from "@/payload/lib/types"
 
 interface FinanceHeroProps {
   onOpenForm: () => void
-  data?: ProductHeroSection
+  data?: KolatHeroData
 }
 
 export function FinanceHero({ onOpenForm, data }: FinanceHeroProps) {
@@ -78,10 +78,10 @@ export function FinanceHero({ onOpenForm, data }: FinanceHeroProps) {
                   onClick={onOpenForm}
                   className="px-8 py-4 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors"
                 >
-                  {data?.primaryCta?.text || "Get Started"}
+                  {data?.ctaButton?.text || "Get Started"}
                 </button>
-                <Link href={data?.secondaryCta?.url || "#our-promise"} className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
-                  {data?.secondaryCta?.text || "Learn More"}
+                <Link href={data?.ctaButtonSecondary?.url || "#our-promise"} className="px-8 py-4 border-2 border-gray-900 text-gray-900 font-bold rounded-full cursor-pointer hover:bg-gray-900 hover:text-white transition-colors">
+                  {data?.ctaButtonSecondary?.text || "Learn More"}
                 </Link>
               </motion.div>
             </motion.div>

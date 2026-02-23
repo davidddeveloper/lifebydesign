@@ -5,18 +5,18 @@ import { Button } from "@/components/ui/button"
 import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
 import { CannotScaleReasonGraphic } from "./cannot-scale-reason"
 
-import type { WorkshopValueSection } from "@/sanity/lib/types"
+import type { WorkshopsValue } from "@/payload/lib/types"
 
 interface WorkshopValueProps {
-  data?: WorkshopValueSection
+  data?: WorkshopsValue
 }
 
 export function WorkshopValue({ data }: WorkshopValueProps) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const introText = data?.introText || "It's not motivational hype, It's tactical Help, solving real world business problems."
-  const ctaText = data?.cta?.text || "REGISTER NOW"
-  const reasons = data?.animatedReasons // can be undefined, fallback in child
+  const introText = data?.description || "It's not motivational hype, It's tactical Help, solving real world business problems."
+  const ctaText = "REGISTER NOW"
+  const reasons = data?.reasons // can be undefined, fallback in child
 
   return (
     <>

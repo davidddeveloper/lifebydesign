@@ -2,10 +2,10 @@
 
 import { motion, type Variants } from "framer-motion"
 import Link from "next/link"
-import type { ProductHeroSection } from "@/sanity/lib/types"
+import type { BlueprintHeroData } from "@/payload/lib/types"
 
 interface BlueprintHeroProps {
-  data?: ProductHeroSection
+  data?: BlueprintHeroData
   onOpenForm: () => void
 }
 
@@ -42,14 +42,10 @@ export function BlueprintHero({ data, onOpenForm }: BlueprintHeroProps) {
 
   const subheading = data?.subheading || "Most businesses are stuck because they're fixing the wrong problems. The Scaling Blueprint identifies your ONE constraint—then gives you the exact 90-day plan to eliminate it."
 
-  const primaryCtaText = data?.primaryCta?.text || "Get Started"
-  // primaryCta?.url handling might need logic if it's a modal trigger vs link.
-  // The original component uses onOpenForm for "Get Started".
-  // If data.primaryCta.url is empty or "#", we might assume modal?
-  // Or we just map text and keep onOpenForm.
+  const primaryCtaText = data?.ctaButton?.text || "Get Started"
 
-  const secondaryCtaText = data?.secondaryCta?.text || "Learn More"
-  const secondaryCtaUrl = data?.secondaryCta?.url || "#how-it-works"
+  const secondaryCtaText = data?.ctaButtonSecondary?.text || "Learn More"
+  const secondaryCtaUrl = data?.ctaButtonSecondary?.url || "#how-it-works"
 
   return (
     <section className="relative bg-gradient-to-b from-[#177fc9] to-[#fff] py-20 lg:py-32"> {/** to-[#8dc8f1]  */}

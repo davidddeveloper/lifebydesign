@@ -2,7 +2,7 @@
 
 import { motion, type Variants } from "framer-motion"
 import { CheckCircle2, BarChart3, Zap } from "lucide-react"
-import type { ProcessStepsSection } from "@/sanity/lib/types"
+import type { BlueprintProcessSteps } from "@/payload/lib/types"
 
 const defaultSteps = [
   {
@@ -29,7 +29,7 @@ const defaultSteps = [
 ]
 
 interface BlueprintProcessProps {
-  data?: ProcessStepsSection
+  data?: BlueprintProcessSteps
 }
 
 export function BlueprintProcess({ data }: BlueprintProcessProps) {
@@ -43,7 +43,7 @@ export function BlueprintProcess({ data }: BlueprintProcessProps) {
   }
 
   const steps = data?.steps?.map((s, i) => ({
-    number: s.stepNumber || `0${i + 1}`,
+    number: s.number ? String(s.number).padStart(2, '0') : `0${i + 1}`,
     title: s.title || "",
     description: s.description || "",
     icon: i === 0 ? BarChart3 : i === 1 ? CheckCircle2 : Zap // Simple fallback icon logic based on index

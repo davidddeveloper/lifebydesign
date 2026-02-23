@@ -1,11 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import type { PricingPlansSection } from "@/sanity/lib/types"
+import type { KolatPricingPlans } from "@/payload/lib/types"
 
 interface FinancePricingProps {
   onOpenForm: () => void
-  data?: PricingPlansSection
+  data?: KolatPricingPlans
 }
 
 export function FinancePricing({ onOpenForm, data }: FinancePricingProps) {
@@ -74,11 +74,11 @@ export function FinancePricing({ onOpenForm, data }: FinancePricingProps) {
   ]
 
   const plans = data?.plans?.map(p => ({
-    name: p.name || "",
-    focus: p.focus || "", // focus mapped from schema 'focus'
+    name: p.title || "",
+    focus: p.description || "",
     monthlyPrice: p.price || "",
-    yearlyPrice: p.yearlyPrice || "",
-    features: p.features || [],
+    yearlyPrice: "",
+    features: p.features?.map(f => f.item || "").filter(Boolean) || [],
     highlighted: p.highlighted || false
   })) || defaultPlans
 

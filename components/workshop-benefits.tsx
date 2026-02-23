@@ -1,8 +1,8 @@
-import type { WorkshopBenefitsSection } from "@/sanity/lib/types"
-import { urlFor } from "@/sanity/lib/image"
+import type { WorkshopsBenefits } from "@/payload/lib/types"
+
 
 interface WorkshopBenefitsProps {
-  data?: WorkshopBenefitsSection
+  data?: WorkshopsBenefits
 }
 
 export function WorkshopBenefits({ data }: WorkshopBenefitsProps) {
@@ -24,10 +24,10 @@ export function WorkshopBenefits({ data }: WorkshopBenefitsProps) {
     }
   ]
 
-  const benefits = data?.benefits?.map(b => ({
+  const benefits = data?.items?.map(b => ({
     title: b.title || "",
     description: b.description || "",
-    image: b.image ? urlFor(b.image).url() : ""
+    image: b.image?.url || ""
   })) || defaultBenefits
 
   return (

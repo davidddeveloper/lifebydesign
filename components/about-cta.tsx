@@ -5,21 +5,18 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
-import type { CTASection } from "@/sanity/lib/types"
+import type { AboutPageCTA } from "@/payload/lib/types"
 
 interface AboutCTAProps {
-  data?: CTASection
+  data?: AboutPageCTA
   onOpenForm: () => void
 }
 
 export function AboutCTA({ data, onOpenForm }: AboutCTAProps) {
   const heading = data?.heading || "READY TO BECOME A PORTFOLIO COMPANY?"
-  const description = data?.text || "Let's explore if your business is a fit for Startup Bodyshop Venture Studios. Apply today to connect with our team."
-  const buttonText = data?.buttonText || "Apply Now"
-  // buttonUrl logic: if data provides url, link there (but design uses modal form primarily or partner link).
-  // Current component hardcodes Link href="/partner".
-  // Let's defer to buttonUrl if present, OR default to /partner.
-  const buttonUrl = data?.buttonUrl || "/partner"
+  const description = data?.subheading || "Let's explore if your business is a fit for Startup Bodyshop Venture Studios. Apply today to connect with our team."
+  const buttonText = data?.ctaButton?.text || "Apply Now"
+  const buttonUrl = data?.ctaButton?.url || "/partner"
 
   return (
     <section className="bg-gray-900 text-white py-20 md:py-32">

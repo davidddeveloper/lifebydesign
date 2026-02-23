@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import type { TargetStagesSection } from "@/sanity/lib/types"
+import type { BlueprintTargetStages } from "@/payload/lib/types"
 
 const defaultSegments = [
   {
@@ -37,15 +37,15 @@ const defaultSegments = [
 ]
 
 interface BlueprintTargetSegmentsProps {
-  data?: TargetStagesSection
+  data?: BlueprintTargetStages
 }
 
 export function BlueprintTargetSegments({ data }: BlueprintTargetSegmentsProps) {
   const segments = data?.stages?.map(s => ({
     name: s.title || "",
-    problem: s.coreProblem || "",
-    pain: s.painPoint || "",
-    constraint: s.weFix || ""
+    problem: s.description || "",
+    pain: "",
+    constraint: ""
   })) || defaultSegments
 
   return (

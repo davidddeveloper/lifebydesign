@@ -1,13 +1,8 @@
-import type { SanityDocument } from "@sanity/client";
-import BlogGrid from "@/components/blog/blog-grid";
+import type { BlogPost, BlogCategory } from "@/payload/lib/types"
+import BlogGrid from "@/components/blog/blog-grid"
 
-const Posts = ({ posts = [], categories = [], searchQuery }: { posts: SanityDocument[], categories: SanityDocument[], searchQuery: string }) => {
-
-  return (
-    <>
-      <BlogGrid posts={posts} categories={categories} searchQuery={searchQuery}/>
-    </>
-  )
+const Posts = ({ posts = [], categories = [], searchQuery }: { posts: BlogPost[], categories: BlogCategory[], searchQuery: string }) => {
+  return <BlogGrid posts={posts} categories={categories} searchQuery={searchQuery} />
 }
 
 export default Posts

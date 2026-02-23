@@ -2,11 +2,11 @@
 
 import { useState, useMemo } from "react"
 import BlogCard from "./blog-card"
-import type { SanityDocument } from "next-sanity"
+import type { BlogPost, BlogCategory } from "@/payload/lib/types"
 
 interface BlogGridProps {
-  posts: SanityDocument[]
-  categories: SanityDocument[]
+  posts: BlogPost[]
+  categories: BlogCategory[]
   searchQuery?: string
 }
 
@@ -16,23 +16,18 @@ export default function BlogGrid({ posts, categories, searchQuery = "" }: BlogGr
   const filteredPosts = useMemo(() => {
     let filtered = posts
 
-    // Filter by category
     if (selectedCategory) {
       filtered = filtered.filter((post) =>
-        post.categories?.some((category: { slug: { current: string } }) => category.slug.current === selectedCategory)
+        post.categories?.some((category) => category.slug === selectedCategory)
       )
     }
 
-    console.log("this is the filtered posts", filtered)
-
-    // Filter by search query
     if (searchQuery) {
       const lowerQuery = searchQuery.toLowerCase()
       filtered = filtered.filter(
         (post) =>
           post.title.toLowerCase().includes(lowerQuery) ||
-          post.description?.toLowerCase().includes(lowerQuery) ||
-          post.category?.name.toLowerCase().includes(lowerQuery),
+          post.description?.toLowerCase().includes(lowerQuery)
       )
     }
 
@@ -41,7 +36,6 @@ export default function BlogGrid({ posts, categories, searchQuery = "" }: BlogGr
 
   return (
     <section className="px-4 pt-4 pb-8 max-w-7xl mx-auto">
-      {/* Category Filter */}
       <div className="mb-12">
         <h3 className="text-xs font-semibold text-muted-foreground mb-4 uppercase tracking-wider">
           Filter by category
@@ -59,10 +53,10 @@ export default function BlogGrid({ posts, categories, searchQuery = "" }: BlogGr
           </button>
           {categories.map((category) => (
             <button
-              key={category._id}
-              onClick={() => setSelectedCategory(category.slug.current)}
+              key={category.id}
+              onClick={() => setSelectedCategory(category.slug)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                selectedCategory === category.slug.current
+                selectedCategory === category.slug
                   ? "bg-primary text-primary-foreground"
                   : "bg-muted text-muted-foreground hover:bg-secondary hover:text-foreground"
               }`}
@@ -73,11 +67,10 @@ export default function BlogGrid({ posts, categories, searchQuery = "" }: BlogGr
         </div>
       </div>
 
-      {/* Posts Grid */}
       {filteredPosts.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPosts.map((post) => (
-            <BlogCard key={post._id} post={post} />
+            <BlogCard key={post.id} post={post} />
           ))}
         </div>
       ) : (

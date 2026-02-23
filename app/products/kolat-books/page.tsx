@@ -1,7 +1,6 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/fetch"
-import { kolatBooksPageQuery } from "@/sanity/lib/queries"
-import type { KolatBooksPage } from "@/sanity/lib/types"
+import { getPayloadClient } from "@/payload"
+import type { KolatBooksPageData } from "@/payload/lib/types"
 import KolatBooksPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,13 +10,11 @@ export const metadata = generateMetadata({
   tags: pageMetadata.kolatBooks.tags,
 })
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function KolatBooksPageRoute() {
-  const pageData = await sanityFetch<KolatBooksPage | null>({
-    query: kolatBooksPageQuery,
-    tags: ["kolatBooksPage"],
-  })
+  const payload = await getPayloadClient()
+  const pageData = await payload.findGlobal({ slug: 'kolat-books-page', depth: 1 }) as KolatBooksPageData
 
   return <KolatBooksPageClient pageData={pageData} />
 }

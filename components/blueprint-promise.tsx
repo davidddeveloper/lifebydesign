@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { Lightbulb, Shield, Zap } from "lucide-react"
-import type { OutcomesSection } from "@/sanity/lib/types"
+import type { BlueprintOutcomes } from "@/payload/lib/types"
 
 const defaultPromises = [
   {
@@ -23,14 +23,14 @@ const defaultPromises = [
 ]
 
 interface BlueprintPromiseProps {
-  data?: OutcomesSection
+  data?: BlueprintOutcomes
 }
 
 export function BlueprintPromise({ data }: BlueprintPromiseProps) {
-  const promises = data?.outcomes?.map((p, i) => ({
-    icon: i === 0 ? Lightbulb : i === 1 ? Shield : Zap, // Map icons based on index
-    title: p.title || "",
-    description: p.description || ""
+  const promises = data?.items?.map((p, i) => ({
+    icon: i === 0 ? Lightbulb : i === 1 ? Shield : Zap,
+    title: p.outcome || "",
+    description: ""
   })) || defaultPromises
 
   const closingStatement = data?.closingStatement || "We don't guess. We measure. We fix. We scale."

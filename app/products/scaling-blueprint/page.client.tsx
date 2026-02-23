@@ -10,41 +10,25 @@ import { BlueprintTargetSegments } from "@/components/blueprint-target-segments"
 import { BlueprintValueLadder } from "@/components/blueprint-value-ladder"
 import { BlueprintFAQ } from "@/components/blueprint-faq"
 import { BlueprintPromise } from "@/components/blueprint-promise"
-import { SectionRenderer } from "@/components/sanity/SectionRenderer"
-import type { ScalingBlueprintPage } from "@/sanity/lib/types"
+import type { ScalingBlueprintPageData } from "@/payload/lib/types"
 
 interface ScalingBlueprintPageClientProps {
-  pageData?: ScalingBlueprintPage | null
+  pageData?: ScalingBlueprintPageData | null
 }
 
 export default function ScalingBlueprintPageClient({ pageData }: ScalingBlueprintPageClientProps) {
   const [formModalOpen, setFormModalOpen] = useState(false)
 
-  // If we have Sanity data, use the section renderer
-  const hasSanityContent = pageData?.sections && pageData.sections.length > 0
-
   return (
     <div className="min-h-screen">
       <Header />
       <main>
-        {hasSanityContent ? (
-          // Render sections from Sanity
-          <SectionRenderer
-            sections={pageData.sections!}
-            onOpenForm={() => setFormModalOpen(true)}
-            page="blueprint"
-          />
-        ) : (
-          // Fallback to hardcoded content
-          <>
-            <BlueprintHero onOpenForm={() => setFormModalOpen(true)} />
-            <BlueprintProcess />
-            <BlueprintTargetSegments />
-            <BlueprintValueLadder onOpenForm={() => setFormModalOpen(true)} />
-            <BlueprintPromise />
-            <BlueprintFAQ />
-          </>
-        )}
+        <BlueprintHero data={pageData?.hero} onOpenForm={() => setFormModalOpen(true)} />
+        <BlueprintProcess data={pageData?.processSteps} />
+        <BlueprintTargetSegments data={pageData?.targetStages} />
+        <BlueprintValueLadder data={pageData?.pricingPaths} onOpenForm={() => setFormModalOpen(true)} />
+        <BlueprintPromise data={pageData?.outcomes} />
+        <BlueprintFAQ data={pageData?.faq} />
       </main>
       <Footer />
       <ScaleFormModal isOpen={formModalOpen} onClose={() => setFormModalOpen(false)} />

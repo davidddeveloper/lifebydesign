@@ -1,13 +1,13 @@
 "use client"
 
-import type { SanityDocument } from "next-sanity"
 import { useState } from "react"
 import BlogHero from "@/components/blog/blog-hero"
 import Posts from "@/components/Posts"
+import type { BlogPost, BlogCategory } from "@/payload/lib/types"
 
 interface BlogClientContentProps {
-  posts: SanityDocument[]
-  categories: SanityDocument[]
+  posts: BlogPost[]
+  categories: BlogCategory[]
 }
 
 export default function BlogClientContent({ posts, categories }: BlogClientContentProps) {

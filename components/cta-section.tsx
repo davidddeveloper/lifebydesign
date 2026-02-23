@@ -2,15 +2,23 @@
 
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import type { CTASection } from '@/sanity/lib/types'
+
+interface CTASectionData {
+    heading?: string
+    subheading?: string
+    ctaButton?: { text?: string; url?: string }
+}
 
 interface CTASectionProps {
-    data: CTASection
+    data?: CTASectionData
     onOpenForm?: () => void
 }
 
 export function CTASection({ data, onOpenForm }: CTASectionProps) {
-    const { heading, text, buttonText, buttonUrl } = data
+    const heading = data?.heading
+    const subheading = data?.subheading
+    const buttonText = data?.ctaButton?.text
+    const buttonUrl = data?.ctaButton?.url
 
     return (
         <section className="bg-[#1e293b] py-16 md:py-24">
@@ -20,9 +28,9 @@ export function CTASection({ data, onOpenForm }: CTASectionProps) {
                         {heading}
                     </h2>
                 )}
-                {text && (
+                {subheading && (
                     <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-                        {text}
+                        {subheading}
                     </p>
                 )}
                 {buttonText && (

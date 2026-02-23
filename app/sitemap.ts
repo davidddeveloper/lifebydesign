@@ -1,14 +1,7 @@
 import { MetadataRoute } from 'next'
-import { client } from '@/sanity/lib/client'
-import { groq } from 'next-sanity'
+import { getPayloadClient } from '@/payload'
 
 const baseUrl = 'https://startupbodyshop.com'
-
-// Query to get all blog post slugs
-const postSlugsQuery = groq`*[_type == "post" && defined(slug.current)] {
-  "slug": slug.current,
-  _updatedAt
-}`
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Static pages
@@ -81,13 +74,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic blog posts from Sanity
+  // Dynamic blog posts from Payload
   let blogPosts: MetadataRoute.Sitemap = []
   try {
-    const posts = await client.fetch<{ slug: string; _updatedAt: string }[]>(postSlugsQuery)
-    blogPosts = posts.map((post) => ({
+    const payload = await getPayloadClient()
+    const result = await payload.find({
+      collection: 'posts',
+      where: { status: { equals: 'published' } },
+      limit: 1000,
+      select: { slug: true, updatedAt: true } as any,
+    })
+    blogPosts = result.docs.map((post) => ({
       url: `${baseUrl}/media/blog/${post.slug}`,
-      lastModified: new Date(post._updatedAt),
+      lastModified: new Date(post.updatedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     }))

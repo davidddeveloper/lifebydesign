@@ -1,7 +1,6 @@
-import { Suspense } from "react"
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/live"
-import { workshopsPageQuery } from "@/sanity/lib/queries"
+import { getPayloadClient } from "@/payload"
+import type { WorkshopsPageData } from "@/payload/lib/types"
 import WorkshopPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,12 +10,11 @@ export const metadata = generateMetadata({
   tags: pageMetadata.workshops.tags,
 })
 
-export default async function WorkshopPage() {
-  const { data: pageData } = await sanityFetch({ query: workshopsPageQuery })
+export const dynamic = 'force-dynamic'
 
-  return (
-    <Suspense>
-      <WorkshopPageClient pageData={pageData} />
-    </Suspense>
-  )
+export default async function WorkshopPage() {
+  const payload = await getPayloadClient()
+  const pageData = await payload.findGlobal({ slug: 'workshops-page', depth: 1 }) as WorkshopsPageData
+
+  return <WorkshopPageClient pageData={pageData} />
 }

@@ -1,25 +1,10 @@
 import Image from "next/image"
 import Link from "next/link"
-import { urlFor } from "@/lib/sanity"
-import imageUrlBuilder from "@sanity/image-url";
-import { client } from "@/sanity/lib/client";
-
-interface BlogPost {
-  _id: string
-  title: string
-  slug: { current: string }
-  author?: { name: string; image?: any }
-  publishedAt: string
-  mainImage?: any
-  description: string
-  category?: { name: string; slug: { current: string } }
-}
+import type { BlogPost } from "@/payload/lib/types"
 
 interface RecommendedPostsProps {
   posts: BlogPost[]
 }
-
-const builder = imageUrlBuilder(client);
 
 export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
   if (posts.length === 0) return null
@@ -29,25 +14,25 @@ export default function RecommendedPosts({ posts }: RecommendedPostsProps) {
       <div className="max-w-3xl mx-auto">
         <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">More Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {posts.map((post: BlogPost) => (
+          {posts.map((post) => (
             <Link
-              key={post._id}
-              href={`/media/blog/${post.slug.current}`}
+              key={post.id}
+              href={`/media/blog/${post.slug}`}
               className="group rounded-lg overflow-hidden border border-border hover:border-primary/50 transition-all"
             >
               <div className="relative aspect-video overflow-hidden bg-muted">
-                {post.mainImage && (
+                {post.mainImage?.url && (
                   <Image
-                    src={post.mainImage ? builder.image(post.mainImage).url() : "/blog-post.jpg"}
-                    alt={`${post.title}`}
+                    src={post.mainImage.url}
+                    alt={post.title}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                 )}
               </div>
               <div className="p-4">
-                {post.category && (
-                  <span className="text-xs font-medium text-primary uppercase">{post.category.name}</span>
+                {post.categories?.[0] && (
+                  <span className="text-xs font-medium text-primary uppercase">{post.categories[0].title}</span>
                 )}
                 <h3 className="font-semibold text-foreground mt-2 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
                   {post.title}

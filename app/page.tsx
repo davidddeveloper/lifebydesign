@@ -1,7 +1,6 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/fetch"
-import { homePageQuery } from "@/sanity/lib/queries"
-import type { HomePage } from "@/sanity/lib/types"
+import { getPayloadClient } from "@/payload"
+import type { HomePageData } from "@/payload/lib/types"
 import HomeClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,13 +10,11 @@ export const metadata = generateMetadata({
   tags: pageMetadata.home.tags,
 })
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-  const pageData = await sanityFetch<HomePage | null>({
-    query: homePageQuery,
-    tags: ["homePage"],
-  })
+  const payload = await getPayloadClient()
+  const pageData = await payload.findGlobal({ slug: 'home-page', depth: 1 }) as HomePageData
 
   return <HomeClient pageData={pageData} />
 }

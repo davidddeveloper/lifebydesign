@@ -4,10 +4,10 @@ import { motion } from "framer-motion"
 import { ChevronDown } from "lucide-react"
 import Link from "next/link"
 
-import type { AboutHeroSection } from "@/sanity/lib/types"
+import type { AboutPageHero } from "@/payload/lib/types"
 
 interface AboutHeroProps {
-  data?: AboutHeroSection
+  data?: AboutPageHero
 }
 
 export function AboutHero({ data }: AboutHeroProps) {

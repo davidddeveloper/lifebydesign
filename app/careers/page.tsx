@@ -1,7 +1,6 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/fetch"
-import { careersPageQuery } from "@/sanity/lib/queries"
-import type { CareersPage } from "@/sanity/lib/types"
+import { getPayloadClient } from "@/payload"
+import type { CareersPageData } from "@/payload/lib/types"
 import CareersPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,13 +10,11 @@ export const metadata = generateMetadata({
   tags: pageMetadata.careers.tags,
 })
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function CareersPageRoute() {
-  const pageData = await sanityFetch<CareersPage | null>({
-    query: careersPageQuery,
-    tags: ["careersPage"],
-  })
+  const payload = await getPayloadClient()
+  const pageData = await payload.findGlobal({ slug: 'careers-page', depth: 1 }) as CareersPageData
 
   return <CareersPageClient pageData={pageData} />
 }

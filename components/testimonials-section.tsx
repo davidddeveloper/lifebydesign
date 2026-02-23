@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { urlFor } from "@/sanity/lib/image"
+
 import type { CareersTestimonialsSection } from "@/sanity/lib/types"
 
 const defaultTestimonials = [
@@ -26,14 +26,14 @@ const defaultTestimonials = [
 ]
 
 interface TestimonialsSectionProps {
-  data?: CareersTestimonialsSection
+  data?: CareersTestimonials
 }
 
 export function TestimonialsSection({ data }: TestimonialsSectionProps) {
-  const testimonials = data?.testimonials?.map(t => ({
+  const testimonials = data?.items?.map(t => ({
     quote: t.quote || "",
     author: t.name || "",
-    image: t.image ? urlFor(t.image).url() : "/placeholder.svg"
+    image: t.image?.url || "/placeholder.svg"
   })) || defaultTestimonials
 
   return (

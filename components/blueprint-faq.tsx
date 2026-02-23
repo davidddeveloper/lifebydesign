@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown } from "lucide-react"
-import type { FAQReferenceSection } from "@/sanity/lib/types"
+import type { BlueprintFAQ as BlueprintFAQData } from "@/payload/lib/types"
 
 const defaultFaqs = [
   {
@@ -39,13 +39,13 @@ const defaultFaqs = [
 ]
 
 interface BlueprintFAQProps {
-  data?: FAQReferenceSection
+  data?: BlueprintFAQData
 }
 
 export function BlueprintFAQ({ data }: BlueprintFAQProps) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(-1)
 
-  const faqs = data?.faq?.faqs || defaultFaqs
+  const faqs = data?.items || defaultFaqs
 
   return (
     <section className="py-20 lg:py-24 bg-white">

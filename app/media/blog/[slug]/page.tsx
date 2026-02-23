@@ -1,69 +1,81 @@
 import { generateMetadata as generateSEOMetadata, siteConfig } from "@/lib/seo"
-import { SanityDocument } from "@sanity/client";
-import { postPathsQuery, postQuery, recommendedPostsQuery } from "@/sanity/lib/queries";
-import { sanityFetch } from "@/sanity/lib/fetch";
-import { client } from "@/sanity/lib/client";
-import imageUrlBuilder from "@sanity/image-url";
-import Post from "@/components/Post";
-
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-
+import { getPayloadClient } from "@/payload"
+import type { BlogPost } from "@/payload/lib/types"
+import Post from "@/components/Post"
+import { Header } from "@/components/Header"
+import { Footer } from "@/components/Footer"
 import RecommendedPosts from "@/components/blog/recommended-posts"
+import { notFound } from "next/navigation"
 
-const builder = imageUrlBuilder(client);
+export const dynamic = 'force-dynamic'
 
-export const revalidate = 60;
-
-export interface BlogPost {
-  _id: string
-  title: string
-  slug: { current: string }
-  author?: { name: string; image?: any }
-  publishedAt: string
-  mainImage?: any
-  description: string
-  category?: { name: string; slug: { current: string } }
+export async function generateStaticParams() {
+  const payload = await getPayloadClient()
+  const posts = await payload.find({
+    collection: 'posts',
+    where: { status: { equals: 'published' } },
+    select: { slug: true },
+    limit: 1000,
+  })
+  return posts.docs.map((post: any) => ({ slug: post.slug }))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = await sanityFetch<BlogPost>({ query: postQuery, params: { slug: slug } })
+  const payload = await getPayloadClient()
+  const result = await payload.find({
+    collection: 'posts',
+    where: { slug: { equals: slug } },
+    depth: 1,
+    limit: 1,
+  })
 
-  if (!post) {
-    return {}
-  }
+  const post = result.docs[0] as BlogPost | undefined
+  if (!post) return {}
 
-  const imageUrl = post.mainImage ? builder.image(post.mainImage).url() : `${siteConfig.baseUrl}/images/og-image.png`
+  const imageUrl = post.mainImage?.url || `${siteConfig.baseUrl}/images/og-image.png`
 
   return generateSEOMetadata({
     title: post.title,
     description: post.description,
-    path: `/blog/${post.slug?.current}`,
+    path: `/blog/${post.slug}`,
     image: imageUrl,
     type: "article",
     author: post.author?.name,
-    publishedDate: new Date(post.publishedAt),
-    tags: [post.category?.name, "business", "entrepreneurship", "insights"].filter(Boolean) as string[],
+    publishedDate: post.publishedAt ? new Date(post.publishedAt) : undefined,
+    tags: ["business", "entrepreneurship", "insights"],
   })
 }
 
-const BlogPostPage = async ({params,}: {params: Promise<{ slug: string }>}) => {
-  const { slug } = await params 
+export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const payload = await getPayloadClient()
 
-  const post = await sanityFetch<SanityDocument>({ query: postQuery, params: {slug} })
-  let recommendedPosts: any[] = []
-  try {
-    recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+  const [postResult, recommendedResult] = await Promise.all([
+    payload.find({
+      collection: 'posts',
+      where: { slug: { equals: slug } },
+      depth: 1,
+      limit: 1,
+    }),
+    payload.find({
+      collection: 'posts',
+      where: { status: { equals: 'published' } },
+      sort: '-publishedAt',
+      depth: 1,
+      limit: 7,
+    }),
+  ])
 
-    recommendedPosts = recommendedPosts.filter((p) => p._id !== post._id)
-  } catch {}
-  // Filter out the current post
+  const post = postResult.docs[0] as BlogPost | undefined
+  if (!post) notFound()
+
+  const recommendedPosts = (recommendedResult.docs as BlogPost[]).filter(p => p.id !== post.id).slice(0, 6)
+
   return (
     <>
       <Header />
       <Post post={post} />
-      {/* Recommended Posts */}
       <div className="max-w-7xl mx-auto px-4">
         <RecommendedPosts posts={recommendedPosts} />
       </div>
@@ -71,5 +83,3 @@ const BlogPostPage = async ({params,}: {params: Promise<{ slug: string }>}) => {
     </>
   )
 }
-
-export default BlogPostPage

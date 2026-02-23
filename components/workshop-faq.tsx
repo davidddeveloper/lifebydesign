@@ -35,7 +35,7 @@ import { WorkshopRegistrationModal } from "@/components/workshop-registration-mo
     answer:
       'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
   },*/}
-import type { HomeFaqSection, FAQReferenceSection } from '@/sanity/lib/types'
+import type { HomePageFAQ } from '@/payload/lib/types'
 
 const defaultFaqs = [
   {
@@ -87,7 +87,7 @@ const defaultFaqs = [
 ]
 
 interface WorkshopFaqProps {
-  data?: HomeFaqSection | FAQReferenceSection
+  data?: HomePageFAQ
   onOpenForm?: () => void
 }
 
@@ -95,10 +95,8 @@ export function WorkshopFaq({ data, onOpenForm }: WorkshopFaqProps) {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Use Sanity data if available, otherwise use default
-  const title = data?.faq?.title || "FAQs"
-  // Normalize Sanity FAQ items to match structure or use default
-  const displayFaqs = data?.faq?.faqs?.map(item => ({
+  const title = data?.title || "FAQs"
+  const displayFaqs = data?.items?.map(item => ({
     question: item.question,
     answer: item.answer
   })) || defaultFaqs

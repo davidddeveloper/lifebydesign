@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import type { CareersValuesSection } from "@/sanity/lib/types"
-import { urlFor } from "@/sanity/lib/image"
+
 
 const defaultValues = [
   {
@@ -27,18 +27,18 @@ const defaultValues = [
 ]
 
 interface ValuesSectionProps {
-  data?: CareersValuesSection
+  data?: CareersValues
 }
 
 export function ValuesSection({ data }: ValuesSectionProps) {
-  const values = data?.values?.map(v => ({
+  const values = data?.items?.map(v => ({
     icon: v.icon || "🌟",
     title: v.title || "",
     description: v.description || "",
-    image: v.image ? urlFor(v.image).url() : undefined
+    image: v.image?.url
   })) || defaultValues
 
-  const heading = data?.heading || "What are our values?"
+  const heading = data?.title || "What are our values?"
   const description = data?.description || "Our values aren't just words on a wall — we make every business decision through them, including who we hire. We hold a high bar for both character and results: no ego, disciplined execution, and measuring ourselves by impact. By setting clear expectations for how we work together, we can keep doing big things with great people."
 
   return (

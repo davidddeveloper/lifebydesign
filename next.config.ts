@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
+import { withPayload } from "@payloadcms/next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
     remotePatterns: [
       {
@@ -12,9 +12,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-
-  
-  
 };
 
-export default nextConfig;
+export default withPayload(nextConfig, { devBundleServerPackages: false });

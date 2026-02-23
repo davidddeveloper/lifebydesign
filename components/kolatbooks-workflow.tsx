@@ -2,10 +2,10 @@
 
 import { motion } from "framer-motion"
 
-import type { WorkflowPhasesSection } from "@/sanity/lib/types"
+import type { KolatWorkflowPhases } from "@/payload/lib/types"
 
 interface FinanceWorkflowProps {
-  data?: WorkflowPhasesSection
+  data?: KolatWorkflowPhases
 }
 
 export function FinanceWorkflow({ data }: FinanceWorkflowProps) {
@@ -62,12 +62,12 @@ export function FinanceWorkflow({ data }: FinanceWorkflowProps) {
     },
   ]
 
-  const phases = data?.phases?.map(p => ({
-    phase: p.phase || "",
+  const phases = data?.phases?.map((p, i) => ({
+    phase: `Phase ${['I', 'II', 'III', 'IV'][i] || i + 1}`,
     title: p.title || "",
     timeframe: p.duration || "",
-    action: p.action || "",
-    result: p.result || ""
+    action: p.description || "",
+    result: p.results || ""
   })) || defaultPhases
 
   return (

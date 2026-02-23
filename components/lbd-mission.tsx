@@ -1,11 +1,11 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { PortableText } from "next-sanity"
-import type { MissionVisionSection } from "@/sanity/lib/types"
+import { RichText } from "@payloadcms/richtext-lexical/react"
+import type { AboutMissionVision } from "@/payload/lib/types"
 
 interface LBDMissionProps {
-  data?: MissionVisionSection
+  data?: AboutMissionVision
 }
 
 export function LBDMission({ data }: LBDMissionProps) {
@@ -27,7 +27,7 @@ export function LBDMission({ data }: LBDMissionProps) {
             <div className="h-1 w-20 bg-[#177fc9] mb-8"></div>
             {data?.story ? (
               <div className="text-gray-700 leading-relaxed text-lg prose max-w-none">
-                <PortableText value={data.story} />
+                <RichText data={data.story} converters={{}} />
               </div>
             ) : (
               <p className="text-gray-700 leading-relaxed text-lg">
@@ -47,9 +47,7 @@ export function LBDMission({ data }: LBDMissionProps) {
               className="space-y-4"
             >
               <h3 className="text-2xl font-black text-gray-900">Mission</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {mission}
-              </p>
+              <p className="text-gray-700 leading-relaxed">{mission}</p>
             </motion.div>
 
             <motion.div
@@ -60,9 +58,7 @@ export function LBDMission({ data }: LBDMissionProps) {
               className="space-y-4"
             >
               <h3 className="text-2xl font-black text-gray-900">Vision</h3>
-              <p className="text-gray-700 leading-relaxed">
-                {vision}
-              </p>
+              <p className="text-gray-700 leading-relaxed">{vision}</p>
             </motion.div>
           </div>
         </motion.div>

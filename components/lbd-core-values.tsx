@@ -2,16 +2,16 @@
 
 import { motion } from "framer-motion"
 
-import type { CoreValuesSection } from "@/sanity/lib/types"
+import type { AboutCoreValues } from "@/payload/lib/types"
 
 const defaultCoreValues = ["Impact", "Integrity", "Inclusivity", "Collaboration", "Excellence"]
 
 interface LBDCoreValuesProps {
-  data?: CoreValuesSection
+  data?: AboutCoreValues
 }
 
 export function LBDCoreValues({ data }: LBDCoreValuesProps) {
-  const values = data?.values || defaultCoreValues
+  const values = data?.values?.map(v => v.title) || defaultCoreValues
 
   return (
     <section className="bg-gray-50 py-20 md:py-32"

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import { CheckCircle2 } from "lucide-react"
-import type { PricingPathsSection } from "@/sanity/lib/types"
+import type { BlueprintPricingPaths } from "@/payload/lib/types"
 
 const defaultTiers = [
   {
@@ -58,19 +58,19 @@ const defaultTiers = [
 ]
 
 interface BlueprintValueLadderProps {
-  data?: PricingPathsSection
+  data?: BlueprintPricingPaths
   onOpenForm: () => void
 }
 
 export function BlueprintValueLadder({ data, onOpenForm }: BlueprintValueLadderProps) {
-  const tiers = data?.paths?.map(path => ({
-    stage: path.stage || "",
-    name: path.title || "",
-    description: "",
-    features: path.features || [],
-    cta: path.ctaText || "",
-    highlighted: path.stage === "Stage 1",
-    price: path.price || ""
+  const tiers = data?.tiers?.map((tier, i) => ({
+    stage: "",
+    name: tier.title || "",
+    description: tier.description || "",
+    features: tier.features?.map(f => f.item || "").filter(Boolean) || [],
+    cta: tier.cta?.text || "",
+    highlighted: i === 0,
+    price: tier.price || ""
   })) || defaultTiers
 
   return (
@@ -123,12 +123,12 @@ export function BlueprintValueLadder({ data, onOpenForm }: BlueprintValueLadderP
                 </ul>
 
                 <button
-                  onClick={tier.stage !== "Stage 3" ? onOpenForm : () => { }}
+                  onClick={tier.cta ? onOpenForm : () => { }}
                   className={`w-full py-3 px-6 font-bold rounded-lg transition-colors ${tier.highlighted
                       ? "bg-[#177fc9] text-white hover:bg-[#177fc9]"
                       : "border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white"
                     }
-                    ${tier.stage !== "Stage 3" ? "cursor-pointer" : "cursor-not-allowed"}`}
+                    ${tier.cta ? "cursor-pointer" : "cursor-not-allowed"}`}
                 >
                   {tier.cta}
                 </button>

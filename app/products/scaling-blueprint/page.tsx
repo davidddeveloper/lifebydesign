@@ -1,7 +1,6 @@
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/fetch"
-import { scalingBlueprintPageQuery } from "@/sanity/lib/queries"
-import type { ScalingBlueprintPage } from "@/sanity/lib/types"
+import { getPayloadClient } from "@/payload"
+import type { ScalingBlueprintPageData } from "@/payload/lib/types"
 import ScalingBlueprintPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,13 +10,11 @@ export const metadata = generateMetadata({
   tags: pageMetadata.scalingBlueprint.tags,
 })
 
-export const revalidate = 0
+export const dynamic = 'force-dynamic'
 
 export default async function ScalingBlueprintPageRoute() {
-  const pageData = await sanityFetch<ScalingBlueprintPage | null>({
-    query: scalingBlueprintPageQuery,
-    tags: ["scalingBlueprintPage"],
-  })
+  const payload = await getPayloadClient()
+  const pageData = await payload.findGlobal({ slug: 'scaling-blueprint-page', depth: 1 }) as ScalingBlueprintPageData
 
   return <ScalingBlueprintPageClient pageData={pageData} />
 }

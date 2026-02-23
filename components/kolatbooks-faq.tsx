@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import type { FAQReferenceSection } from "@/sanity/lib/types"
+import type { KolatFAQ } from "@/payload/lib/types"
 
 
-export function FinanceFaq({ data }: { data?: FAQReferenceSection }) {
+export function FinanceFaq({ data }: { data?: KolatFAQ }) {
   const [openIndex, setOpenIndex] = useState(-1)
 
   const defaultFaqs = [
@@ -29,8 +29,8 @@ export function FinanceFaq({ data }: { data?: FAQReferenceSection }) {
     },
   ]
 
-  const faqs = data?.faq?.faqs || defaultFaqs
-  const title = data?.faq?.title || "Frequently Asked Questions"
+  const faqs = data?.items || defaultFaqs
+  const title = data?.title || "Frequently Asked Questions"
 
   return (
     <section className="py-20 md:py-28 bg-gray-50">

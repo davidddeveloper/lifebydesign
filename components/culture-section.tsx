@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { urlFor } from "@/sanity/lib/image"
+// urlFor removed
 import type { CareersMindsetSection } from "@/sanity/lib/types"
 
 const defaultCultureItems = [
@@ -41,7 +41,7 @@ const defaultCultureItems = [
 ]
 
 interface CultureSectionProps {
-  data?: CareersMindsetSection
+  data?: CareersMindset
 }
 
 export function CultureSection({ data }: CultureSectionProps) {
@@ -49,11 +49,11 @@ export function CultureSection({ data }: CultureSectionProps) {
     title: item.title || "",
     description: item.description || "",
     subtext: item.subtext || "",
-    image: item.image ? urlFor(item.image).url() : (defaultCultureItems[index]?.image || "/placeholder.svg"),
+    image: item.image?.url || (defaultCultureItems[index]?.image || "/placeholder.svg"),
     reverse: item.reverse || false
   })) || defaultCultureItems
 
-  const heading = data?.heading || "We want disciplined team players who trust and win together."
+  const heading = data?.title || "We want disciplined team players who trust and win together."
   const description = data?.description || "At Startup Bodyshop, we're focused on building businesses that compound over years, not months. We care about creating systems that scale, making decisions that stand the test of time, and building relationships that last."
 
   return (

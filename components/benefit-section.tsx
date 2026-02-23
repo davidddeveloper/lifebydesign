@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 import Link from "next/link"
-import type { CareersBenefitsSection } from "@/sanity/lib/types"
+import type { CareersBenefits } from "@/payload/lib/types"
 
 const defaultBenefits = [
   {
@@ -32,11 +32,11 @@ const defaultBenefits = [
 ]
 
 interface BenefitsSectionProps {
-  data?: CareersBenefitsSection
+  data?: CareersBenefits
 }
 
 export function BenefitsSection({ data }: BenefitsSectionProps) {
-  const benefits = data?.benefits?.map(b => ({
+  const benefits = data?.items?.map(b => ({
     icon: b.icon || "✨",
     title: b.title || "",
     description: b.description || ""

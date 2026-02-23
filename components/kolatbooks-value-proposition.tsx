@@ -1,10 +1,10 @@
 "use client"
 
 import { motion } from "framer-motion"
-import type { ProductPromiseSection } from "@/sanity/lib/types"
+import type { KolatPromise } from "@/payload/lib/types"
 
 interface FinanceValuePropositionProps {
-  data?: ProductPromiseSection
+  data?: KolatPromise
 }
 
 export function FinanceValueProposition({ data }: FinanceValuePropositionProps) {
@@ -44,7 +44,7 @@ export function FinanceValueProposition({ data }: FinanceValuePropositionProps) 
   // I will keep them hardcoded for now or use description field if multiple paragraphs.
 
   const heading = data?.heading || "Our Promise to You"
-  const description = data?.description || "We organize your SME finances, automate your accounting, and make you fully credit-ready — giving you the confidence to grow."
+  const description = data?.subheading || "We organize your SME finances, automate your accounting, and make you fully credit-ready — giving you the confidence to grow."
   const guarantee = data?.guarantee || "Clean books, credit-ready financial statements, and full confidence in your numbers."
 
   return (

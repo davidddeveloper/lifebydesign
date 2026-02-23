@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 
-import type { ServicesSection } from "@/sanity/lib/types"
+import type { AboutServices } from "@/payload/lib/types"
 
 const defaultServices = [
   {
@@ -23,11 +23,11 @@ const defaultServices = [
 ]
 
 interface LBDServicesProps {
-  data?: ServicesSection
+  data?: AboutServices
 }
 
 export function LBDServices({ data }: LBDServicesProps) {
-  const services = data?.services?.map(s => ({
+  const services = data?.items?.map(s => ({
     title: s.title || "",
     description: s.description || ""
   })) || defaultServices

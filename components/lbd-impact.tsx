@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion"
 
-import type { ImpactStatsSection } from "@/sanity/lib/types"
+import type { AboutImpactStats } from "@/payload/lib/types"
 
 const defaultImpactStats = [
   { value: "2,900+", label: "Entrepreneurs Trained & Mentored" },
@@ -11,7 +11,7 @@ const defaultImpactStats = [
 ]
 
 interface LBDImpactProps {
-  data?: ImpactStatsSection
+  data?: AboutImpactStats
 }
 
 export function LBDImpact({ data }: LBDImpactProps) {
