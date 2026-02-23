@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
           email: registration.personal_email || registration.business_email,
           name: registration.first_name || registration.full_name || 'Valued Customer',
           businessName: registration.business_name,
+          workshopTitle: registration.workshop_title,
         });
         if (!success) console.error('[monime-webhook] confirmation email failed:', emailError);
       }
@@ -74,12 +75,12 @@ export async function POST(request: NextRequest) {
       const { data: registration } = reference
         ? await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
           .eq('registration_id', reference)
           .single()
         : await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
           .eq('checkout_session_id', checkoutSessionId)
           .single();
 
@@ -100,6 +101,7 @@ export async function POST(request: NextRequest) {
           name: registration.first_name || registration.full_name || 'Valued Customer',
           businessName: registration.business_name,
           registrationId: registration.registration_id,
+          workshopTitle: registration.workshop_title,
         }, { body: resumeLink });
       }
     }

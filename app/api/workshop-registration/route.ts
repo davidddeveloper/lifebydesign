@@ -126,6 +126,7 @@ export async function POST(request: NextRequest) {
           email: result.personal_email || result.business_email,
           name: result.first_name || 'Valued Customer',
           businessName: result.business_name,
+          workshopTitle: result.workshop_title,
         }, { body: resumeLink }); // Passing link as body for this template
       } catch (emailError) {
         console.error('Failed to send payment reminder email:', emailError);
