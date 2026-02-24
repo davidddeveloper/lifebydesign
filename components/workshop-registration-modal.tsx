@@ -46,14 +46,14 @@ const STORAGE_KEY = "sbs_workshop_registration_progress"
 const PATH_CONFIG: Record<RegistrationType, { title: string; price: number; label: string; color: string; hoverColor: string }> = {
   workshop: {
     title: "Business Constraint-Breaking Workshop",
-    price: 100,
+    price: 0.05,
     label: "Workshop",
     color: "#177fc9",
     hoverColor: "#0f5b90",
   },
   vip_consultation: {
     title: "VIP Consultation",
-    price: 200,
+    price: 0.05,
     label: "VIP Consultation",
     color: "#b45309",
     hoverColor: "#92400e",
@@ -630,7 +630,7 @@ export function WorkshopRegistrationModal({
                           ) : (
                             <>
                               <CreditCard className="w-5 h-5 mr-2" />
-                              Pay with Monime
+                              Pay Now
                             </>
                           )}
                         </Button>
@@ -683,15 +683,15 @@ export function WorkshopRegistrationModal({
                               style={{
                                 backgroundColor:
                                   formData.firstName &&
-                                  (formData.personalEmail || formData.businessEmail) &&
-                                  formData.phone
+                                    (formData.personalEmail || formData.businessEmail) &&
+                                    formData.phone
                                     ? "#22c55e"
                                     : accentColor,
                               }}
                             >
                               {formData.firstName &&
-                              (formData.personalEmail || formData.businessEmail) &&
-                              formData.phone ? (
+                                (formData.personalEmail || formData.businessEmail) &&
+                                formData.phone ? (
                                 <Check className="w-5 h-5" />
                               ) : (
                                 "1"
@@ -858,9 +858,8 @@ export function WorkshopRegistrationModal({
                                 id="yearsOfOperations"
                                 value={formData.yearsOfOperations}
                                 onChange={(e) => handleFieldChange("yearsOfOperations", e.target.value)}
-                                className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${
-                                  errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
-                                } focus:outline-none focus:border-[#177fc9]`}
+                                className={`w-full mt-1 px-4 py-2 border rounded-lg font-medium text-gray-900 bg-white cursor-pointer transition-colors ${errors.yearsOfOperations ? "border-red-500" : "border-gray-300 hover:border-[#177fc9]"
+                                  } focus:outline-none focus:border-[#177fc9]`}
                               >
                                 <option value="">Select years in business...</option>
                                 <option value="Pre-launch">Pre-launch (planning stage)</option>
@@ -1005,8 +1004,8 @@ export function WorkshopRegistrationModal({
                                   <>
                                     <CreditCard className="w-5 h-5 mr-2" />
                                     {isVip
-                                      ? `Book VIP Consultation - $${workshopPrice.toLocaleString()} USD`
-                                      : `Proceed to Payment - $${workshopPrice.toLocaleString()} USD`}
+                                      ? `Book VIP Consultation - $${(workshopPrice * 24).toLocaleString()} SLE`
+                                      : `Proceed to Payment - $${(workshopPrice * 24).toLocaleString()} SLE`}
                                   </>
                                 )}
                               </Button>
