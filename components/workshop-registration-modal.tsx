@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { X, Check, Loader2, CreditCard, Users, Star } from "lucide-react"
+import { X, Check, Loader2, CreditCard, Users, Star, CheckCircle, XCircle, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,6 +20,22 @@ interface WorkshopRegistrationModalProps {
   workshopTitle?: string
   workshopPrice?: number // in USD (display value, e.g. 100 = $100)
   resumeId?: string | null
+  /** When set, the modal shows a payment result card instead of the registration form */
+  paymentResult?: { status: "success" | "cancelled"; registrationId?: string }
+  /** Called when user clicks "Try Again" from the cancelled view */
+  onRetry?: () => void
+}
+
+interface PaymentRegData {
+  registration_id: string
+  full_name: string | null
+  first_name: string | null
+  last_name: string | null
+  personal_email: string | null
+  business_email: string | null
+  business_name: string | null
+  workshop_title: string | null
+  workshop_price: number | null
 }
 
 interface FormData {
@@ -63,7 +79,9 @@ const PATH_CONFIG: Record<RegistrationType, { title: string; price: number; labe
 export function WorkshopRegistrationModal({
   isOpen,
   onClose,
-  resumeId
+  resumeId,
+  paymentResult,
+  onRetry,
 }: WorkshopRegistrationModalProps) {
   const [registrationType, setRegistrationType] = useState<RegistrationType | null>(null)
   const [currentStep, setCurrentStep] = useState(1)
@@ -436,6 +454,23 @@ export function WorkshopRegistrationModal({
 
   const isVip = registrationType === "vip_consultation"
 
+  // ── Payment result state ──────────────────────────────────────────
+  const [paymentRegData, setPaymentRegData] = useState<PaymentRegData | null>(null)
+  const [paymentRegLoading, setPaymentRegLoading] = useState(false)
+
+  useEffect(() => {
+    if (isOpen && paymentResult?.status === "success" && paymentResult.registrationId) {
+      setPaymentRegLoading(true)
+      fetch(`/api/workshop-registration?id=${paymentResult.registrationId}`)
+        .then(r => r.json())
+        .then(data => { if (data.success && data.registration) setPaymentRegData(data.registration) })
+        .catch(() => {})
+        .finally(() => setPaymentRegLoading(false))
+    } else {
+      setPaymentRegData(null)
+    }
+  }, [isOpen, paymentResult])
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -456,6 +491,118 @@ export function WorkshopRegistrationModal({
             className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
           >
             <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden pointer-events-auto">
+              {/* ── Payment result views ─────────────────────────────────────── */}
+              {paymentResult?.status === "success" ? (
+                <div>
+                  {/* Green success header */}
+                  <div className="bg-gradient-to-br from-green-50 to-emerald-50 px-8 pt-8 pb-6 text-center">
+                    <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-10 h-10 text-green-600" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">Payment Confirmed!</h2>
+                    <p className="text-gray-500 mt-1.5 text-sm">Your spot is secured. We&apos;ll see you there!</p>
+                  </div>
+
+                  {/* Details */}
+                  <div className="px-6 py-5 space-y-4">
+                    {paymentRegLoading ? (
+                      <div className="py-6 flex flex-col items-center gap-2 text-gray-400">
+                        <RefreshCw className="w-5 h-5 animate-spin" />
+                        <span className="text-sm">Loading your details…</span>
+                      </div>
+                    ) : paymentRegData ? (
+                      <>
+                        <div className="bg-gray-50 rounded-xl divide-y divide-gray-100 overflow-hidden">
+                          <div className="flex items-center justify-between px-4 py-3">
+                            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Name</span>
+                            <span className="text-sm font-semibold text-gray-900">
+                              {paymentRegData.full_name || `${paymentRegData.first_name ?? ""} ${paymentRegData.last_name ?? ""}`.trim() || "—"}
+                            </span>
+                          </div>
+                          <div className="flex items-start justify-between px-4 py-3 gap-4">
+                            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide flex-shrink-0">Registration</span>
+                            <span className="text-sm font-semibold text-gray-900 text-right">{paymentRegData.workshop_title || "Workshop"}</span>
+                          </div>
+                          {paymentRegData.business_name && (
+                            <div className="flex items-center justify-between px-4 py-3">
+                              <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Business</span>
+                              <span className="text-sm font-medium text-gray-800">{paymentRegData.business_name}</span>
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between px-4 py-3">
+                            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Amount Paid</span>
+                            <span className="text-sm font-bold text-green-600">
+                              {paymentRegData.workshop_price != null ? `$${paymentRegData.workshop_price} USD` : "Paid"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {(paymentRegData.personal_email || paymentRegData.business_email) && (
+                          <p className="text-xs text-center bg-blue-50 text-blue-700 rounded-xl px-4 py-3 leading-relaxed">
+                            A confirmation email has been sent to{" "}
+                            <span className="font-semibold">{paymentRegData.personal_email || paymentRegData.business_email}</span>
+                          </p>
+                        )}
+
+                        <p className="text-xs text-gray-400 text-center">
+                          Ref: <span className="font-mono">{paymentRegData.registration_id}</span>
+                        </p>
+                      </>
+                    ) : (
+                      <p className="text-sm text-gray-500 text-center py-2">
+                        Your registration is confirmed. Check your email for details.
+                      </p>
+                    )}
+
+                    <button
+                      onClick={onClose}
+                      className="w-full py-3 bg-[#177fc9] hover:bg-[#0f5b90] text-white font-semibold rounded-xl transition-colors text-sm"
+                    >
+                      Continue to Workshop Page
+                    </button>
+                  </div>
+                </div>
+              ) : paymentResult?.status === "cancelled" ? (
+                <div>
+                  {/* Red/orange cancelled header */}
+                  <div className="bg-gradient-to-br from-red-50 to-orange-50 px-8 pt-8 pb-6 text-center relative">
+                    <button
+                      onClick={onClose}
+                      className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-red-100 text-red-400 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                    <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <XCircle className="w-10 h-10 text-red-500" />
+                    </div>
+                    <h2 className="text-2xl font-bold text-gray-900">Payment Not Completed</h2>
+                    <p className="text-gray-500 mt-1.5 text-sm">No worries — your details are saved.</p>
+                  </div>
+
+                  {/* Body */}
+                  <div className="px-6 py-5 space-y-3">
+                    <div className="bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 text-sm text-amber-800 leading-relaxed">
+                      Your registration has been saved. Click <span className="font-semibold">Try Again</span> to return to the payment screen without re-entering your information.
+                    </div>
+
+                    <button
+                      onClick={() => { if (onRetry) onRetry(); else onClose() }}
+                      className="w-full py-3 bg-[#177fc9] hover:bg-[#0f5b90] text-white font-semibold rounded-xl transition-colors text-sm"
+                    >
+                      Try Again
+                    </button>
+
+                    <button
+                      onClick={onClose}
+                      className="w-full py-3 bg-gray-50 hover:bg-gray-100 text-gray-600 font-medium rounded-xl transition-colors text-sm"
+                    >
+                      Maybe Later
+                    </button>
+                  </div>
+                </div>
+              ) : (
+              /* ── Normal registration form ──────────────────────────────────── */
+              <>
               {/* Header */}
               <div
                 className="px-6 py-5 flex items-center justify-between"
@@ -1031,6 +1178,8 @@ export function WorkshopRegistrationModal({
                   </>
                 )}
               </div>
+              </>
+              )}
             </div>
           </motion.div>
         </>
