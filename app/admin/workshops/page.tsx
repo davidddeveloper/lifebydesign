@@ -43,6 +43,7 @@ interface Registration {
 }
 
 type TimeFilter = "all" | "today" | "this_week" | "this_month" | "last_month" | "this_year"
+type TypeFilter = "all" | "workshop" | "vip"
 type SortField = "created_at" | "full_name" | "business_name" | "status" | "workshop_price" | "payment_completed_at"
 type SortDir = "asc" | "desc"
 
@@ -424,6 +425,7 @@ export default function AdminWorkshopsPage() {
   // Filters
   const [search, setSearch] = useState("")
   const [statusFilter, setStatusFilter] = useState("all")
+  const [typeFilter, setTypeFilter] = useState<TypeFilter>("all")
   const [timeFilter, setTimeFilter] = useState<TimeFilter>("all")
   const [showDateRange, setShowDateRange] = useState(false)
   const [dateFrom, setDateFrom] = useState("")
@@ -475,6 +477,14 @@ export default function AdminWorkshopsPage() {
       result = result.filter(r => r.status === statusFilter)
     }
 
+    if (typeFilter !== "all") {
+      if (typeFilter === "vip") {
+        result = result.filter(r => r.workshop_title === "VIP Consultation")
+      } else {
+        result = result.filter(r => r.workshop_title !== "VIP Consultation")
+      }
+    }
+
     if (timeFilter !== "all" && !showDateRange) {
       const range = getTimeRange(timeFilter)
       if (range) result = result.filter(r => {
@@ -505,7 +515,7 @@ export default function AdminWorkshopsPage() {
     })
 
     return result
-  }, [registrations, search, statusFilter, timeFilter, showDateRange, dateFrom, dateTo, sortField, sortDir])
+  }, [registrations, search, statusFilter, typeFilter, timeFilter, showDateRange, dateFrom, dateTo, sortField, sortDir])
 
   // ── Stats ──
   const stats = useMemo(() => {
@@ -514,7 +524,9 @@ export default function AdminWorkshopsPage() {
     const pending = all.filter(r => r.status === "pending_payment")
     const inProg = all.filter(r => r.status === "in_progress")
     const revenue = paid.reduce((sum, r) => sum + (r.workshop_price ?? 0), 0)
-    return { total: all.length, paid: paid.length, pending: pending.length, inProg: inProg.length, revenue }
+    const workshopCount = all.filter(r => r.workshop_title !== "VIP Consultation").length
+    const vipCount = all.filter(r => r.workshop_title === "VIP Consultation").length
+    return { total: all.length, paid: paid.length, pending: pending.length, inProg: inProg.length, revenue, workshopCount, vipCount }
   }, [registrations])
 
   // ── Selection ──
@@ -615,12 +627,14 @@ export default function AdminWorkshopsPage() {
           </div>
 
           {/* Stats strip */}
-          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-6 gap-3">
             {[
               { icon: Users,        label: "Total",           value: stats.total,              color: "text-gray-700",  bg: "bg-gray-50"  },
               { icon: CheckCircle,  label: "Paid",            value: stats.paid,               color: "text-green-700", bg: "bg-green-50" },
               { icon: Clock,        label: "Pending Payment", value: stats.pending,            color: "text-amber-700", bg: "bg-amber-50" },
               { icon: DollarSign,   label: "Revenue (USD)",   value: `$${stats.revenue.toLocaleString()}`, color: "text-[#177fc9]", bg: "bg-blue-50" },
+              { icon: Users,        label: "Workshops",       value: stats.workshopCount,      color: "text-indigo-700", bg: "bg-indigo-50" },
+              { icon: Users,        label: "VIP",             value: stats.vipCount,           color: "text-amber-700", bg: "bg-amber-50"  },
             ].map(s => (
               <div key={s.label} className={`${s.bg} rounded-xl px-4 py-3 flex items-center gap-3`}>
                 <s.icon className={`w-5 h-5 flex-shrink-0 ${s.color}`} />
@@ -661,6 +675,27 @@ export default function AdminWorkshopsPage() {
                 <option value="in_progress">In Progress</option>
                 <option value="failed">Failed</option>
               </select>
+
+              {/* Type filter */}
+              <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
+                {([
+                  { value: "all",      label: "All Types" },
+                  { value: "workshop", label: "Workshop" },
+                  { value: "vip",      label: "VIP" },
+                ] as { value: TypeFilter; label: string }[]).map(t => (
+                  <button
+                    key={t.value}
+                    onClick={() => setTypeFilter(t.value)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                      typeFilter === t.value
+                        ? "bg-[#177fc9] text-white shadow-sm"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Time chips */}
@@ -814,6 +849,15 @@ export default function AdminWorkshopsPage() {
                           <div className="text-sm text-gray-700">{r.business_name || "—"}</div>
                           {r.years_of_operations && (
                             <div className="text-xs text-gray-400">{r.years_of_operations}</div>
+                          )}
+                          {r.workshop_title && (
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium mt-1 ${
+                              r.workshop_title === "VIP Consultation"
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-blue-50 text-blue-700"
+                            }`}>
+                              {r.workshop_title === "VIP Consultation" ? "VIP" : "Workshop"}
+                            </span>
                           )}
                         </td>
 
