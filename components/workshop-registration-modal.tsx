@@ -523,7 +523,9 @@ export function WorkshopRegistrationModal({
                           <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                             <Users className="w-5 h-5 text-[#177fc9]" />
                           </div>
-                          <span className="text-[#177fc9] font-bold text-lg">$100 <span className="text-xs font-normal text-gray-500">USD</span></span>
+                          <span className="text-[#177fc9] font-bold text-lg">{workshopPrice.toLocaleString()} <span className="text-xs font-normal text-gray-500">USD</span>
+                            <p className="text-xs text-green-600 font-medium">~ SLE {(workshopPrice * 24).toLocaleString()}</p>
+                          </span>
                         </div>
                         <h3 className="font-bold text-gray-900 text-lg mb-1">Workshop</h3>
                         <p className="text-sm text-gray-500 mb-4">2-day group training event</p>
@@ -553,7 +555,9 @@ export function WorkshopRegistrationModal({
                           <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                             <Star className="w-5 h-5 text-amber-600" />
                           </div>
-                          <span className="text-amber-600 font-bold text-lg">$200 <span className="text-xs font-normal text-gray-500">USD</span></span>
+                          <span className="text-amber-600 font-bold text-lg">$200 <span className="text-xs font-normal text-gray-500">USD</span>
+                            <p className="text-xs text-green-600 font-medium">~ SLE {(200 * 24).toLocaleString()}</p>
+                          </span>
                         </div>
                         <h3 className="font-bold text-gray-900 text-lg mb-1">VIP Consultation</h3>
                         <p className="text-sm text-gray-500 mb-4">Private 1-on-1 strategy session</p>
@@ -605,12 +609,12 @@ export function WorkshopRegistrationModal({
                           </div>
                           {isVip && (
                             <p className="text-xs text-gray-500 mt-2 text-left">
-                              ≈ {(workshopPrice * 24).toLocaleString()} SLE
+                              ≈ SLE {(workshopPrice * 24).toLocaleString()}
                             </p>
                           )}
                           {!isVip && (
                             <p className="text-xs text-gray-500 mt-2 text-left">
-                              ≈ {(workshopPrice * 24).toLocaleString()} SLE
+                              ≈ SLE {(workshopPrice * 24).toLocaleString()}
                             </p>
                           )}
                         </div>
@@ -964,7 +968,7 @@ export function WorkshopRegistrationModal({
                                 </div>
                                 <div className="flex justify-end">
                                   <span className="text-xs text-gray-500">
-                                    ≈ {(workshopPrice * 24).toLocaleString()} SLE
+                                    ≈ SLE {(workshopPrice * 24).toLocaleString()}
                                   </span>
                                 </div>
                               </div>
@@ -1004,8 +1008,8 @@ export function WorkshopRegistrationModal({
                                   <>
                                     <CreditCard className="w-5 h-5 mr-2" />
                                     {isVip
-                                      ? `Book VIP Consultation - $${(workshopPrice * 24).toLocaleString()} SLE`
-                                      : `Proceed to Payment - $${(workshopPrice * 24).toLocaleString()} SLE`}
+                                      ? `Book VIP Consultation - SLE ${(workshopPrice * 24).toLocaleString()}`
+                                      : `Proceed to Payment - SLE ${(workshopPrice * 24).toLocaleString()}`}
                                   </>
                                 )}
                               </Button>
