@@ -99,7 +99,7 @@ const constraintCopy: Record<string, { headline: string; explanation: string; wh
   },
 }
 
-const CALENDLY_URL = "https://calendly.com/dconteh-lbd/diagnostic"
+const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL
 
 // ─── Currency Toggle ─────────────────────────────────────────
 function CurrencyToggle({
