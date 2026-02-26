@@ -62,14 +62,14 @@ const STORAGE_KEY = "sbs_workshop_registration_progress"
 const PATH_CONFIG: Record<RegistrationType, { title: string; price: number; label: string; color: string; hoverColor: string }> = {
   workshop: {
     title: "Business Constraint-Breaking Workshop",
-    price: 100,
+    price: 2500,
     label: "Workshop",
     color: "#177fc9",
     hoverColor: "#0f5b90",
   },
   vip_consultation: {
     title: "VIP Consultation",
-    price: 200,
+    price: 3500,
     label: "VIP Consultation",
     color: "#b45309",
     hoverColor: "#92400e",
@@ -115,6 +115,7 @@ export function WorkshopRegistrationModal({
   const pathConfig = registrationType ? PATH_CONFIG[registrationType] : null
   const workshopTitle = pathConfig?.title ?? "Business Constraint-Breaking Workshop"
   const workshopPrice = pathConfig?.price ?? 100
+  const vipPrice = pathConfig?.price ?? 100
   const accentColor = pathConfig?.color ?? "#177fc9"
   const accentHoverColor = pathConfig?.hoverColor ?? "#0f5b90"
 
@@ -383,7 +384,7 @@ export function WorkshopRegistrationModal({
         registrationId,
         workshopTitle: config.title,
         workshopPrice: config.price,
-        currency: "USD",
+        currency: "SLE",
       }
       console.log("Sending checkout payload:", payload)
 
@@ -670,9 +671,7 @@ export function WorkshopRegistrationModal({
                               <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                                 <Users className="w-5 h-5 text-[#177fc9]" />
                               </div>
-                              <span className="text-[#177fc9] font-bold text-lg">{workshopPrice.toLocaleString()} <span className="text-xs font-normal text-gray-500">USD</span>
-                                <p className="text-xs text-green-600 font-medium">~ SLE {(workshopPrice * 24).toLocaleString()}</p>
-                              </span>
+                              <span className="text-[#177fc9] font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span> 2500</span>
                             </div>
                             <h3 className="font-bold text-gray-900 text-lg mb-1">Workshop</h3>
                             <p className="text-sm text-gray-500 mb-4">2-day group training event</p>
@@ -702,9 +701,7 @@ export function WorkshopRegistrationModal({
                               <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                                 <Star className="w-5 h-5 text-amber-600" />
                               </div>
-                              <span className="text-amber-600 font-bold text-lg">$200 <span className="text-xs font-normal text-gray-500">USD</span>
-                                <p className="text-xs text-green-600 font-medium">~ SLE {(200 * 24).toLocaleString()}</p>
-                              </span>
+                              <span className="text-amber-600 font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span>3500</span>
                             </div>
                             <h3 className="font-bold text-gray-900 text-lg mb-1">VIP Consultation</h3>
                             <p className="text-sm text-gray-500 mb-4">Private 1-on-1 strategy session</p>
@@ -752,18 +749,8 @@ export function WorkshopRegistrationModal({
                             <div className="bg-gray-50 rounded-xl p-6 mb-6 max-w-sm mx-auto">
                               <div className="flex justify-between items-center">
                                 <span className="text-gray-600">{isVip ? "Consultation Fee" : "Workshop Fee"}</span>
-                                <span className="font-bold text-gray-900">${workshopPrice.toLocaleString()} USD</span>
+                                <span className="font-bold text-gray-900">SLE {workshopPrice}</span>
                               </div>
-                              {isVip && (
-                                <p className="text-xs text-gray-500 mt-2 text-left">
-                                  ≈ SLE {(workshopPrice * 24).toLocaleString()}
-                                </p>
-                              )}
-                              {!isVip && (
-                                <p className="text-xs text-gray-500 mt-2 text-left">
-                                  ≈ SLE {(workshopPrice * 24).toLocaleString()}
-                                </p>
-                              )}
                             </div>
 
                             <Button
@@ -1110,14 +1097,14 @@ export function WorkshopRegistrationModal({
                                     <div className="flex justify-between pt-2 border-t mt-2">
                                       <span className="font-semibold text-gray-900">Total</span>
                                       <span className="font-bold" style={{ color: accentColor }}>
-                                        ${workshopPrice.toLocaleString()} USD
+                                        SLE ${workshopPrice.toLocaleString()}
                                       </span>
                                     </div>
-                                    <div className="flex justify-end">
+                                    {/*<div className="flex justify-end">
                                       <span className="text-xs text-gray-500">
                                         ≈ SLE {(workshopPrice * 24).toLocaleString()}
                                       </span>
-                                    </div>
+                                    </div>*/}
                                   </div>
                                 </div>
 
@@ -1155,8 +1142,8 @@ export function WorkshopRegistrationModal({
                                       <>
                                         <CreditCard className="w-5 h-5 mr-2" />
                                         {isVip
-                                          ? `Book VIP Consultation - SLE ${(workshopPrice * 24).toLocaleString()}`
-                                          : `Proceed to Payment - SLE ${(workshopPrice * 24).toLocaleString()}`}
+                                          ? `Book VIP Consultation - SLE ${(workshopPrice).toLocaleString()}`
+                                          : `Proceed to Payment - SLE ${(workshopPrice).toLocaleString()}`}
                                       </>
                                     )}
                                   </Button>
