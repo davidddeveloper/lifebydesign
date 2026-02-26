@@ -813,13 +813,13 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             </motion.div>
 
             {/* CTA */}
-            <motion.div
+            {/*<motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={revealed ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
             >
               <BookCallCTA />
-            </motion.div>
+            </motion.div>*/}
             {/* Footer inside scroll area */}
             <div className="pt-6 border-t border-gray-200 mt-2">
               <div className="text-center text-xs text-gray-400 pb-4">
