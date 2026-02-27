@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { FileText, Mail, CalendarDays, ChevronRight, LayoutDashboard, LogOut } from "lucide-react"
+import Image from "next/image"
 
 const NAV_CARDS = [
   {
@@ -40,11 +41,11 @@ export default function AdminDashboardPage() {
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <LayoutDashboard className="w-4 h-4 text-white" />
+              <Image src="/images/startupbodyshoplogo.png" alt="Logo" width={32} height={32} />
             </div>
             <div>
               <span className="text-sm font-semibold text-gray-900">Admin Dashboard</span>
-              <span className="hidden sm:inline text-sm text-gray-400 ml-2">· Life by Design</span>
+              <span className="hidden sm:inline text-sm text-gray-400 ml-2">· Startup Bodyshop</span>
             </div>
           </div>
           <button
@@ -90,7 +91,7 @@ export default function AdminDashboardPage() {
       {/* Footer */}
       <footer className="max-w-5xl mx-auto px-6 pb-8">
         <p className="text-xs text-gray-400">
-          &copy; {new Date().getFullYear()} Life by Design. Admin panel.
+          &copy; {new Date().getFullYear()} startupbodyshop.com. Admin panel.
         </p>
       </footer>
     </div>
