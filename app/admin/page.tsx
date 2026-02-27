@@ -41,7 +41,7 @@ export default function AdminDashboardPage() {
         <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Image src="/images/startupbodyshoplogo.png" alt="Logo" width={32} height={32} />
+              <Image src="/lifebydesignlogo" alt="Logo" width={32} height={32} />
             </div>
             <div>
               <span className="text-sm font-semibold text-gray-900">Admin Dashboard</span>
