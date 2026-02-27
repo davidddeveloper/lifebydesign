@@ -2,6 +2,7 @@
 "use client"
 
 import { useEffect, useState, useMemo, useCallback } from "react"
+import Link from "next/link"
 import {
   Search,
   FileSpreadsheet,
@@ -580,6 +581,11 @@ export default function AdminAuditsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex items-center justify-between">
             <div>
+              <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
+                <Link href="/admin" className="hover:text-[#177fc9] transition-colors">Admin</Link>
+                <span>/</span>
+                <span className="text-gray-700 font-medium">Audits</span>
+              </div>
               <h1 className="text-2xl font-bold text-gray-900">Audit Submissions</h1>
               <p className="text-sm text-gray-500 mt-1">
                 {stats.total} submission{stats.total !== 1 ? "s" : ""}

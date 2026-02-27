@@ -2,6 +2,7 @@
 "use client"
 
 import { useEffect, useState, useMemo } from "react"
+import Link from "next/link"
 import {
   Search,
   Mail,
@@ -325,6 +326,11 @@ export default function EmailManagementPage() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
+              <div className="flex items-center gap-1.5 text-xs text-gray-400 mb-1">
+                <Link href="/admin" className="hover:text-[#177fc9] transition-colors">Admin</Link>
+                <span>/</span>
+                <span className="text-gray-700 font-medium">Emails</span>
+              </div>
               <h1 className="text-2xl font-bold text-gray-900">Email Management</h1>
               <p className="text-sm text-gray-500">
                 {contacts.length} contacts • {selectedIds.size} selected

@@ -601,6 +601,8 @@ export default function AdminWorkshopsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2 text-xs text-gray-400">
+                <a href="/admin" className="hover:text-[#177fc9] transition-colors">Admin</a>
+                <span>/</span>
                 <a href="/admin/audits"  className="hover:text-[#177fc9] transition-colors">Audits</a>
                 <span>/</span>
                 <span className="text-gray-700 font-semibold">Workshops</span>
