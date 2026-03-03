@@ -409,8 +409,11 @@ export const workshopsPageQuery = groq`*[_type == "workshopsPage"][0]{
     _type == "heroSection" => {
       heading,
       subheading,
-      image,
-      primaryCta
+      description,
+      heroImageLeft,
+      heroImageRight,
+      primaryCtaText,
+      primaryCtaUrl
     },
     // workshopBenefits
     _type == "workshopBenefits" => {

@@ -34,7 +34,7 @@ export function DeliverablesComponent({ data }: DeliverablesProps) {
         >
           {items.map((item, index) => (
             <motion.div
-              key={index}
+              key={item._key || index}
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -42,7 +42,12 @@ export function DeliverablesComponent({ data }: DeliverablesProps) {
               className="flex items-start gap-3"
             >
               <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-              <span className="text-gray-900 font-semibold">{item}</span>
+              <div>
+                <span className="text-gray-900 font-semibold">{item.title}</span>
+                {item.description && (
+                  <p className="text-gray-600 text-sm mt-1">{item.description}</p>
+                )}
+              </div>
             </motion.div>
           ))}
         </motion.div>
