@@ -222,7 +222,6 @@ async function exportToPDF(audits: Audit[]) {
 function mapAuditToPDFData(a: Audit) {
   const scores = safeObj(a.scores, { who: 0, what: 0, sell: 0, traffic: 0, operations: 0 })
   const ri = safeObj(a.revenueImpact, { currentMonthly: 0, potentialMonthly: 0, monthlyOpportunityCost: 0, yearlyOpportunityCost: 0, explanation: "" })
-  const qw = safeObj(a.quickWin, { action: "", impact: "", time: "" })
 
   return {
     business_name: a.businessName || "",
@@ -242,7 +241,6 @@ function mapAuditToPDFData(a: Audit) {
     },
     evidence_points: safeArray(a.evidencePoints),
     revenue_impact: ri,
-    quick_win: qw,
   }
 }
 

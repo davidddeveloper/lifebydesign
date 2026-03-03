@@ -405,30 +405,6 @@ export default function DashboardPage() {
               </div>
             </motion.div>
 
-            {/* Quick Win */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.25 }}
-              className="bg-white rounded-xl border border-gray-200 p-6"
-            >
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Win</h3>
-              <div className="bg-amber-50 rounded-lg p-4 space-y-3">
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Action</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.action || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Expected Impact</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.impact || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Time Required</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.time || "N/A"}</p>
-                </div>
-              </div>
-            </motion.div>
-
             {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
