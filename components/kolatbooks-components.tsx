@@ -48,13 +48,11 @@ export function FinanceComponents({ data }: FinanceComponentsProps) {
     { title: "Payroll support (Growth & VIP tiers)", description: "Payroll support, including calculation of salaries, taxes, and other deductions, as well as preparation of payslips and compliance with regulatory requirements." },
   ]
 
-  // If data.items exists (array of strings), map to {title, description}.
-  // Try to match to defaultServices for description; otherwise empty.
   const displayServices = data?.items?.length
-    ? data.items.map(item => {
-        const match = defaultServices.find(d => d.title === item)
-        return { title: item, description: match?.description || "" }
-      })
+    ? data.items.map(item => ({
+        title: item.title || "",
+        description: item.description || "",
+      }))
     : defaultServices
 
   // Helper to get icon index safely

@@ -1,7 +1,8 @@
 import { Suspense } from "react"
 import { generateMetadata, pageMetadata } from "@/lib/seo"
-import { sanityFetch } from "@/sanity/lib/live"
+import { sanityFetch } from "@/sanity/lib/fetch"
 import { workshopsPageQuery } from "@/sanity/lib/queries"
+import type { WorkshopsPage } from "@/sanity/lib/types"
 import WorkshopPageClient from "./page.client"
 
 export const metadata = generateMetadata({
@@ -11,8 +12,13 @@ export const metadata = generateMetadata({
   tags: pageMetadata.workshops.tags,
 })
 
+export const revalidate = 0
+
 export default async function WorkshopPage() {
-  const { data: pageData } = await sanityFetch({ query: workshopsPageQuery })
+  const pageData = await sanityFetch<WorkshopsPage | null>({
+    query: workshopsPageQuery,
+    tags: ["workshopsPage"],
+  })
 
   return (
     <Suspense>
