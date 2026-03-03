@@ -109,9 +109,24 @@ export async function POST(request: NextRequest) {
       }
 
       result = created;
+
+      // Notify team on every new registration (first save = someone started the form)
+      try {
+        const { sendTeamNotification } = await import('@/lib/email');
+        await sendTeamNotification('registration_started', {
+          firstName: result.first_name,
+          fullName: result.full_name,
+          personalEmail: result.personal_email,
+          businessEmail: result.business_email,
+          phone: result.phone,
+          businessName: result.business_name,
+          registrationId: result.registration_id,
+          currentStep: result.current_step,
+        });
+      } catch (notifyError) {
+        console.error('Failed to send team notification:', notifyError);
+      }
     }
-
-
 
     // Send payment reminder email if status is pending_payment
     // and we haven't already sent it (optimally we'd check, but for now just send)

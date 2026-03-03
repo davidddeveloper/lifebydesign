@@ -75,12 +75,12 @@ export async function POST(request: NextRequest) {
       const { data: registration } = reference
         ? await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title, phone')
           .eq('registration_id', reference)
           .single()
         : await supabaseAdmin
           .from('workshop_registrations')
-          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title')
+          .select('registration_id, personal_email, business_email, first_name, full_name, business_name, workshop_title, phone')
           .eq('checkout_session_id', checkoutSessionId)
           .single();
 
@@ -93,8 +93,9 @@ export async function POST(request: NextRequest) {
 
         console.log('[monime-webhook] reset to pending_payment:', registration.registration_id);
 
-        // Send payment reminder with resume link
-        const { sendEmail } = await import('@/lib/email');
+        const { sendEmail, sendTeamNotification } = await import('@/lib/email');
+
+        // Send payment reminder to participant
         const resumeLink = `${SITE_URL}/workshops?resume_registration=${registration.registration_id}`;
         await sendEmail('payment_reminder', {
           email: registration.personal_email || registration.business_email,
@@ -103,6 +104,18 @@ export async function POST(request: NextRequest) {
           registrationId: registration.registration_id,
           workshopTitle: registration.workshop_title,
         }, { body: resumeLink });
+
+        // Notify team that payment was not completed
+        await sendTeamNotification('payment_not_completed', {
+          firstName: registration.first_name,
+          fullName: registration.full_name,
+          personalEmail: registration.personal_email,
+          businessEmail: registration.business_email,
+          phone: registration.phone,
+          businessName: registration.business_name,
+          workshopTitle: registration.workshop_title,
+          registrationId: registration.registration_id,
+        });
       }
     }
 

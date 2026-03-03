@@ -318,6 +318,104 @@ function getTemplate(
   }
 }
 
+// ─── Team Notification ────────────────────────────────────────────
+
+const TEAM_EMAILS = [
+  'sjohnson@lbd.sl',
+  'dlake@lbd.sl',
+  'fkamara@lbd.sl',
+  'dconteh@lbd.sl',
+];
+
+interface TeamRegistrationData {
+  firstName?: string;
+  fullName?: string;
+  personalEmail?: string;
+  businessEmail?: string;
+  phone?: string;
+  businessName?: string;
+  workshopTitle?: string;
+  registrationId?: string;
+  currentStep?: number;
+}
+
+export async function sendTeamNotification(
+  event: 'registration_started' | 'payment_not_completed',
+  registration: TeamRegistrationData,
+): Promise<void> {
+  const name = registration.firstName || registration.fullName || 'Unknown';
+  const email = registration.personalEmail || registration.businessEmail || '—';
+  const phone = registration.phone || '—';
+  const biz = registration.businessName || '—';
+  const resumeLink = registration.registrationId
+    ? `${SITE_URL}/workshops?resume_registration=${registration.registrationId}`
+    : `${SITE_URL}/workshops`;
+
+  const infoTable = (rows: [string, string][]) => `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+      ${rows.map(([label, value], i) => `
+        <tr style="${i % 2 === 0 ? 'background:#f9fafb;' : ''}">
+          <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;width:38%;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${label}</td>
+          <td style="padding:10px 16px;font-size:14px;color:#111827;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${value}</td>
+        </tr>`).join('')}
+    </table>`;
+
+  let subject: string;
+  let html: string;
+
+  if (event === 'registration_started') {
+    subject = `New workshop registration started – ${name}`;
+    html = wrapInLayout(`
+      <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#177fc9;text-transform:uppercase;letter-spacing:0.5px;">Team Notification</p>
+      <p style="margin:0 0 16px;font-size:18px;font-weight:700;color:#111827;">New Registration In Progress</p>
+      <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+        Someone has started filling in the workshop registration form. They may need a follow-up if they don't complete it.
+      </p>
+      ${infoTable([
+        ['Name', name],
+        ['Email', email],
+        ['Phone', phone],
+        ['Business', biz],
+        ['Current Step', `Step ${registration.currentStep || 1} of 3`],
+      ])}
+      ${ctaButton('View Resume Link', resumeLink)}
+      <p style="margin:16px 0 0;font-size:13px;color:#9ca3af;">This is an automated notification. No action required unless you want to follow up proactively.</p>
+    `);
+  } else {
+    subject = `Workshop payment not completed – ${name}`;
+    html = wrapInLayout(`
+      <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#dc2626;text-transform:uppercase;letter-spacing:0.5px;">Team Notification</p>
+      <p style="margin:0 0 16px;font-size:18px;font-weight:700;color:#111827;">Payment Not Completed</p>
+      <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+        A participant filled out the registration form but cancelled or did not complete their payment. Consider reaching out to help them finish.
+      </p>
+      ${infoTable([
+        ['Name', name],
+        ['Email', email],
+        ['Phone', phone],
+        ['Business', biz],
+        ['Workshop', registration.workshopTitle || '—'],
+      ])}
+      ${ctaButton('Send Them Resume Link', resumeLink)}
+      <p style="margin:16px 0 0;font-size:13px;color:#9ca3af;">A payment reminder has already been sent to the participant automatically.</p>
+    `);
+  }
+
+  try {
+    await resend.batch.send(
+      TEAM_EMAILS.map(teamEmail => ({
+        from: FROM_EMAIL,
+        to: teamEmail,
+        subject,
+        html,
+      }))
+    );
+    console.log(`[team-notify] sent "${event}" notification to team`);
+  } catch (err) {
+    console.error('[team-notify] failed to send team notification:', err);
+  }
+}
+
 // ─── Send Functions ───────────────────────────────────────────────
 
 export async function sendEmail(
