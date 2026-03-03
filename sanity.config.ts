@@ -2,7 +2,6 @@
 import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
-import { presentationTool } from 'sanity/presentation'
 import { apiVersion, dataset, projectId } from './sanity/env'
 import { schema } from './sanity/schemaTypes'
 import CustomNavbar from './components/custom-navbar'
@@ -62,19 +61,6 @@ export default defineConfig({
                 ].includes(item.getId() || '')
             ),
           ]),
-    }),
-    presentationTool({
-      previewUrl: {
-        origin: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
-        previewMode: {
-          enable: '/api/draft',
-        },
-      },
-      allowOrigins: [
-        'https://startupbodyshop.com',
-        'https://www.startupbodyshop.com',
-        'http://localhost:3000',
-      ],
     }),
     visionTool({ defaultApiVersion: apiVersion }),
   ],
