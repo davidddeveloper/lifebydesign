@@ -13,7 +13,7 @@ import RecommendedPosts from "@/components/blog/recommended-posts"
 
 const builder = imageUrlBuilder(client);
 
-export const revalidate = 60;
+export const revalidate = 1;
 
 export interface BlogPost {
   _id: string
@@ -48,16 +48,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
 }
 
-const BlogPostPage = async ({params,}: {params: Promise<{ slug: string }>}) => {
-  const { slug } = await params 
+const BlogPostPage = async ({ params, }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params
 
-  const post = await sanityFetch<SanityDocument>({ query: postQuery, params: {slug} })
+  const post = await sanityFetch<SanityDocument>({ query: postQuery, params: { slug } })
   let recommendedPosts: any[] = []
   try {
-    recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params})
+    recommendedPosts = await sanityFetch<BlogPost[]>({ query: recommendedPostsQuery, params })
 
     recommendedPosts = recommendedPosts.filter((p) => p._id !== post._id)
-  } catch {}
+  } catch { }
   // Filter out the current post
   return (
     <>
