@@ -9,8 +9,7 @@ import { WorkshopHero } from "@/components/workshop-hero"
 import { WorkshopBenefits } from "@/components/workshop-benefits"
 import { WorkshopValue } from "@/components/workshop-value"
 import { WorkshopFaq } from "@/components/workshop-faq"
-import { SectionRenderer } from "@/components/sanity/SectionRenderer"
-import type { WorkshopsPage } from "@/sanity/lib/types"
+import type { WorkshopsPage, HeroSection, WorkshopBenefitsSection, WorkshopValueSection, FAQReferenceSection } from "@/sanity/lib/types"
 
 interface WorkshopPageClientProps {
     pageData?: WorkshopsPage | null
@@ -47,7 +46,6 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
     }, [searchParams])
 
     function handleRetry() {
-        // Keep modal open, clear paymentResult, and pre-fill with saved registration
         const regId = paymentResult?.registrationId || null
         setPaymentResult(undefined)
         setResumeId(regId)
@@ -58,26 +56,20 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
         setPaymentResult(undefined)
     }
 
-    const hasSanityContent = pageData?.sections && pageData.sections.length > 0
+    const sections = pageData?.sections || []
+    const heroData = sections.find(s => s._type === "heroSection") as HeroSection | undefined
+    const benefitsData = sections.find(s => s._type === "workshopBenefits") as WorkshopBenefitsSection | undefined
+    const valueData = sections.find(s => s._type === "workshopValue") as WorkshopValueSection | undefined
+    const faqData = sections.find(s => s._type === "faqReference") as FAQReferenceSection | undefined
 
     return (
         <div className="min-h-screen">
             <Header />
             <main>
-                {hasSanityContent ? (
-                    <SectionRenderer
-                        sections={pageData.sections!}
-                        onOpenForm={() => setFormModalOpen(true)}
-                        page="workshop"
-                    />
-                ) : (
-                    <>
-                        <WorkshopHero />
-                        <WorkshopBenefits />
-                        <WorkshopValue />
-                        <WorkshopFaq />
-                    </>
-                )}
+                <WorkshopHero data={heroData} />
+                <WorkshopBenefits data={benefitsData} />
+                <WorkshopValue data={valueData} />
+                <WorkshopFaq data={faqData} onOpenForm={() => setFormModalOpen(true)} />
             </main>
             <Footer />
             <WorkshopRegistrationModal

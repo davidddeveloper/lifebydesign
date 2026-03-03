@@ -41,13 +41,8 @@ export function DeliverablesComponent({ data }: DeliverablesProps) {
               viewport={{ once: true }}
               className="flex items-start gap-3"
             >
-              <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
-              <div>
-                <span className="text-gray-900 font-semibold">{item.title}</span>
-                {item.description && (
-                  <p className="text-gray-600 text-sm mt-1">{item.description}</p>
-                )}
-              </div>
+              <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+              <span className="text-gray-900 font-semibold">{item}</span>
             </motion.div>
           ))}
         </motion.div>

@@ -7,17 +7,9 @@ export const deliverablesSection = defineType({
   fields: [
     {
       name: "items",
+      title: "Items",
       type: "array",
-      of: [
-        {
-          type: "object",
-          fields: [
-            { name: "title", type: "string" },
-            { name: "description", type: "text", rows: 3 },
-          ],
-        },
-      ],
+      of: [{ type: "string" }],
     },
   ],
 })
-

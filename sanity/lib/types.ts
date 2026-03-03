@@ -282,11 +282,7 @@ export interface ProductPromiseSection extends BaseSection {
 // Deliverables Section
 export interface DeliverablesSection extends BaseSection {
   _type: 'deliverablesSection'
-  items?: Array<{
-    _key: string
-    title?: string
-    description?: string
-  }>
+  items?: string[]
 }
 
 // Workflow Phases
