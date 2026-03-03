@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { FileText, Mail, CalendarDays, ChevronRight, LayoutDashboard, LogOut } from "lucide-react"
+import { FileText, Mail, CalendarDays, ChevronRight, LogOut, PencilRuler } from "lucide-react"
 import Image from "next/image"
 
 const NAV_CARDS = [
@@ -85,6 +85,24 @@ export default function AdminDashboardPage() {
               </div>
             </Link>
           ))}
+        </div>
+
+        {/* Edit Website */}
+        <div className="mt-6 pt-6 border-t border-gray-200">
+          <Link
+            href="/studio"
+            target="_blank"
+            className="group inline-flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-4 hover:border-indigo-300 hover:shadow-md transition-all duration-150"
+          >
+            <div className="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+              <PencilRuler className="w-4 h-4 text-indigo-600" />
+            </div>
+            <div>
+              <span className="text-sm font-semibold text-gray-900">Edit Website</span>
+              <p className="text-xs text-gray-500">Open Sanity CMS to manage website content</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all ml-auto" />
+          </Link>
         </div>
       </main>
 

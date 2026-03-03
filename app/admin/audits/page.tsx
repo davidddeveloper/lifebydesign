@@ -1,7 +1,7 @@
 // app/admin/audits/page.tsx
 "use client"
 
-import { useEffect, useState, useMemo, useCallback } from "react"
+import { useEffect, useState, useMemo, useCallback, useRef } from "react"
 import Link from "next/link"
 import {
   Search,
@@ -18,12 +18,64 @@ import {
 // ─── Types ───────────────────────────────────────────────────────
 interface Audit {
   _id: string
+  // Basic info
   businessName: string
   ownerName: string
   email: string
   phone: string
   industry: string
+  yearsInBusiness?: number
   monthlyRevenue: number
+  numberOfCustomers?: number
+  teamSize?: number
+  // WHO
+  idealCustomer?: string
+  customerTypes?: string
+  newCustomersLastMonth?: string
+  conversionRate?: string
+  biggestProblem?: string
+  turnDownBadFits?: string
+  // WHAT
+  mainProblemSolved?: string
+  solution?: string
+  avgTransactionValue?: string
+  pricingVsCompetitors?: string
+  customerSatisfaction?: string
+  referralFrequency?: string
+  proofLevel?: string
+  // SELL
+  hasSalesScript?: string
+  salesConversations?: string
+  conversionToCustomer?: string
+  timeToClose?: string
+  reasonsNotBuying?: string
+  followUpSystem?: string
+  // TRAFFIC
+  trafficReferrals?: number
+  trafficSocial?: number
+  trafficAds?: number
+  trafficPartnerships?: number
+  trafficWalkIns?: number
+  trafficOther?: number
+  postingFrequency?: string
+  weeklyReach?: string
+  monthlyLeads?: string
+  leadPredictability?: string
+  hasLeadMagnet?: string
+  // OPERATIONS
+  businessWithoutYou?: string
+  writtenProcedures?: string
+  repeatPurchases?: string
+  hasUpsells?: string
+  trackNumbers?: string
+  profitMargin?: string
+  hoursPerWeek?: string
+  timeOnVsIn?: string
+  // FINAL
+  topChallenge?: string
+  oneThingToFix?: string
+  twelveMonthGoal?: string
+  // AI Results
   scores: {
     who: number
     what: number
@@ -111,9 +163,8 @@ function getTimeRange(filter: TimeFilter): { start: Date; end: Date } | null {
     }
     case "this_year":
       return { start: new Date(now.getFullYear(), 0, 1), end: now }
-    case "last_year": {
+    case "last_year":
       return { start: new Date(now.getFullYear() - 1, 0, 1), end: new Date(now.getFullYear() - 1, 11, 31, 23, 59, 59) }
-    }
     default:
       return null
   }
@@ -195,49 +246,150 @@ function mapAuditToPDFData(a: Audit) {
   }
 }
 
-function exportToSheet(audits: Audit[]) {
+function buildResultsRows(audits: Audit[]) {
+  return audits.map((a) => ({
+    "Business Name": a.businessName,
+    Owner: a.ownerName,
+    Email: a.email,
+    Phone: a.phone,
+    Industry: a.industry,
+    Status: a.status,
+    Constraint: a.primaryConstraint,
+    "Constraint Score": a.primaryScore,
+    Confidence: a.confidence,
+    "WHO Score": a.scores?.who,
+    "WHAT Score": a.scores?.what,
+    "SELL Score": a.scores?.sell,
+    "TRAFFIC Score": a.scores?.traffic,
+    "OPS Score": a.scores?.operations,
+    "Current Monthly (Le)": a.revenueImpact?.currentMonthly,
+    "Potential Monthly (Le)": a.revenueImpact?.potentialMonthly,
+    "Monthly Opp. Cost (Le)": a.revenueImpact?.monthlyOpportunityCost,
+    "Yearly Opp. Cost (Le)": a.revenueImpact?.yearlyOpportunityCost,
+    "Yearly Opp. Cost (USD)": a.revenueImpact?.yearlyOpportunityCost
+      ? Math.round(a.revenueImpact.yearlyOpportunityCost / USD_TO_SLE)
+      : 0,
+    "Quick Win": a.quickWin?.action,
+    Reasoning: a.reasoning,
+    "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
+  }))
+}
+
+function buildSubmissionsRows(audits: Audit[]) {
+  return audits.map((a) => ({
+    // Basic
+    "Business Name": a.businessName,
+    Owner: a.ownerName,
+    Email: a.email,
+    Phone: a.phone,
+    Industry: a.industry,
+    "Years in Business": a.yearsInBusiness,
+    "Monthly Revenue (Le)": a.monthlyRevenue,
+    "# of Customers": a.numberOfCustomers,
+    "Team Size": a.teamSize,
+    // WHO
+    "Ideal Customer": a.idealCustomer,
+    "Customer Types": a.customerTypes,
+    "New Customers Last Month": a.newCustomersLastMonth,
+    "Conversion Rate": a.conversionRate,
+    "Biggest Problem": a.biggestProblem,
+    "Turn Down Bad Fits?": a.turnDownBadFits,
+    // WHAT
+    "Main Problem Solved": a.mainProblemSolved,
+    Solution: a.solution,
+    "Avg Transaction Value": a.avgTransactionValue,
+    "Pricing vs Competitors": a.pricingVsCompetitors,
+    "Customer Satisfaction": a.customerSatisfaction,
+    "Referral Frequency": a.referralFrequency,
+    "Proof Level": a.proofLevel,
+    // SELL
+    "Has Sales Script?": a.hasSalesScript,
+    "Sales Conversations/Month": a.salesConversations,
+    "Conversion to Customer": a.conversionToCustomer,
+    "Time to Close": a.timeToClose,
+    "Reasons Not Buying": a.reasonsNotBuying,
+    "Follow-Up System": a.followUpSystem,
+    // TRAFFIC
+    "Traffic - Referrals %": a.trafficReferrals,
+    "Traffic - Social %": a.trafficSocial,
+    "Traffic - Ads %": a.trafficAds,
+    "Traffic - Partnerships %": a.trafficPartnerships,
+    "Traffic - Walk-ins %": a.trafficWalkIns,
+    "Traffic - Other %": a.trafficOther,
+    "Posting Frequency": a.postingFrequency,
+    "Weekly Reach": a.weeklyReach,
+    "Monthly Leads": a.monthlyLeads,
+    "Lead Predictability": a.leadPredictability,
+    "Has Lead Magnet?": a.hasLeadMagnet,
+    // OPERATIONS
+    "Business Without You": a.businessWithoutYou,
+    "Written Procedures?": a.writtenProcedures,
+    "Repeat Purchases": a.repeatPurchases,
+    "Has Upsells?": a.hasUpsells,
+    "Track Numbers?": a.trackNumbers,
+    "Profit Margin": a.profitMargin,
+    "Hours/Week": a.hoursPerWeek,
+    "Time On vs In Business": a.timeOnVsIn,
+    // FINAL
+    "Top Challenge": a.topChallenge,
+    "One Thing to Fix": a.oneThingToFix,
+    "12-Month Goal": a.twelveMonthGoal,
+    "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
+  }))
+}
+
+function autoColWidths(rows: Record<string, unknown>[]) {
+  if (!rows.length) return []
+  return Object.keys(rows[0]).map((key) => ({
+    wch: Math.max(key.length, ...rows.map((r) => String(r[key] ?? "").length)) + 2,
+  }))
+}
+
+function exportResults(audits: Audit[]) {
   import("xlsx").then((XLSX) => {
-    const rows = audits.map((a) => ({
-      "Business Name": a.businessName,
-      Owner: a.ownerName,
-      Email: a.email,
-      Phone: a.phone,
-      Industry: a.industry,
-      Status: a.status,
-      Constraint: a.primaryConstraint,
-      "Constraint Score": a.primaryScore,
-      Confidence: a.confidence,
-      "WHO Score": a.scores?.who,
-      "WHAT Score": a.scores?.what,
-      "SELL Score": a.scores?.sell,
-      "TRAFFIC Score": a.scores?.traffic,
-      "OPS Score": a.scores?.operations,
-      "Current Monthly (Le)": a.revenueImpact?.currentMonthly,
-      "Potential Monthly (Le)": a.revenueImpact?.potentialMonthly,
-      "Monthly Opp. Cost (Le)": a.revenueImpact?.monthlyOpportunityCost,
-      "Yearly Opp. Cost (Le)": a.revenueImpact?.yearlyOpportunityCost,
-      "Yearly Opp. Cost (USD)": a.revenueImpact?.yearlyOpportunityCost
-        ? Math.round(a.revenueImpact.yearlyOpportunityCost / USD_TO_SLE)
-        : 0,
-      "Quick Win": a.quickWin?.action,
-      Reasoning: a.reasoning,
-      "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
-    }))
-
+    const rows = buildResultsRows(audits)
     const ws = XLSX.utils.json_to_sheet(rows)
+    ws["!cols"] = autoColWidths(rows)
     const wb = XLSX.utils.book_new()
-    XLSX.utils.book_append_sheet(wb, ws, "Audit Submissions")
+    XLSX.utils.book_append_sheet(wb, ws, "Results")
+    const filename = audits.length === 1
+      ? `${(audits[0].businessName || "Audit").replace(/\s+/g, "-")}-Results.xlsx`
+      : `Audit-Results-${new Date().toISOString().slice(0, 10)}.xlsx`
+    XLSX.writeFile(wb, filename)
+  })
+}
 
-    // Auto-size columns
-    const colWidths = Object.keys(rows[0] || {}).map((key) => ({
-      wch: Math.max(key.length, ...rows.map((r) => String((r as Record<string, unknown>)[key] || "").length)).toString().length + 2,
-    }))
-    ws["!cols"] = colWidths
+function exportSubmissions(audits: Audit[]) {
+  import("xlsx").then((XLSX) => {
+    const rows = buildSubmissionsRows(audits)
+    const ws = XLSX.utils.json_to_sheet(rows)
+    ws["!cols"] = autoColWidths(rows)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, "Submissions")
+    const filename = audits.length === 1
+      ? `${(audits[0].businessName || "Audit").replace(/\s+/g, "-")}-Submissions.xlsx`
+      : `Audit-Submissions-${new Date().toISOString().slice(0, 10)}.xlsx`
+    XLSX.writeFile(wb, filename)
+  })
+}
+
+function exportAll(audits: Audit[]) {
+  import("xlsx").then((XLSX) => {
+    const subRows = buildSubmissionsRows(audits)
+    const resRows = buildResultsRows(audits)
+
+    const wsSub = XLSX.utils.json_to_sheet(subRows)
+    wsSub["!cols"] = autoColWidths(subRows)
+    const wsRes = XLSX.utils.json_to_sheet(resRows)
+    wsRes["!cols"] = autoColWidths(resRows)
+
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, wsSub, "Submissions")
+    XLSX.utils.book_append_sheet(wb, wsRes, "Results")
 
     const filename = audits.length === 1
-      ? `${(audits[0].businessName || "Audit").replace(/\s+/g, "-")}-Audit.xlsx`
-      : `Audit-Submissions-Export-${new Date().toISOString().slice(0, 10)}.xlsx`
-
+      ? `${(audits[0].businessName || "Audit").replace(/\s+/g, "-")}-Full-Export.xlsx`
+      : `Audit-Full-Export-${new Date().toISOString().slice(0, 10)}.xlsx`
     XLSX.writeFile(wb, filename)
   })
 }
@@ -253,18 +405,73 @@ function downloadBlob(blob: Blob, filename: string) {
   URL.revokeObjectURL(url)
 }
 
+// ─── Sheet Export Dropdown ────────────────────────────────────────
+function SheetExportDropdown({ audits, size = "md" }: { audits: Audit[]; size?: "sm" | "md" }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+    }
+    if (open) document.addEventListener("mousedown", handleClickOutside)
+    return () => document.removeEventListener("mousedown", handleClickOutside)
+  }, [open])
+
+  const isSm = size === "sm"
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        onClick={(e) => { e.stopPropagation(); setOpen((v) => !v) }}
+        className={
+          isSm
+            ? "p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
+            : "inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+        }
+        title="Export as Spreadsheet"
+      >
+        <FileSpreadsheet className={isSm ? "w-3.5 h-3.5" : "w-3 h-3"} />
+        {!isSm && <>Spreadsheet <ChevronDown className="w-3 h-3" /></>}
+      </button>
+
+      {open && (
+        <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50 py-1">
+          <button
+            onClick={(e) => { e.stopPropagation(); exportResults(audits); setOpen(false) }}
+            className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+            Export Results
+          </button>
+          <button
+            onClick={(e) => { e.stopPropagation(); exportSubmissions(audits); setOpen(false) }}
+            className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+            Export Submissions
+          </button>
+          <div className="border-t border-gray-100 my-1" />
+          <button
+            onClick={(e) => { e.stopPropagation(); exportAll(audits); setOpen(false) }}
+            className="w-full text-left px-3 py-2 text-xs text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 text-indigo-600 flex-shrink-0" />
+            Export All (2 sheets)
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Detail Panel ────────────────────────────────────────────────
 function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => void }) {
   const [exporting, setExporting] = useState(false)
 
-  const handleExport = async (format: "pdf" | "sheet") => {
+  const handlePDF = async () => {
     setExporting(true)
-    try {
-      if (format === "pdf") await exportToPDF([audit])
-      else exportToSheet([audit])
-    } finally {
-      setExporting(false)
-    }
+    try { await exportToPDF([audit]) } finally { setExporting(false) }
   }
 
   return (
@@ -281,21 +488,14 @@ function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => voi
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => handleExport("pdf")}
+              onClick={handlePDF}
               disabled={exporting}
               className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
               title="Export as PDF"
             >
               <FileText className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => handleExport("sheet")}
-              disabled={exporting}
-              className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors"
-              title="Export as Spreadsheet"
-            >
-              <FileSpreadsheet className="w-4 h-4" />
-            </button>
+            <SheetExportDropdown audits={[audit]} />
             <button onClick={onClose} className="p-2 rounded-lg hover:bg-gray-100 text-gray-600 transition-colors">
               <X className="w-4 h-4" />
             </button>
@@ -413,7 +613,6 @@ export default function AdminAuditsPage() {
   const [dateTo, setDateTo] = useState("")
   const [bulkExporting, setBulkExporting] = useState(false)
 
-  // ── Fetch data ──
   const fetchAudits = useCallback(async () => {
     setLoading(true)
     try {
@@ -427,15 +626,11 @@ export default function AdminAuditsPage() {
     }
   }, [])
 
-  useEffect(() => {
-    fetchAudits()
-  }, [fetchAudits])
+  useEffect(() => { fetchAudits() }, [fetchAudits])
 
-  // ── Filter + Sort ──
   const filteredAudits = useMemo(() => {
     let result = [...audits]
 
-    // Search
     if (searchQuery) {
       const q = searchQuery.toLowerCase()
       result = result.filter(
@@ -448,12 +643,8 @@ export default function AdminAuditsPage() {
       )
     }
 
-    // Status filter
-    if (statusFilter !== "all") {
-      result = result.filter((a) => a.status === statusFilter)
-    }
+    if (statusFilter !== "all") result = result.filter((a) => a.status === statusFilter)
 
-    // Time filter
     if (timeFilter !== "all") {
       const range = getTimeRange(timeFilter)
       if (range) {
@@ -465,7 +656,6 @@ export default function AdminAuditsPage() {
       }
     }
 
-    // Custom date range
     if (showDateRange && dateFrom) {
       const from = new Date(dateFrom)
       result = result.filter((a) => a.submittedAt && new Date(a.submittedAt) >= from)
@@ -475,34 +665,16 @@ export default function AdminAuditsPage() {
       result = result.filter((a) => a.submittedAt && new Date(a.submittedAt) <= to)
     }
 
-    // Sort
     result.sort((a, b) => {
       let valA: string | number = ""
       let valB: string | number = ""
-
       switch (sortField) {
-        case "submittedAt":
-          valA = a.submittedAt || ""
-          valB = b.submittedAt || ""
-          break
-        case "businessName":
-          valA = (a.businessName || "").toLowerCase()
-          valB = (b.businessName || "").toLowerCase()
-          break
-        case "primaryConstraint":
-          valA = (a.primaryConstraint || "").toLowerCase()
-          valB = (b.primaryConstraint || "").toLowerCase()
-          break
-        case "yearlyOpportunityCost":
-          valA = a.revenueImpact?.yearlyOpportunityCost || 0
-          valB = b.revenueImpact?.yearlyOpportunityCost || 0
-          break
-        case "status":
-          valA = a.status || ""
-          valB = b.status || ""
-          break
+        case "submittedAt": valA = a.submittedAt || ""; valB = b.submittedAt || ""; break
+        case "businessName": valA = (a.businessName || "").toLowerCase(); valB = (b.businessName || "").toLowerCase(); break
+        case "primaryConstraint": valA = (a.primaryConstraint || "").toLowerCase(); valB = (b.primaryConstraint || "").toLowerCase(); break
+        case "yearlyOpportunityCost": valA = a.revenueImpact?.yearlyOpportunityCost || 0; valB = b.revenueImpact?.yearlyOpportunityCost || 0; break
+        case "status": valA = a.status || ""; valB = b.status || ""; break
       }
-
       if (valA < valB) return sortDir === "asc" ? -1 : 1
       if (valA > valB) return sortDir === "asc" ? 1 : -1
       return 0
@@ -511,17 +683,11 @@ export default function AdminAuditsPage() {
     return result
   }, [audits, searchQuery, statusFilter, timeFilter, sortField, sortDir, showDateRange, dateFrom, dateTo])
 
-  // ── Selection ──
   const allSelected = filteredAudits.length > 0 && filteredAudits.every((a) => selectedIds.has(a._id))
-
   const toggleSelectAll = () => {
-    if (allSelected) {
-      setSelectedIds(new Set())
-    } else {
-      setSelectedIds(new Set(filteredAudits.map((a) => a._id)))
-    }
+    if (allSelected) setSelectedIds(new Set())
+    else setSelectedIds(new Set(filteredAudits.map((a) => a._id)))
   }
-
   const toggleSelect = (id: string) => {
     const next = new Set(selectedIds)
     if (next.has(id)) next.delete(id)
@@ -531,38 +697,27 @@ export default function AdminAuditsPage() {
 
   const selectedAudits = audits.filter((a) => selectedIds.has(a._id))
 
-  // ── Sort toggle ──
   const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      setSortDir(sortDir === "asc" ? "desc" : "asc")
-    } else {
-      setSortField(field)
-      setSortDir("desc")
-    }
+    if (sortField === field) setSortDir(sortDir === "asc" ? "desc" : "asc")
+    else { setSortField(field); setSortDir("desc") }
   }
 
-  // ── Bulk export ──
-  const handleBulkExport = async (format: "pdf" | "sheet") => {
+  const handleBulkPDF = async () => {
     const targets = selectedAudits.length > 0 ? selectedAudits : filteredAudits
     if (targets.length === 0) return
     setBulkExporting(true)
-    try {
-      if (format === "pdf") await exportToPDF(targets)
-      else exportToSheet(targets)
-    } finally {
-      setBulkExporting(false)
-    }
+    try { await exportToPDF(targets) } finally { setBulkExporting(false) }
   }
 
-  // ── Stats ──
-  const stats = useMemo(() => {
-    const total = filteredAudits.length
-    const pending = filteredAudits.filter((a) => a.status === "pending_contact").length
-    const nurturing = filteredAudits.filter((a) => a.status === "nurturing").length
-    const contacted = filteredAudits.filter((a) => a.status === "contacted").length
-    const converted = filteredAudits.filter((a) => a.status === "converted").length
-    return { total, pending, nurturing, contacted, converted }
-  }, [filteredAudits])
+  const stats = useMemo(() => ({
+    total: filteredAudits.length,
+    pending: filteredAudits.filter((a) => a.status === "pending_contact").length,
+    nurturing: filteredAudits.filter((a) => a.status === "nurturing").length,
+    contacted: filteredAudits.filter((a) => a.status === "contacted").length,
+    converted: filteredAudits.filter((a) => a.status === "converted").length,
+  }), [filteredAudits])
+
+  const bulkTargets = selectedAudits.length > 0 ? selectedAudits : filteredAudits
 
   const TIME_FILTERS: { value: TimeFilter; label: string }[] = [
     { value: "all", label: "All Time" },
@@ -576,7 +731,7 @@ export default function AdminAuditsPage() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
-      {/* Header + Toolbar — sticky top section */}
+      {/* Header + Toolbar */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">
           <div className="flex items-center justify-between">
@@ -594,19 +749,16 @@ export default function AdminAuditsPage() {
                 )}
               </p>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={fetchAudits}
-                disabled={loading}
-                className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
-                title="Refresh"
-              >
-                <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
-              </button>
-            </div>
+            <button
+              onClick={fetchAudits}
+              disabled={loading}
+              className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors"
+              title="Refresh"
+            >
+              <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            </button>
           </div>
 
-          {/* Stats bar */}
           <div className="mt-4 flex gap-4 flex-wrap">
             {[
               { label: "Pending", count: stats.pending, color: "bg-red-500" },
@@ -622,262 +774,202 @@ export default function AdminAuditsPage() {
           </div>
         </div>
 
-        {/* Toolbar — part of the sticky top */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-4">
           <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
-          <div className="flex flex-col lg:flex-row gap-3">
-            {/* Search */}
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search business, owner, email, constraint..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
+            <div className="flex flex-col lg:flex-row gap-3">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search business, owner, email, constraint..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                />
+              </div>
 
-            {/* Time filter */}
-            <div className="flex gap-1 flex-wrap">
-              {TIME_FILTERS.map((tf) => (
+              <div className="flex gap-1 flex-wrap">
+                {TIME_FILTERS.map((tf) => (
+                  <button
+                    key={tf.value}
+                    onClick={() => { setTimeFilter(tf.value); setShowDateRange(false) }}
+                    className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
+                      timeFilter === tf.value && !showDateRange
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {tf.label}
+                  </button>
+                ))}
                 <button
-                  key={tf.value}
-                  onClick={() => { setTimeFilter(tf.value); setShowDateRange(false) }}
-                  className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
-                    timeFilter === tf.value && !showDateRange
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  onClick={() => { setShowDateRange(!showDateRange); setTimeFilter("all") }}
+                  className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 ${
+                    showDateRange ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                   }`}
                 >
-                  {tf.label}
+                  <Calendar className="w-3 h-3" />
+                  Range
                 </button>
-              ))}
-              <button
-                onClick={() => { setShowDateRange(!showDateRange); setTimeFilter("all") }}
-                className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 ${
-                  showDateRange ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
+              </div>
+
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
-                <Calendar className="w-3 h-3" />
-                Range
-              </button>
+                <option value="all">All Statuses</option>
+                <option value="pending_contact">Pending</option>
+                <option value="nurturing">Nurturing</option>
+                <option value="contacted">Contacted</option>
+                <option value="converted">Converted</option>
+              </select>
             </div>
 
-            {/* Status filter */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All Statuses</option>
-              <option value="pending_contact">Pending</option>
-              <option value="nurturing">Nurturing</option>
-              <option value="contacted">Contacted</option>
-              <option value="converted">Converted</option>
-            </select>
-          </div>
+            {showDateRange && (
+              <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100">
+                <label className="text-xs text-gray-500">From</label>
+                <input
+                  type="date"
+                  value={dateFrom}
+                  onChange={(e) => setDateFrom(e.target.value)}
+                  className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <label className="text-xs text-gray-500">To</label>
+                <input
+                  type="date"
+                  value={dateTo}
+                  onChange={(e) => setDateTo(e.target.value)}
+                  className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {(dateFrom || dateTo) && (
+                  <button onClick={() => { setDateFrom(""); setDateTo("") }} className="text-xs text-gray-400 hover:text-gray-600">
+                    Clear
+                  </button>
+                )}
+              </div>
+            )}
 
-          {/* Date range picker */}
-          {showDateRange && (
-            <div className="flex items-center gap-3 mt-3 pt-3 border-t border-gray-100">
-              <label className="text-xs text-gray-500">From</label>
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <label className="text-xs text-gray-500">To</label>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              {(dateFrom || dateTo) && (
+            {filteredAudits.length > 0 && (
+              <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
+                <span className="text-xs text-gray-500">
+                  Export {selectedIds.size > 0 ? `${selectedIds.size} selected` : `all ${filteredAudits.length}`}:
+                </span>
                 <button
-                  onClick={() => { setDateFrom(""); setDateTo("") }}
-                  className="text-xs text-gray-400 hover:text-gray-600"
+                  onClick={handleBulkPDF}
+                  disabled={bulkExporting}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
                 >
-                  Clear
+                  <FileText className="w-3 h-3" />
+                  PDF
                 </button>
-              )}
-            </div>
-          )}
-
-          {/* Bulk actions */}
-          {(selectedIds.size > 0 || filteredAudits.length > 0) && (
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100">
-              <span className="text-xs text-gray-500">
-                Export {selectedIds.size > 0 ? `${selectedIds.size} selected` : `all ${filteredAudits.length}`}:
-              </span>
-              <button
-                onClick={() => handleBulkExport("pdf")}
-                disabled={bulkExporting}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
-              >
-                <FileText className="w-3 h-3" />
-                PDF
-              </button>
-              <button
-                onClick={() => handleBulkExport("sheet")}
-                disabled={bulkExporting}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors disabled:opacity-50"
-              >
-                <FileSpreadsheet className="w-3 h-3" />
-                Spreadsheet
-              </button>
-              {bulkExporting && <span className="text-xs text-blue-600">Exporting...</span>}
-            </div>
-          )}
+                <SheetExportDropdown audits={bulkTargets} />
+                {bulkExporting && <span className="text-xs text-blue-600">Exporting...</span>}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Table — scrollable area fills remaining height */}
+      {/* Table */}
       <div className="flex-1 min-h-0 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          {loading ? (
-            <div className="p-12 text-center">
-              <RefreshCw className="w-6 h-6 animate-spin text-gray-400 mx-auto mb-3" />
-              <p className="text-sm text-gray-500">Loading submissions...</p>
-            </div>
-          ) : filteredAudits.length === 0 ? (
-            <div className="p-12 text-center">
-              <p className="text-gray-500">No submissions found</p>
-              <p className="text-sm text-gray-400 mt-1">Try adjusting your filters</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="pl-4 pr-2 py-3 text-left">
-                      <input
-                        type="checkbox"
-                        checked={allSelected}
-                        onChange={toggleSelectAll}
-                        className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                      />
-                    </th>
-                    <th className="px-3 py-3 text-left">
-                      <button onClick={() => handleSort("businessName")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
-                        Business
-                        {sortField === "businessName" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
-                      </button>
-                    </th>
-                    <th className="px-3 py-3 text-left">
-                      <button onClick={() => handleSort("primaryConstraint")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
-                        Constraint
-                        {sortField === "primaryConstraint" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
-                      </button>
-                    </th>
-                    <th className="px-3 py-3 text-left">
-                      <button onClick={() => handleSort("yearlyOpportunityCost")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
-                        Opp. Cost/yr
-                        {sortField === "yearlyOpportunityCost" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
-                      </button>
-                    </th>
-                    <th className="px-3 py-3 text-left">
-                      <button onClick={() => handleSort("status")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
-                        Status
-                        {sortField === "status" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
-                      </button>
-                    </th>
-                    <th className="px-3 py-3 text-left">
-                      <button onClick={() => handleSort("submittedAt")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
-                        Date
-                        {sortField === "submittedAt" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
-                      </button>
-                    </th>
-                    <th className="px-3 py-3 text-right">
-                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
-                  {filteredAudits.map((audit) => (
-                    <tr
-                      key={audit._id}
-                      className={`group hover:bg-blue-50/40 transition-colors cursor-pointer ${
-                        selectedIds.has(audit._id) ? "bg-blue-50/60" : ""
-                      }`}
-                      onClick={() => setShowDetail(audit)}
-                    >
-                      <td className="pl-4 pr-2 py-3" onClick={(e) => e.stopPropagation()}>
-                        <input
-                          type="checkbox"
-                          checked={selectedIds.has(audit._id)}
-                          onChange={() => toggleSelect(audit._id)}
-                          className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                      </td>
-                      <td className="px-3 py-3">
-                        <div className="text-sm font-medium text-gray-900">{audit.businessName || "—"}</div>
-                        <div className="text-xs text-gray-500">{audit.ownerName} &middot; {audit.email}</div>
-                      </td>
-                      <td className="px-3 py-3">
-                        <ConstraintTag constraint={audit.primaryConstraint} />
-                        {audit.primaryScore > 0 && (
-                          <span className="ml-1.5 text-xs text-gray-400">{audit.primaryScore}/10</span>
-                        )}
-                      </td>
-                      <td className="px-3 py-3">
-                        <div className="text-sm font-medium text-red-600">
-                          {formatLeones(audit.revenueImpact?.yearlyOpportunityCost)}
-                        </div>
-                        {audit.revenueImpact?.yearlyOpportunityCost > 0 && (
-                          <div className="text-xs text-gray-400">
-                            {usdHint(audit.revenueImpact.yearlyOpportunityCost)}
-                          </div>
-                        )}
-                      </td>
-                      <td className="px-3 py-3">
-                        <StatusBadge status={audit.status} />
-                      </td>
-                      <td className="px-3 py-3 text-sm text-gray-500">
-                        {formatDate(audit.submittedAt)}
-                      </td>
-                      <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <button
-                            onClick={() => setShowDetail(audit)}
-                            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
-                            title="View details"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={async () => {
-                              await exportToPDF([audit])
-                            }}
-                            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
-                            title="Export as PDF"
-                          >
-                            <FileText className="w-3.5 h-3.5" />
-                          </button>
-                          <button
-                            onClick={() => exportToSheet([audit])}
-                            className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600"
-                            title="Export as Spreadsheet"
-                          >
-                            <FileSpreadsheet className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </td>
+          <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+            {loading ? (
+              <div className="p-12 text-center">
+                <RefreshCw className="w-6 h-6 animate-spin text-gray-400 mx-auto mb-3" />
+                <p className="text-sm text-gray-500">Loading submissions...</p>
+              </div>
+            ) : filteredAudits.length === 0 ? (
+              <div className="p-12 text-center">
+                <p className="text-gray-500">No submissions found</p>
+                <p className="text-sm text-gray-400 mt-1">Try adjusting your filters</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-100 bg-gray-50/50">
+                      <th className="pl-4 pr-2 py-3 text-left">
+                        <input type="checkbox" checked={allSelected} onChange={toggleSelectAll} className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                      </th>
+                      <th className="px-3 py-3 text-left">
+                        <button onClick={() => handleSort("businessName")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
+                          Business {sortField === "businessName" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                        </button>
+                      </th>
+                      <th className="px-3 py-3 text-left">
+                        <button onClick={() => handleSort("primaryConstraint")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
+                          Constraint {sortField === "primaryConstraint" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                        </button>
+                      </th>
+                      <th className="px-3 py-3 text-left">
+                        <button onClick={() => handleSort("yearlyOpportunityCost")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
+                          Opp. Cost/yr {sortField === "yearlyOpportunityCost" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                        </button>
+                      </th>
+                      <th className="px-3 py-3 text-left">
+                        <button onClick={() => handleSort("status")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
+                          Status {sortField === "status" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                        </button>
+                      </th>
+                      <th className="px-3 py-3 text-left">
+                        <button onClick={() => handleSort("submittedAt")} className="inline-flex items-center gap-1 text-xs font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-700">
+                          Date {sortField === "submittedAt" && (sortDir === "asc" ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />)}
+                        </button>
+                      </th>
+                      <th className="px-3 py-3 text-right">
+                        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</span>
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                  </thead>
+                  <tbody className="divide-y divide-gray-50">
+                    {filteredAudits.map((audit) => (
+                      <tr
+                        key={audit._id}
+                        className={`group hover:bg-blue-50/40 transition-colors cursor-pointer ${selectedIds.has(audit._id) ? "bg-blue-50/60" : ""}`}
+                        onClick={() => setShowDetail(audit)}
+                      >
+                        <td className="pl-4 pr-2 py-3" onClick={(e) => e.stopPropagation()}>
+                          <input type="checkbox" checked={selectedIds.has(audit._id)} onChange={() => toggleSelect(audit._id)} className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                        </td>
+                        <td className="px-3 py-3">
+                          <div className="text-sm font-medium text-gray-900">{audit.businessName || "—"}</div>
+                          <div className="text-xs text-gray-500">{audit.ownerName} &middot; {audit.email}</div>
+                        </td>
+                        <td className="px-3 py-3">
+                          <ConstraintTag constraint={audit.primaryConstraint} />
+                          {audit.primaryScore > 0 && <span className="ml-1.5 text-xs text-gray-400">{audit.primaryScore}/10</span>}
+                        </td>
+                        <td className="px-3 py-3">
+                          <div className="text-sm font-medium text-red-600">{formatLeones(audit.revenueImpact?.yearlyOpportunityCost)}</div>
+                          {audit.revenueImpact?.yearlyOpportunityCost > 0 && (
+                            <div className="text-xs text-gray-400">{usdHint(audit.revenueImpact.yearlyOpportunityCost)}</div>
+                          )}
+                        </td>
+                        <td className="px-3 py-3"><StatusBadge status={audit.status} /></td>
+                        <td className="px-3 py-3 text-sm text-gray-500">{formatDate(audit.submittedAt)}</td>
+                        <td className="px-3 py-3 text-right" onClick={(e) => e.stopPropagation()}>
+                          <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button onClick={() => setShowDetail(audit)} className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600" title="View details">
+                              <Eye className="w-3.5 h-3.5" />
+                            </button>
+                            <button onClick={async (e) => { e.stopPropagation(); await exportToPDF([audit]) }} className="p-1.5 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600" title="Export as PDF">
+                              <FileText className="w-3.5 h-3.5" />
+                            </button>
+                            <SheetExportDropdown audits={[audit]} size="sm" />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* Detail panel */}
       {showDetail && <AuditDetailPanel audit={showDetail} onClose={() => setShowDetail(null)} />}
     </div>
   )
