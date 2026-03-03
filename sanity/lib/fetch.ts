@@ -17,7 +17,7 @@ export async function sanityFetch<QueryResponse>({
 }): Promise<QueryResponse> {
   return client.fetch<QueryResponse>(query, params, {
     next: {
-      revalidate: 60,
+      revalidate: 1,
       tags,
     },
   });
