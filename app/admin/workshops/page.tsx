@@ -3,7 +3,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react"
 import {
   Search, RefreshCw, ChevronDown, ChevronUp, X, Calendar,
-  Eye, Send, CheckCircle, Download, Users, DollarSign,
+  Eye, Send, CheckCircle, Download, Users, ShoppingBagIcon,
   Clock, AlertCircle, MoreHorizontal,
 } from "lucide-react"
 import { EmailEditor } from "@/components/admin/email-editor"
@@ -89,10 +89,10 @@ function getTimeRange(filter: TimeFilter): { start: Date; end: Date } | null {
 // ─── Status config ────────────────────────────────────────────────────────────
 
 const STATUS: Record<string, { label: string; bg: string; text: string; dot: string }> = {
-  completed:       { label: "Paid",            bg: "bg-green-50",  text: "text-green-700",  dot: "bg-green-500" },
-  pending_payment: { label: "Pending Payment", bg: "bg-amber-50",  text: "text-amber-700",  dot: "bg-amber-500" },
-  in_progress:     { label: "In Progress",     bg: "bg-blue-50",   text: "text-blue-700",   dot: "bg-blue-500"  },
-  failed:          { label: "Failed",          bg: "bg-red-50",    text: "text-red-700",    dot: "bg-red-500"   },
+  completed: { label: "Paid", bg: "bg-green-50", text: "text-green-700", dot: "bg-green-500" },
+  pending_payment: { label: "Pending Payment", bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-500" },
+  in_progress: { label: "In Progress", bg: "bg-blue-50", text: "text-blue-700", dot: "bg-blue-500" },
+  failed: { label: "Failed", bg: "bg-red-50", text: "text-red-700", dot: "bg-red-500" },
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -495,19 +495,19 @@ export default function AdminWorkshopsPage() {
 
     if (showDateRange) {
       if (dateFrom) result = result.filter(r => new Date(r.created_at) >= new Date(dateFrom))
-      if (dateTo)   result = result.filter(r => new Date(r.created_at) <= new Date(dateTo + "T23:59:59"))
+      if (dateTo) result = result.filter(r => new Date(r.created_at) <= new Date(dateTo + "T23:59:59"))
     }
 
     result.sort((a, b) => {
       let va: string | number = ""
       let vb: string | number = ""
       switch (sortField) {
-        case "full_name":            va = displayName(a).toLowerCase(); vb = displayName(b).toLowerCase(); break
-        case "business_name":        va = (a.business_name ?? "").toLowerCase(); vb = (b.business_name ?? "").toLowerCase(); break
-        case "status":               va = a.status; vb = b.status; break
-        case "workshop_price":       va = a.workshop_price ?? 0; vb = b.workshop_price ?? 0; break
+        case "full_name": va = displayName(a).toLowerCase(); vb = displayName(b).toLowerCase(); break
+        case "business_name": va = (a.business_name ?? "").toLowerCase(); vb = (b.business_name ?? "").toLowerCase(); break
+        case "status": va = a.status; vb = b.status; break
+        case "workshop_price": va = a.workshop_price ?? 0; vb = b.workshop_price ?? 0; break
         case "payment_completed_at": va = a.payment_completed_at ?? ""; vb = b.payment_completed_at ?? ""; break
-        default:                     va = a.created_at; vb = b.created_at; break
+        default: va = a.created_at; vb = b.created_at; break
       }
       if (va < vb) return sortDir === "asc" ? -1 : 1
       if (va > vb) return sortDir === "asc" ? 1 : -1
@@ -603,7 +603,7 @@ export default function AdminWorkshopsPage() {
               <div className="flex items-center gap-2 text-xs text-gray-400">
                 <a href="/admin" className="hover:text-[#177fc9] transition-colors">Admin</a>
                 <span>/</span>
-                <a href="/admin/audits"  className="hover:text-[#177fc9] transition-colors">Audits</a>
+                <a href="/admin/audits" className="hover:text-[#177fc9] transition-colors">Audits</a>
                 <span>/</span>
                 <span className="text-gray-700 font-semibold">Workshops</span>
                 <span>/</span>
@@ -631,12 +631,12 @@ export default function AdminWorkshopsPage() {
           {/* Stats strip */}
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-6 gap-3">
             {[
-              { icon: Users,        label: "Total",           value: stats.total,              color: "text-gray-700",  bg: "bg-gray-50"  },
-              { icon: CheckCircle,  label: "Paid",            value: stats.paid,               color: "text-green-700", bg: "bg-green-50" },
-              { icon: Clock,        label: "Pending Payment", value: stats.pending,            color: "text-amber-700", bg: "bg-amber-50" },
-              { icon: DollarSign,   label: "Revenue (USD)",   value: `$${stats.revenue.toLocaleString()}`, color: "text-[#177fc9]", bg: "bg-blue-50" },
-              { icon: Users,        label: "Workshops",       value: stats.workshopCount,      color: "text-indigo-700", bg: "bg-indigo-50" },
-              { icon: Users,        label: "VIP",             value: stats.vipCount,           color: "text-amber-700", bg: "bg-amber-50"  },
+              { icon: Users, label: "Total", value: stats.total, color: "text-gray-700", bg: "bg-gray-50" },
+              { icon: CheckCircle, label: "Paid", value: stats.paid, color: "text-green-700", bg: "bg-green-50" },
+              { icon: Clock, label: "Pending Payment", value: stats.pending, color: "text-amber-700", bg: "bg-amber-50" },
+              { icon: ShoppingBagIcon, label: "Revenue (SLE)", value: `Le ${stats.revenue.toLocaleString()}`, color: "text-[#177fc9]", bg: "bg-blue-50" },
+              { icon: Users, label: "Workshops", value: stats.workshopCount, color: "text-indigo-700", bg: "bg-indigo-50" },
+              { icon: Users, label: "VIP", value: stats.vipCount, color: "text-amber-700", bg: "bg-amber-50" },
             ].map(s => (
               <div key={s.label} className={`${s.bg} rounded-xl px-4 py-3 flex items-center gap-3`}>
                 <s.icon className={`w-5 h-5 flex-shrink-0 ${s.color}`} />
@@ -681,18 +681,17 @@ export default function AdminWorkshopsPage() {
               {/* Type filter */}
               <div className="flex items-center gap-1 bg-white border border-gray-200 rounded-lg p-1">
                 {([
-                  { value: "all",      label: "All Types" },
+                  { value: "all", label: "All Types" },
                   { value: "workshop", label: "Workshop" },
-                  { value: "vip",      label: "VIP" },
+                  { value: "vip", label: "VIP" },
                 ] as { value: TypeFilter; label: string }[]).map(t => (
                   <button
                     key={t.value}
                     onClick={() => setTypeFilter(t.value)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                      typeFilter === t.value
-                        ? "bg-[#177fc9] text-white shadow-sm"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${typeFilter === t.value
+                      ? "bg-[#177fc9] text-white shadow-sm"
+                      : "text-gray-500 hover:text-gray-700"
+                      }`}
                   >
                     {t.label}
                   </button>
@@ -706,22 +705,20 @@ export default function AdminWorkshopsPage() {
                 <button
                   key={t.value}
                   onClick={() => { setTimeFilter(t.value); setShowDateRange(false) }}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
-                    timeFilter === t.value && !showDateRange
-                      ? "bg-[#177fc9] text-white"
-                      : "bg-white border border-gray-200 text-gray-600 hover:border-[#177fc9] hover:text-[#177fc9]"
-                  }`}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${timeFilter === t.value && !showDateRange
+                    ? "bg-[#177fc9] text-white"
+                    : "bg-white border border-gray-200 text-gray-600 hover:border-[#177fc9] hover:text-[#177fc9]"
+                    }`}
                 >
                   {t.label}
                 </button>
               ))}
               <button
                 onClick={() => { setShowDateRange(!showDateRange); setTimeFilter("all") }}
-                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors inline-flex items-center gap-1 ${
-                  showDateRange
-                    ? "bg-[#177fc9] text-white"
-                    : "bg-white border border-gray-200 text-gray-600 hover:border-[#177fc9] hover:text-[#177fc9]"
-                }`}
+                className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors inline-flex items-center gap-1 ${showDateRange
+                  ? "bg-[#177fc9] text-white"
+                  : "bg-white border border-gray-200 text-gray-600 hover:border-[#177fc9] hover:text-[#177fc9]"
+                  }`}
               >
                 <Calendar className="w-3 h-3" />
                 Custom Range
@@ -805,9 +802,9 @@ export default function AdminWorkshopsPage() {
                         />
                       </th>
 
-                      {([ ["full_name","Name"], ["business_name","Business"], ["status","Status"],
-                           ["workshop_price","Amount"], ["payment_completed_at","Paid At"], ["created_at","Registered"],
-                        ] as [SortField, string][]).map(([field, label]) => (
+                      {([["full_name", "Name"], ["business_name", "Business"], ["status", "Status"],
+                      ["workshop_price", "Amount"], ["payment_completed_at", "Paid At"], ["created_at", "Registered"],
+                      ] as [SortField, string][]).map(([field, label]) => (
                         <th key={field} className="px-3 py-3 text-left">
                           <button
                             onClick={() => handleSort(field)}
@@ -828,9 +825,8 @@ export default function AdminWorkshopsPage() {
                       <tr
                         key={r.registration_id}
                         onClick={() => setDetail(r)}
-                        className={`group cursor-pointer hover:bg-blue-50/40 transition-colors ${
-                          selectedIds.has(r.registration_id) ? "bg-blue-50/60" : ""
-                        }`}
+                        className={`group cursor-pointer hover:bg-blue-50/40 transition-colors ${selectedIds.has(r.registration_id) ? "bg-blue-50/60" : ""
+                          }`}
                       >
                         <td className="pl-4 pr-2 py-3" onClick={e => e.stopPropagation()}>
                           <input
@@ -853,11 +849,10 @@ export default function AdminWorkshopsPage() {
                             <div className="text-xs text-gray-400">{r.years_of_operations}</div>
                           )}
                           {r.workshop_title && (
-                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium mt-1 ${
-                              r.workshop_title === "VIP Consultation"
-                                ? "bg-amber-50 text-amber-700"
-                                : "bg-blue-50 text-blue-700"
-                            }`}>
+                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium mt-1 ${r.workshop_title === "VIP Consultation"
+                              ? "bg-amber-50 text-amber-700"
+                              : "bg-blue-50 text-blue-700"
+                              }`}>
                               {r.workshop_title === "VIP Consultation" ? "VIP" : "Workshop"}
                             </span>
                           )}
@@ -869,7 +864,7 @@ export default function AdminWorkshopsPage() {
 
                         <td className="px-3 py-3">
                           <span className="text-sm font-medium text-gray-800">
-                            {r.workshop_price != null ? `$${r.workshop_price}` : "—"}
+                            {r.workshop_price != null ? `Le ${r.workshop_price}` : "—"}
                           </span>
                         </td>
 
