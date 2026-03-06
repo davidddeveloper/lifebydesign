@@ -274,29 +274,9 @@ function PDFEvidencePage({ data }: { data: ResultsPageProps["data"] }) {
   )
 }
 
-function PDFQuickWinPage({ data }: { data: ResultsPageProps["data"] }) {
+function PDFNextStepsPage() {
   return (
     <div className="w-full h-full bg-white flex flex-col p-6 font-sans overflow-hidden">
-      <div className="mb-4">
-        <h3 className="text-sm font-bold text-gray-900 mb-3 border-l-2 border-[#177fc9] pl-2">
-          Quick Win - Start Today
-        </h3>
-        <div className="bg-amber-50 rounded-lg p-4 space-y-3">
-          <div>
-            <p className="text-[9px] text-amber-700 uppercase font-semibold tracking-wider mb-1">Action</p>
-            <p className="text-xs text-gray-800">{data.quick_win?.action || "N/A"}</p>
-          </div>
-          <div>
-            <p className="text-[9px] text-amber-700 uppercase font-semibold tracking-wider mb-1">Expected Impact</p>
-            <p className="text-xs text-gray-800">{data.quick_win?.impact || "N/A"}</p>
-          </div>
-          <div>
-            <p className="text-[9px] text-amber-700 uppercase font-semibold tracking-wider mb-1">Time Required</p>
-            <p className="text-xs text-gray-800">{data.quick_win?.time || "N/A"}</p>
-          </div>
-        </div>
-      </div>
-
       <div className="border-t border-gray-200 pt-4 mt-auto">
         <h3 className="text-sm font-bold text-gray-900 mb-2 border-l-2 border-[#177fc9] pl-2">Next Steps</h3>
         <p className="text-xs text-gray-600 mb-2">
@@ -326,7 +306,7 @@ function PDFPreview({ data, onDownload, isGenerating }: {
     <PDFCoverPage key="cover" data={data} />,
     <PDFScoresPage key="scores" data={data} />,
     <PDFEvidencePage key="evidence" data={data} />,
-    <PDFQuickWinPage key="quickwin" data={data} />,
+    <PDFNextStepsPage key="nextsteps" />,
   ]
 
   const goNext = () => setCurrentPage((p) => Math.min(p + 1, totalPages - 1))
@@ -786,30 +766,6 @@ export default function ResultsPage({ data }: ResultsPageProps) {
                   {data.revenue_impact.explanation}
                 </p>
               )}
-            </motion.div>
-
-            {/* Quick Win */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={revealed ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="bg-white rounded-xl border border-gray-200 p-6"
-            >
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Win - Start Today</h3>
-              <div className="bg-amber-50 rounded-lg p-4 space-y-3">
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Action</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.action || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Expected Impact</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.impact || "N/A"}</p>
-                </div>
-                <div>
-                  <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Time Required</p>
-                  <p className="text-sm text-gray-800">{data.quick_win?.time || "N/A"}</p>
-                </div>
-              </div>
             </motion.div>
 
             {/* CTA */}

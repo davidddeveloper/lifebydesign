@@ -173,26 +173,6 @@ const styles = StyleSheet.create({
     fontWeight: 700,
     color: '#DC2626',
   },
-  quickWinBox: {
-    backgroundColor: '#FFFBEB',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  quickWinLabel: {
-    fontSize: 9,
-    color: '#92400E',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 6,
-    fontWeight: 600,
-  },
-  quickWinText: {
-    fontSize: 11,
-    color: '#333',
-    marginBottom: 10,
-    lineHeight: 1.5,
-  },
   footer: {
     position: 'absolute',
     bottom: 30,
@@ -308,11 +288,6 @@ interface AuditResultsPDFProps {
       monthlyOpportunityCost: number;
       yearlyOpportunityCost: number;
       explanation: string;
-    };
-    quick_win: {
-      action: string;
-      impact: string;
-      time: string;
     };
   };
 }
@@ -442,25 +417,8 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
         </View>
       </Page>
 
-      {/* Page 4: Quick Win + Next Steps */}
+      {/* Page 4: Next Steps */}
       <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Quick Win - Start Today</Text>
-
-          <View style={styles.quickWinBox}>
-            <Text style={styles.quickWinLabel}>Action</Text>
-            <Text style={styles.quickWinText}>{data.quick_win?.action || 'N/A'}</Text>
-
-            <Text style={styles.quickWinLabel}>Expected Impact</Text>
-            <Text style={styles.quickWinText}>{data.quick_win?.impact || 'N/A'}</Text>
-
-            <Text style={styles.quickWinLabel}>Time Required</Text>
-            <Text style={styles.quickWinText}>{data.quick_win?.time || 'N/A'}</Text>
-          </View>
-        </View>
-
-        <View style={styles.divider} />
-
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Next Steps</Text>
           <Text style={[styles.text, { marginBottom: 8 }]}>
