@@ -1097,7 +1097,7 @@ export function WorkshopRegistrationModal({
                                     <div className="flex justify-between pt-2 border-t mt-2">
                                       <span className="font-semibold text-gray-900">Total</span>
                                       <span className="font-bold" style={{ color: accentColor }}>
-                                        SLE ${workshopPrice.toLocaleString()}
+                                        SLE {workshopPrice.toLocaleString()}
                                       </span>
                                     </div>
                                     {/*<div className="flex justify-end">
