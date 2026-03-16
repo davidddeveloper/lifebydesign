@@ -99,7 +99,7 @@ const constraintCopy: Record<string, { headline: string; explanation: string; wh
   },
 }
 
-const CALENDLY_URL = process.env.NEXT_PUBLIC_CALENDLY_URL
+const CAL_LINK = process.env.NEXT_PUBLIC_CAL_LINK ?? "startupbodyshop/30min"
 
 // ─── Currency Toggle ─────────────────────────────────────────
 function CurrencyToggle({
@@ -397,50 +397,57 @@ function PDFPreview({ data, onDownload, isGenerating }: {
 }
 
 // ─── Personalized Solution CTA ───────────────────────────────
-function PersonalizedSolutionCTA() {
-  const [clicked, setClicked] = useState(false)
-
-  const handleClick = useCallback(() => {
-    setClicked(true)
-    setTimeout(() => setClicked(false), 2000)
+function PersonalizedSolutionCTA({ email, name }: { email: string; name: string }) {
+  useEffect(() => {
+    (async () => {
+      const { getCalApi } = await import("@calcom/embed-react")
+      const cal = await getCalApi({ namespace: "30min" })
+      cal("ui", { hideEventTypeDetails: false, layout: "month_view" })
+    })()
   }, [])
 
   return (
     <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
       <h3 className="text-lg font-bold text-gray-900 mb-2">Want a Personalized Solution?</h3>
       <p className="text-sm text-gray-600 mb-4">
-        Get expert help to break through your constraint. Our team will reach out with a tailored plan.
+        Get expert help to break through your constraint. Book a free 30-minute call and we'll map out your 90-day fix.
       </p>
       <button
-        onClick={handleClick}
-        disabled={clicked}
-        className={`w-full py-3 rounded-lg font-semibold text-sm transition-all ${clicked
-          ? "bg-green-100 text-green-700"
-          : "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700"
-          }`}
+        data-cal-namespace="30min"
+        data-cal-link={CAL_LINK}
+        data-cal-config={JSON.stringify({ layout: "month_view", name, email })}
+        className="w-full py-3 rounded-lg font-semibold text-sm transition-all bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:from-green-600 hover:to-emerald-700"
       >
-        {clicked ? "Request Sent!" : "Get a Personalized Solution"}
+        Get a Personalized Solution
       </button>
     </div>
   )
 }
 
 // ─── Book Call CTA ───────────────────────────────────────────
-function BookCallCTA() {
+function BookCallCTA({ email, name }: { email: string; name: string }) {
+  useEffect(() => {
+    (async () => {
+      const { getCalApi } = await import("@calcom/embed-react")
+      const cal = await getCalApi({ namespace: "30min" })
+      cal("ui", { hideEventTypeDetails: false, layout: "month_view" })
+    })()
+  }, [])
+
   return (
     <div className="bg-gradient-to-br from-[#177fc9] to-[#0f5b90] rounded-xl p-6 text-white">
       <h3 className="text-lg font-bold mb-3">What to do next</h3>
       <p className="text-sm text-blue-100 leading-relaxed mb-5">
         We've helped businesses like yours fix this exact constraint and see 30-100% revenue growth in 90 days. The next step is a free 30-minute diagnostic call where we walk through your results and map out your 90-day fix.
       </p>
-      <a
-        href={CALENDLY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        data-cal-namespace="30min"
+        data-cal-link={CAL_LINK}
+        data-cal-config={JSON.stringify({ layout: "month_view", name, email })}
         className="block w-full py-3 bg-white text-[#177fc9] font-bold rounded-lg text-center hover:bg-blue-50 transition-colors"
       >
         Book Your Free Diagnostic Call
-      </a>
+      </button>
     </div>
   )
 }
@@ -769,13 +776,15 @@ export default function ResultsPage({ data }: ResultsPageProps) {
             </motion.div>
 
             {/* CTA */}
-            {/*<motion.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={revealed ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.5 }}
+              className="space-y-4"
             >
-              <BookCallCTA />
-            </motion.div>*/}
+              <BookCallCTA email={data.email} name={data.owner_name} />
+              {/*<PersonalizedSolutionCTA email={data.email} name={data.owner_name} />*/}
+            </motion.div>
             {/* Footer inside scroll area */}
             <div className="pt-6 border-t border-gray-200 mt-2">
               <div className="text-center text-xs text-gray-400 pb-4">
