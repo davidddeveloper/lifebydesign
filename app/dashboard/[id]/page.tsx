@@ -6,6 +6,8 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { Radar } from "react-chartjs-2"
 import { Download, RefreshCw, Calendar, TrendingUp, AlertCircle, ArrowRight } from "lucide-react"
+
+const CAL_LINK = process.env.NEXT_PUBLIC_CAL_LINK ?? "startupbodyshop/30min"
 import { generatePDFBlob } from "@/lib/generate-pdf"
 import { formatSLE, usdHint, type CurrencyCode } from "@/lib/currency"
 import {
@@ -85,7 +87,33 @@ function CurrencyToggle({
   )
 }
 
-export default function DashboardPage() {
+export default function BookCallButton({ name, email }: { name: string; email: string }) {
+  useEffect(() => {
+    let ignore = false
+    async function initCal() {
+      const { getCalApi } = await import("@calcom/embed-react")
+      if (ignore) return
+      const cal = await getCalApi({ namespace: "30min" })
+      cal("ui", { hideEventTypeDetails: false, layout: "month_view" })
+    }
+    initCal()
+    return () => { ignore = true }
+  }, [])
+
+  return (
+    <button
+      data-cal-namespace="30min"
+      data-cal-link={CAL_LINK}
+      data-cal-config={JSON.stringify({ layout: "month_view", name, email })}
+      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-600 hover:to-emerald-700 transition-all text-sm"
+    >
+      <Calendar className="w-4 h-4" />
+      Book a Free Strategy Call
+    </button>
+  )
+}
+
+function DashboardPage() {
   const params = useParams()
   const router = useRouter()
   const dashboardId = params.id as string
@@ -441,13 +469,14 @@ export default function DashboardPage() {
               <p className="text-sm text-gray-600 mb-4">
                 Get expert guidance to eliminate your constraint and unlock growth.
               </p>
+              <BookCallButton name={data.owner_name} email={data.email} />
               <a
                 href="https://wa.me/23230600600"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-green-700 hover:text-green-800"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-green-700 hover:text-green-800"
               >
-                Chat with us on WhatsApp
+                Or chat on WhatsApp
                 <ArrowRight className="w-4 h-4" />
               </a>
             </motion.div>
