@@ -1,6 +1,6 @@
 // lib/email.ts
 // Centralized email service using Resend
-// The ONLY place emails are sent from (except the initial n8n audit result email)
+// The ONLY place emails are sent from.
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -468,4 +468,437 @@ export async function sendBulkEmails(
   }
 
   return results;
+}
+
+// ─── Audit Result Emails ──────────────────────────────────────────
+
+export interface AuditResultEmailData {
+  ownerName: string
+  businessName: string
+  email: string
+  primaryConstraint: string
+  primaryScore: number
+  band: string
+  scores: {
+    who: number; what: number; traffic: number; sell: number; operations: number
+  }
+  narrative: {
+    whatIsWorking: string
+    primaryConstraintNarrative: string
+    whatThisCosts: string
+    rootCause: string
+    nextStep: string
+  }
+  recommendedCta: 'workshop' | 'vip_consultation' | '90day_programme' | 'scaling'
+  auditId: string | null
+}
+
+const BAND_COLOUR: Record<string, string> = {
+  CRITICAL: '#DC2626',
+  WEAK: '#D97706',
+  FUNCTIONAL: '#2563EB',
+  STRONG: '#16A34A',
+}
+
+const CTA_LINKS: Record<string, { label: string; url: string }> = {
+  workshop: { label: 'Register for the Workshop', url: `${SITE_URL}/workshops` },
+  vip_consultation: { label: 'Book a VIP Consultation', url: `${SITE_URL}/constraint-audit#book` },
+  '90day_programme': { label: 'Start the 90-Day Programme', url: `${SITE_URL}/constraint-audit#book` },
+  scaling: { label: 'Book a Scaling Conversation', url: `${SITE_URL}/constraint-audit#book` },
+}
+
+function scoreBar(label: string, score: number, band: string): string {
+  const colour = BAND_COLOUR[band] || '#374151'
+  const pct = Math.round((score / 10) * 100)
+  return `
+    <tr>
+      <td style="padding:6px 0;">
+        <table width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td style="font-size:13px;color:#374151;width:160px;vertical-align:middle;">${label}</td>
+            <td style="vertical-align:middle;padding:0 10px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#e5e7eb;border-radius:4px;height:8px;overflow:hidden;">
+                <tr>
+                  <td style="background:${colour};width:${pct}%;height:8px;border-radius:4px;"></td>
+                  <td></td>
+                </tr>
+              </table>
+            </td>
+            <td style="font-size:13px;font-weight:700;color:${colour};width:40px;text-align:right;vertical-align:middle;">${score}/10</td>
+          </tr>
+        </table>
+      </td>
+    </tr>`
+}
+
+export async function sendAuditResults(
+  data: AuditResultEmailData,
+  pdfBuffer: Buffer,
+): Promise<SendResult> {
+  const { ownerName, businessName, email, primaryConstraint, band, scores, narrative, recommendedCta } = data
+  const name = ownerName || 'there'
+  const biz = businessName || 'your business'
+  const constraintColour = BAND_COLOUR[band] || '#DC2626'
+  const cta = CTA_LINKS[recommendedCta] || CTA_LINKS['vip_consultation']
+
+  const html = wrapInLayout(`
+    <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#177fc9;text-transform:uppercase;letter-spacing:0.5px;">Your Diagnostic Report</p>
+    <p style="margin:0 0 20px;font-size:20px;font-weight:700;color:#111827;">Hi ${name},</p>
+    <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+      Your Constraint-Busting Business Audit for <strong>${biz}</strong> is complete. Your full diagnostic report is attached as a PDF — and summarised below.
+    </p>
+
+    <!-- Primary Constraint -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;">
+      <tr>
+        <td style="padding:20px;">
+          <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Your Primary Constraint</p>
+          <p style="margin:0;font-size:18px;font-weight:700;color:${constraintColour};">${primaryConstraint}</p>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Scores -->
+    <p style="margin:0 0 10px;font-size:13px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Your 5 Lever Scores</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:#f9fafb;border-radius:8px;padding:16px;">
+      <tr><td>
+        <table width="100%" cellpadding="0" cellspacing="0">
+          ${scoreBar('WHO — Market', scores.who, scores.who < 3.5 ? 'CRITICAL' : scores.who < 5.5 ? 'WEAK' : scores.who < 7.5 ? 'FUNCTIONAL' : 'STRONG')}
+          ${scoreBar('WHAT — Offer', scores.what, scores.what < 3.5 ? 'CRITICAL' : scores.what < 5.5 ? 'WEAK' : scores.what < 7.5 ? 'FUNCTIONAL' : 'STRONG')}
+          ${scoreBar('FIND YOU — Traffic', scores.traffic, scores.traffic < 3.5 ? 'CRITICAL' : scores.traffic < 5.5 ? 'WEAK' : scores.traffic < 7.5 ? 'FUNCTIONAL' : 'STRONG')}
+          ${scoreBar('SELL — Conversion', scores.sell, scores.sell < 3.5 ? 'CRITICAL' : scores.sell < 5.5 ? 'WEAK' : scores.sell < 7.5 ? 'FUNCTIONAL' : 'STRONG')}
+          ${scoreBar('DELIVER — Operations', scores.operations, scores.operations < 3.5 ? 'CRITICAL' : scores.operations < 5.5 ? 'WEAK' : scores.operations < 7.5 ? 'FUNCTIONAL' : 'STRONG')}
+        </table>
+      </td></tr>
+    </table>
+
+    <!-- Narrative sections -->
+    ${[
+      { label: 'What Is Working', text: narrative.whatIsWorking },
+      { label: 'Your Primary Constraint', text: narrative.primaryConstraintNarrative },
+      { label: 'What This Is Costing You', text: narrative.whatThisCosts },
+      { label: 'The Root Cause', text: narrative.rootCause },
+      { label: 'Your Recommended Next Step', text: narrative.nextStep },
+    ].map(s => `
+      <p style="margin:0 0 4px;font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:0.5px;">${s.label}</p>
+      <p style="margin:0 0 20px;font-size:14px;color:#374151;line-height:1.7;">${s.text}</p>
+    `).join('')}
+
+    ${ctaButton(cta.label, cta.url)}
+    <p style="margin:16px 0 0;font-size:13px;color:#9ca3af;">
+      Questions? Reply to this email or WhatsApp us at +232 30 600 600.
+    </p>
+  `)
+
+  try {
+    const { data: sent, error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: `Your Constraint Audit Results — ${biz}`,
+      html,
+      attachments: [{
+        filename: `Constraint-Audit-${biz.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`,
+        content: pdfBuffer,
+      }],
+    })
+    if (error) return { success: false, error: error.message }
+    return { success: true, messageId: sent?.id }
+  } catch (err) {
+    return { success: false, error: err instanceof Error ? err.message : 'Unknown error' }
+  }
+}
+
+export async function sendAuditAdminNotification(
+  data: AuditResultEmailData,
+): Promise<void> {
+  const { ownerName, businessName, email, primaryConstraint, band, scores } = data
+  const constraintColour = BAND_COLOUR[band] || '#DC2626'
+
+  const infoTable = (rows: [string, string][]) => `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+      ${rows.map(([label, value], i) => `
+        <tr style="${i % 2 === 0 ? 'background:#f9fafb;' : ''}">
+          <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;width:38%;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${label}</td>
+          <td style="padding:10px 16px;font-size:14px;color:#111827;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${value}</td>
+        </tr>`).join('')}
+    </table>`
+
+  const bandBg: Record<string, string> = {
+    CRITICAL: '#fef2f2', WEAK: '#fffbeb', FUNCTIONAL: '#eff6ff', STRONG: '#f0fdf4',
+  }
+
+  const html = wrapInLayout(`
+    <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#177fc9;text-transform:uppercase;letter-spacing:0.5px;">Team Notification</p>
+    <p style="margin:0 0 16px;font-size:18px;font-weight:700;color:#111827;">New Audit Submission</p>
+    <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+      A new Constraint-Busting Business Audit has been completed and the report sent to the client.
+    </p>
+
+    ${infoTable([
+      ['Business', businessName || '—'],
+      ['Owner', ownerName || '—'],
+      ['Email', email || '—'],
+    ])}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;background:${bandBg[band] || '#fef2f2'};border-radius:8px;border:1px solid #e5e7eb;">
+      <tr>
+        <td style="padding:16px 20px;">
+          <p style="margin:0 0 4px;font-size:12px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:0.5px;">Primary Constraint Identified</p>
+          <p style="margin:0;font-size:17px;font-weight:700;color:${constraintColour};">${primaryConstraint}</p>
+        </td>
+      </tr>
+    </table>
+
+    <p style="margin:0 0 8px;font-size:13px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:0.5px;">Lever Scores</p>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+      ${[
+        ['WHO', scores.who],
+        ['WHAT', scores.what],
+        ['FIND YOU', scores.traffic],
+        ['SELL', scores.sell],
+        ['DELIVER', scores.operations],
+      ].map(([l, s]) => {
+        const sc = s as number
+        const b = sc < 3.5 ? 'CRITICAL' : sc < 5.5 ? 'WEAK' : sc < 7.5 ? 'FUNCTIONAL' : 'STRONG'
+        return scoreBar(String(l), sc, b)
+      }).join('')}
+    </table>
+
+    <p style="margin:0;font-size:13px;color:#9ca3af;">Results email and PDF have been sent to the client automatically.</p>
+  `)
+
+  try {
+    await resend.batch.send(
+      TEAM_EMAILS.map(teamEmail => ({
+        from: FROM_EMAIL,
+        to: teamEmail,
+        subject: `New Audit — ${businessName || 'Unknown'} | Constraint: ${primaryConstraint}`,
+        html,
+      }))
+    )
+  } catch (err) {
+    console.error('[audit-admin-notify] failed:', err)
+  }
+}
+
+// ─── Booking Emails ───────────────────────────────────────────────────────────
+
+export interface BookingEmailData {
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  bookingDate: string   // YYYY-MM-DD
+  bookingTime: string   // HH:MM (24h)
+  callMedium: string    // 'in_person' | 'zoom' | 'google_meet' | 'phone_call'
+  meetingLink: string | null
+  assignedToName: string | null
+}
+
+const MEDIUM_LABELS: Record<string, string> = {
+  in_person:   'In-Person Consultation',
+  zoom:        'Zoom Video Call',
+  google_meet: 'Google Meet',
+  phone_call:  'Phone Call',
+}
+
+function formatTime12(time24: string): string {
+  const [h, m] = time24.split(':').map(Number)
+  const ampm = h >= 12 ? 'PM' : 'AM'
+  const h12 = h % 12 || 12
+  return `${h12}:${String(m).padStart(2, '0')} ${ampm}`
+}
+
+function formatDateLong(iso: string): string {
+  // iso = YYYY-MM-DD
+  return new Date(iso + 'T00:00:00').toLocaleDateString('en-GB', {
+    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+  })
+}
+
+export async function sendBookingConfirmation(data: BookingEmailData): Promise<void> {
+  const {
+    firstName, lastName, email, phone,
+    bookingDate, bookingTime, callMedium, meetingLink, assignedToName,
+  } = data
+
+  const name = `${firstName} ${lastName}`
+  const formattedDate = formatDateLong(bookingDate)
+  const formattedTime = `${formatTime12(bookingTime)} (WAT – Sierra Leone time)`
+  const mediumLabel   = MEDIUM_LABELS[callMedium] ?? callMedium
+  const assignedTo    = assignedToName ?? 'a member of our team'
+
+  const meetingBlock = callMedium === 'in_person'
+    ? `<tr>
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">Location</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">
+          62 Dundas Street, Freetown, Sierra Leone<br>
+          <a href="https://maps.google.com/?q=62+Dundas+Street+Freetown+Sierra+Leone" style="color:#177fc9;font-size:13px;">Get directions →</a>
+        </td>
+      </tr>`
+    : callMedium === 'phone_call'
+    ? `<tr>
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">We'll call</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">${phone}</td>
+      </tr>`
+    : meetingLink
+    ? `<tr>
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">Meeting Link</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">
+          <a href="${meetingLink}" style="color:#177fc9;">${meetingLink}</a>
+        </td>
+      </tr>`
+    : ''
+
+  const html = wrapInLayout(`
+    <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:#16a34a;text-transform:uppercase;letter-spacing:0.5px;">✓ Booking Confirmed</p>
+    <p style="margin:0 0 20px;font-size:22px;font-weight:700;color:#111827;line-height:1.2;">
+      Your call is booked,<br>${firstName}!
+    </p>
+
+    <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+      You're all set. <strong>${assignedTo}</strong> from Startup Bodyshop is looking forward to speaking with you.
+    </p>
+
+    <!-- Booking summary card -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+      <tr style="background:#f9fafb;">
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;width:38%;">Date</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;font-weight:600;">${formattedDate}</td>
+      </tr>
+      <tr>
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">Time</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">${formattedTime}</td>
+      </tr>
+      <tr style="background:#f9fafb;">
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">Meeting Type</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">${mediumLabel}</td>
+      </tr>
+      ${meetingBlock}
+      <tr style="${callMedium === 'in_person' ? '' : 'background:#f9fafb;'}">
+        <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;border-top:1px solid #e5e7eb;width:38%;">With</td>
+        <td style="padding:10px 16px;font-size:14px;color:#111827;border-top:1px solid #e5e7eb;">${assignedTo}</td>
+      </tr>
+    </table>
+
+    <!-- WhatsApp reminder note -->
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;background:#f0fdf4;border-radius:8px;border:1px solid #bbf7d0;">
+      <tr>
+        <td style="padding:16px 20px;">
+          <p style="margin:0 0 6px;font-size:14px;font-weight:700;color:#166534;">💬 WhatsApp Reminder</p>
+          <p style="margin:0;font-size:14px;color:#166534;line-height:1.5;">
+            We'll send you a reminder on WhatsApp 24 hours before your call.<br>
+            Save our number: <strong>+232 30 600 600</strong>
+          </p>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Add to Google Calendar -->
+    ${ctaButton('Add to Google Calendar', `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(`Call with ${assignedTo} — Startup Bodyshop`)}&dates=${bookingDate.replace(/-/g, '')}T${bookingTime.replace(':', '')}00/${bookingDate.replace(/-/g, '')}T${(() => { const [h,m] = bookingTime.split(':').map(Number); const end = h * 60 + m + 30; return `${String(Math.floor(end/60)).padStart(2,'0')}${String(end%60).padStart(2,'0')}` })()}00&ctz=Africa%2FFreetown`)}
+
+    <p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">
+      Need to reschedule or have questions? Reply to this email or
+      <a href="https://wa.me/23230600600" style="color:#177fc9;text-decoration:none;">message us on WhatsApp</a>.
+    </p>
+    <p style="margin:0;font-size:13px;color:#9ca3af;">See you soon, ${firstName}!</p>
+  `)
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: email,
+      subject: `Confirmed: Your call on ${formattedDate} at ${formatTime12(bookingTime)}`,
+      html,
+    })
+    console.log(`[booking-confirm] sent to ${email}`)
+  } catch (err) {
+    console.error('[booking-confirm] failed:', err)
+    throw err
+  }
+}
+
+export async function sendBookingTeamNotification(data: BookingEmailData): Promise<void> {
+  const {
+    firstName, lastName, email, phone,
+    bookingDate, bookingTime, callMedium, meetingLink, assignedToName,
+  } = data
+
+  const name = `${firstName} ${lastName}`
+  const formattedDate = formatDateLong(bookingDate)
+  const formattedTime = `${formatTime12(bookingTime)} (WAT)`
+  const mediumLabel   = MEDIUM_LABELS[callMedium] ?? callMedium
+
+  const infoRows = [
+    ['Client Name',  name],
+    ['Email',        email],
+    ['Phone',        phone],
+    ['Date',         formattedDate],
+    ['Time',         formattedTime],
+    ['Meeting Type', mediumLabel],
+    ...(meetingLink ? [['Meeting Link', meetingLink]] : []),
+    ...(assignedToName ? [['Assigned To', assignedToName]] : []),
+  ]
+
+  const html = wrapInLayout(`
+    <p style="margin:0 0 4px;font-size:13px;font-weight:600;color:#177fc9;text-transform:uppercase;letter-spacing:0.5px;">Team Notification</p>
+    <p style="margin:0 0 20px;font-size:22px;font-weight:700;color:#111827;">New Booking Confirmed</p>
+
+    <p style="margin:0 0 20px;font-size:15px;color:#374151;line-height:1.6;">
+      A call has been booked through the website. Full details below:
+    </p>
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 24px;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden;">
+      ${infoRows.map(([label, value], i) => `
+        <tr style="${i % 2 === 0 ? 'background:#f9fafb;' : ''}">
+          <td style="padding:10px 16px;font-size:13px;color:#6b7280;font-weight:600;width:36%;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${label}</td>
+          <td style="padding:10px 16px;font-size:14px;color:#111827;${i > 0 ? 'border-top:1px solid #e5e7eb;' : ''}">${
+            label === 'Meeting Link' && value
+              ? `<a href="${value}" style="color:#177fc9;">${value}</a>`
+              : String(value)
+          }</td>
+        </tr>`).join('')}
+    </table>
+
+    ${ctaButton('View All Bookings in Admin', `${SITE_URL}/admin/bookings`)}
+
+    <p style="margin:0;font-size:13px;color:#9ca3af;">This notification was sent to all active team members automatically.</p>
+  `)
+
+  // Fetch notification team from settings or fall back to default
+  let recipients = ['joeabass@lbd.sl', 'sjohnson@lbd.sl', 'fkamara@lbd.sl', 'dlake@lbd.sl']
+
+  try {
+    // Try to fetch live team list from DB
+    const { createClient } = await import('@supabase/supabase-js')
+    const admin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    )
+    const { data: row } = await admin
+      .from('booking_settings')
+      .select('value')
+      .eq('key', 'notification_team')
+      .single()
+
+    if (Array.isArray(row?.value)) {
+      const active = row.value.filter((m: any) => m.active !== false)
+      if (active.length > 0) recipients = active.map((m: any) => m.email)
+    }
+  } catch { /* use defaults */ }
+
+  try {
+    await resend.batch.send(
+      recipients.map(to => ({
+        from: FROM_EMAIL,
+        to,
+        subject: `New Booking: ${name} · ${formattedDate} ${formatTime12(bookingTime)}`,
+        html,
+      }))
+    )
+    console.log(`[booking-team-notify] sent to ${recipients.join(', ')}`)
+  } catch (err) {
+    console.error('[booking-team-notify] failed:', err)
+    throw err
+  }
 }

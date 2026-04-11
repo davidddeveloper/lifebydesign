@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { FileText, Mail, CalendarDays, ChevronRight, LogOut, PencilRuler } from "lucide-react"
+import { FileText, Mail, CalendarDays, ChevronRight, LogOut, PencilRuler, Book } from "lucide-react"
 import Image from "next/image"
 
 const NAV_CARDS = [
@@ -24,6 +24,11 @@ const NAV_CARDS = [
     title: "Workshop Registrations",
     description: "Track registrations, manage payments, and communicate with attendees.",
   },
+  {
+    href: "/admin/bookings",
+    icon: Book,
+    description: "Manage bookings."
+  }
 ]
 
 export default function AdminDashboardPage() {

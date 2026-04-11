@@ -18,6 +18,8 @@ import {
 // ─── Types ───────────────────────────────────────────────────────
 interface Audit {
   _id: string
+  _version?: "v1" | "v2"
+  auditVersion?: string
   // Basic info
   businessName: string
   ownerName: string
@@ -101,8 +103,9 @@ interface Audit {
     time: string
   }
   status: string
-  dashboardId: string
+  dashboardId: string | null
   submittedAt: string
+  recommendedCta?: string | null
 }
 
 type TimeFilter = "all" | "today" | "this_week" | "this_month" | "last_month" | "this_year" | "last_year"
@@ -481,7 +484,14 @@ function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => voi
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between rounded-t-2xl">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">{audit.businessName}</h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold text-gray-900">{audit.businessName}</h2>
+              {audit.auditVersion && (
+                <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-gray-100 text-gray-500">
+                  v{audit.auditVersion}
+                </span>
+              )}
+            </div>
             <p className="text-sm text-gray-500">{audit.ownerName} &middot; {audit.email}</p>
           </div>
           <div className="flex items-center gap-2">
@@ -932,7 +942,12 @@ export default function AdminAuditsPage() {
                           <input type="checkbox" checked={selectedIds.has(audit._id)} onChange={() => toggleSelect(audit._id)} className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                         </td>
                         <td className="px-3 py-3">
-                          <div className="text-sm font-medium text-gray-900">{audit.businessName || "—"}</div>
+                          <div className="flex items-center gap-1.5">
+                            <div className="text-sm font-medium text-gray-900">{audit.businessName || "—"}</div>
+                            {audit.auditVersion === "3.0" && (
+                              <span className="text-[9px] font-bold uppercase tracking-wider px-1 py-0.5 bg-blue-50 text-blue-600 rounded">v3</span>
+                            )}
+                          </div>
                           <div className="text-xs text-gray-500">{audit.ownerName} &middot; {audit.email}</div>
                         </td>
                         <td className="px-3 py-3">
