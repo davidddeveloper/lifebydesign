@@ -51,6 +51,8 @@ interface Screen {
   leverName?: string
   leverTagline?: string
   leverDescription?: string
+  // conditional display
+  conditionalOn?: { fieldKey: string; hideWhenValue: string | number }
 }
 
 interface FormData {
@@ -65,6 +67,8 @@ interface FormData {
   numberOfCustomers: string
   teamSize: string
   revenueTracking: string
+  // Q2a — capacity gate (not scored, routing only)
+  q2a: string | null   // "A" | "B" | "C" | "D" | null
   // Q1–Q27 (numeric scored)
   q1: number | null
   q2: number | null
@@ -103,6 +107,7 @@ const INITIAL_FORM: FormData = {
   businessName: "", ownerName: "", phone: "", email: "",
   industry: "", yearsInBusiness: "", monthlyRevenue: "",
   numberOfCustomers: "", teamSize: "", revenueTracking: "",
+  q2a: null,
   q1: null, q2: null, q3: null, q4: "",
   q5: null, q6: null, q7: null, q8: null, q9: null,
   q10: null, q11: null, q12: "",
@@ -193,13 +198,29 @@ const SCREENS: Screen[] = [
     ],
   },
 
-  // Q2
+  // Q2a — capacity gate (not scored, routing only)
+  {
+    id: "q2a", type: "choice", questionNumber: "2a" as any, lever: 1,
+    section: "Lever 1 — WHO",
+    question: "Right now, is your business actively able to take on new customers if they came to you?",
+    hint: "Think about today — not your plans for next month. If a new customer called or walked in wanting to use your business, could you serve them without turning anyone else away or compromising quality? Some businesses are temporarily full. Some are actively looking for more customers. Be honest about which situation you are in.",
+    fieldKey: "q2a",
+    options: [
+      { label: "No — we are at full capacity and cannot take on new customers right now", value: "A" },
+      { label: "Partially — we could take a few but we are close to our limit", value: "B" },
+      { label: "Yes — we have room and are actively looking for new customers", value: "C" },
+      { label: "Yes — we have significant capacity and urgently need more customers", value: "D" },
+    ],
+  },
+
+  // Q2 — conditional: hidden when Q2a = "A"
   {
     id: "q2", type: "choice", questionNumber: 2, lever: 1,
     section: "Lever 1 — WHO",
     question: "How many genuinely new customers came to your business last month?",
     hint: "Count only customers who had never bought from you before. Do not count returning customers. Be as accurate as possible — look at your records if you need to.",
     fieldKey: "q2",
+    conditionalOn: { fieldKey: "q2a", hideWhenValue: "A" },
     options: [
       { label: "0 to 2", value: 2 },
       { label: "3 to 5", value: 4 },
@@ -586,8 +607,8 @@ const SCREENS: Screen[] = [
     hint: "Profit margin is not the same as revenue. It is what remains after you have paid for everything — stock, rent, transport, phone, staff, and your own time. If you earn NLe 10M and costs are NLe 7M, your profit is NLe 3M and your margin is 30%.",
     fieldKey: "q26",
     options: [
-      { label: "No — I genuinely do not know my profit margin", value: 0 },
-      { label: "I am losing money or only barely breaking even", value: 0 },
+      { label: "No — I genuinely do not know my profit margin", value: "0a" },
+      { label: "I am losing money or only barely breaking even", value: "0b" },
       { label: "I keep roughly 10 to 20 out of every 100 Leones I earn", value: 4 },
       { label: "I keep roughly 21 to 35 out of every 100 Leones I earn", value: 6 },
       { label: "I keep more than 35 out of every 100 Leones I earn", value: 8 },
@@ -705,6 +726,9 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [bookingOpen, setBookingOpen] = useState(false)
   const saveRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Always-current ref so navigation callbacks never read stale formData
+  const formDataRef = useRef<FormData>(formData)
+  useEffect(() => { formDataRef.current = formData }, [formData])
 
   // Restore progress
   useEffect(() => {
@@ -732,14 +756,38 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
 
   const screen = SCREENS[screenIndex]
 
-  const go = useCallback((delta: number) => {
-    const next = screenIndex + delta
+  // Check if a screen should be skipped.
+  // Accepts an optional pending override so handleChoiceSelect can pass the
+  // value it just set *before* the React state update has flushed.
+  const isScreenHidden = useCallback((
+    idx: number,
+    pending?: { fieldKey: string; value: any }
+  ): boolean => {
+    const s = SCREENS[idx]
+    if (!s.conditionalOn) return false
+    const { fieldKey, hideWhenValue } = s.conditionalOn
+    // Use pending value if it matches the gate field, otherwise use the ref
+    const currentValue = (pending?.fieldKey === fieldKey)
+      ? pending.value
+      : (formDataRef.current as any)[fieldKey]
+    return currentValue === hideWhenValue
+  }, []) // No deps — reads from ref and pending arg, never stale
+
+  const go = useCallback((
+    delta: number,
+    pending?: { fieldKey: string; value: any }
+  ) => {
+    let next = screenIndex + delta
+    // Skip conditionally hidden screens, using pending value for accuracy
+    while (next >= 0 && next < SCREENS.length && isScreenHidden(next, pending)) {
+      next += delta
+    }
     if (next < 0 || next >= SCREENS.length) return
     setDirection(delta)
     setScreenIndex(next)
-    persist(formData, next)
+    persist(formDataRef.current, next)
     window.scrollTo(0, 0)
-  }, [screenIndex, formData, persist])
+  }, [screenIndex, persist, isScreenHidden])
 
   const goNext = useCallback(() => go(1), [go])
   const goPrev = useCallback(() => go(-1), [go])
@@ -747,10 +795,10 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
   const goToScreen = useCallback((idx: number) => {
     setDirection(idx > screenIndex ? 1 : -1)
     setScreenIndex(idx)
-    persist(formData, idx)
+    persist(formDataRef.current, idx)
     setShowNav(false)
     window.scrollTo(0, 0)
-  }, [screenIndex, formData, persist])
+  }, [screenIndex, persist])
 
   const update = useCallback((field: string, value: any) => {
     setFormData(prev => {
@@ -840,7 +888,9 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
     setJustSelected(String(value))
     setTimeout(() => {
       setJustSelected(null)
-      goNext()
+      // Pass the pending value so isScreenHidden sees the new selection
+      // immediately, regardless of whether React has flushed the state yet
+      go(1, { fieldKey, value })
     }, 480)
   }
 
@@ -981,6 +1031,8 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
                   const isActive = screenIndex >= section.screenIdx &&
                     (i === NAV_SECTIONS.length - 1 || screenIndex < NAV_SECTIONS[i + 1].screenIdx)
                   const isDone = section.fields.every(fk => {
+                    // Skip q2 when Q2a = "A" (capacity flag — screen is hidden)
+                    if (fk === "q2" && formData.q2a === "A") return true
                     const v = (formData as any)[fk]
                     return v !== null && v !== undefined && String(v).trim() !== ""
                   })
@@ -1531,10 +1583,21 @@ function SubmitScreen({
   onSubmit: () => void
   onBack: () => void
 }) {
-  // Count answered questions
-  const scored = SCREENS.filter(s => s.type === "choice" && s.fieldKey)
-  const answeredScored = scored.filter(s => (formData as any)[s.fieldKey!] !== null).length
-  const total = scored.length
+  // Build the list of required choice screens, excluding Q2 when Q2a = "A"
+  const capacityFlag = formData.q2a === "A"
+  const requiredScreens = SCREENS.filter(s => {
+    if (s.type !== "choice" || !s.fieldKey) return false
+    // Q2 is not required when business is at full capacity
+    if (s.fieldKey === "q2" && capacityFlag) return false
+    return true
+  })
+
+  const answered = requiredScreens.filter(s => {
+    const val = (formData as any)[s.fieldKey!]
+    return val !== null && val !== undefined && val !== ""
+  }).length
+  const total = requiredScreens.length
+  const allAnswered = answered === total
 
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
@@ -1549,9 +1612,9 @@ function SubmitScreen({
           You're done.
         </h2>
         <p className="text-base text-[#555] leading-relaxed max-w-md">
-          {answeredScored} of {total} scored questions answered.
-          {answeredScored < total && (
-            <span className="text-[#C0392B]"> Some questions are still unanswered — you can go back and complete them.</span>
+          {answered} of {total} questions answered.
+          {!allAnswered && (
+            <span className="text-[#C0392B]"> Some questions are still unanswered — go back and complete them to generate your report.</span>
           )}
         </p>
       </div>
@@ -1588,7 +1651,8 @@ function SubmitScreen({
       <div className="flex items-center gap-4 flex-wrap">
         <button
           onClick={onSubmit}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-8 py-4 text-base font-semibold hover:bg-black transition-colors"
+          disabled={!allAnswered}
+          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-8 py-4 text-base font-semibold hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
         >
           Generate My Report
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
