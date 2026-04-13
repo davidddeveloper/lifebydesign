@@ -58,6 +58,10 @@ export interface AuditNarrativeInput {
 
   // Recommended CTA
   recommendedCta: "workshop" | "vip_consultation" | "90day_programme" | "scaling"
+
+  // Capacity constraint amendment (Q2a)
+  capacityStatus?: string   // human-readable status string
+  capacityFlag?: boolean    // true = Q2 was excluded from Lever 1 scoring
 }
 
 export interface AuditNarrativeOutput {
@@ -93,6 +97,7 @@ function buildPrompt(input: AuditNarrativeInput): string {
     businessName, industry, yearsInBusiness, monthlyRevenue, teamSize,
     revenueTracking, scores, bands, primaryConstraint, primaryScore,
     secondaryConstraint, ruleApplied, interactionFlags,
+    capacityStatus, capacityFlag,
     q4, q12, q22, q28, q29, q30, revenueOpportunityText, recommendedCta,
   } = input
 
@@ -105,27 +110,32 @@ function buildPrompt(input: AuditNarrativeInput): string {
   ].join("\n")
 
   const flagsText = interactionFlags.length > 0
-    ? interactionFlags.join("\n")
+    ? interactionFlags.join("\n— ")
     : "None identified."
 
   const ctaDescription = CTA_DESCRIPTIONS[recommendedCta] || CTA_DESCRIPTIONS["vip_consultation"]
 
+  const capacityBlock = capacityFlag
+    ? `\nCAPACITY CONSTRAINT HANDLING:\nThis business answered Q2a as 'At full capacity' — Q2 was excluded from Lever 1 scoring.\nIn section 2 (Primary Constraint): If WHO or FIND YOU appears as primary constraint, do not write a market or traffic diagnosis. Instead write: 'Your scores suggest a potential market or traffic constraint, but you have told us your business is currently at full capacity. The real constraint here is not that customers are hard to find — it is that you cannot serve more of them right now. Your coach will explore what is limiting your capacity and what it would take to expand it.'\nIn section 4 (Root Cause): Always address the capacity ceiling explicitly. Name whether it appears to be financial (limited capital), physical (space, equipment), or human (team size). Draw on Q28 and Q12 for context.\nIn section 5 (Recommended Next Step): Always recommend the VIP Consultation — this requires a personalised conversation, not a group workshop.\n`
+    : ""
+
   return `
 BUSINESS OWNER CONTEXT:
 Business: ${businessName || "Unknown"} | Industry: ${industry || "Unknown"} | Years operating: ${yearsInBusiness || "Unknown"} | Monthly revenue: NLe ${monthlyRevenue || "Unknown"} | Team: ${teamSize || "Unknown"} | Tracks numbers: ${revenueTracking}
+Capacity status: ${capacityStatus || "Not specified — Q2 included"}
 
 LEVER SCORES (out of 10) — pre-calculated, do not recalculate:
 ${scoreLines}
 
 CONSTRAINT DIAGNOSIS — pre-calculated, do not override:
-Primary constraint: ${primaryConstraint} | Rule applied: Rule ${ruleApplied}
+Primary constraint: ${primaryConstraint} (score: ${primaryScore}/10) | Rule applied: Rule ${ruleApplied}
 Secondary constraint: ${secondaryConstraint || "None"}
 
 REVENUE OPPORTUNITY:
 ${revenueOpportunityText}
-
+${capacityBlock}
 LEVER INTERACTION FLAGS — weave these into the narrative where relevant:
-${flagsText}
+— ${flagsText}
 
 OPEN-TEXT ANSWERS:
 Q4 — Ideal customer: ${q4 || "Not provided"}
@@ -236,19 +246,21 @@ export function calculateInteractionFlags(
 ): string[] {
   const flags: string[] = []
 
-  if (primaryConstraint.includes("WHO") && scores.lever2 < 5.5)
+  const pc = primaryConstraint ?? ""
+
+  if (pc.includes("WHO") && scores.lever2 < 5.5)
     flags.push("Improving your market focus will bring better customers — but your offer will also need strengthening to convert and keep them. Both need attention.")
 
-  if (primaryConstraint.includes("WHAT") && scores.lever3 < 5.5)
+  if (pc.includes("WHAT") && scores.lever3 < 5.5)
     flags.push("A stronger offer alone will not grow revenue if the right people are not finding you. Your traffic system needs attention alongside your offer.")
 
-  if (primaryConstraint.includes("FIND YOU") && scores.lever4 < 5.5)
+  if (pc.includes("FIND YOU") && scores.lever4 < 5.5)
     flags.push("More leads will only help if you can convert them. Your sales process needs strengthening alongside your traffic activity.")
 
-  if (primaryConstraint.includes("SELL") && scores.lever2 < 5.5)
+  if (pc.includes("SELL") && scores.lever2 < 5.5)
     flags.push("A better sales process will help, but the core issue may be the offer itself. Both need attention for full improvement.")
 
-  if (primaryConstraint.includes("DELIVER") && (answers.q10 ?? 99) <= 4 && (answers.q11 ?? 99) <= 2)
+  if (pc.includes("DELIVER") && (answers.q10 ?? 99) <= 4 && (answers.q11 ?? 99) <= 2)
     flags.push("Fixing your systems is important — but growth also requires building ways to sell more to your existing customers. These two problems need solving together.")
 
   if ((answers.q17 ?? 99) < 3 && (answers.q19 ?? 0) > 5)
