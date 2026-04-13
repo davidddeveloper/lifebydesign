@@ -466,6 +466,51 @@ function SheetExportDropdown({ audits, size = "md" }: { audits: Audit[]; size?: 
   )
 }
 
+// ─── Regenerate Narrative Button ─────────────────────────────────
+function RegenerateNarrativeButton({ auditId, reasoning }: { auditId: string; reasoning: string | null }) {
+  const [state, setState] = useState<"idle" | "loading" | "done" | "error">("idle")
+  const isBlank = !reasoning || reasoning.trim().length === 0
+
+  async function handleRegenerate() {
+    if (!confirm("Re-run Claude narrative generation for this audit? This will cost ~$0.017 and overwrite the existing narrative.")) return
+    setState("loading")
+    try {
+      const res = await fetch("/api/admin/regenerate-narrative", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: auditId }),
+      })
+      if (!res.ok) throw new Error((await res.json()).error ?? "Failed")
+      setState("done")
+      // Reload after short delay so the panel refreshes
+      setTimeout(() => window.location.reload(), 1200)
+    } catch (err: any) {
+      console.error(err)
+      setState("error")
+      setTimeout(() => setState("idle"), 3000)
+    }
+  }
+
+  return (
+    <div className={`flex items-center gap-3 p-3 rounded-lg border ${isBlank ? "bg-amber-50 border-amber-200" : "bg-gray-50 border-gray-200"}`}>
+      <div className="flex-1">
+        <p className="text-xs font-semibold text-gray-700">
+          {isBlank ? "⚠ Narrative is empty — Claude call may have failed" : "AI Narrative"}
+        </p>
+        {!isBlank && <p className="text-xs text-gray-400 mt-0.5">Regenerate to refresh with updated prompt</p>}
+      </div>
+      <button
+        onClick={handleRegenerate}
+        disabled={state === "loading" || state === "done"}
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-gray-300 bg-white hover:bg-gray-50 disabled:opacity-50 transition-colors"
+      >
+        {state === "loading" && <span className="w-3 h-3 border border-gray-400 border-t-transparent rounded-full animate-spin" />}
+        {state === "done" ? "Done ✓" : state === "error" ? "Error — retry" : state === "loading" ? "Running…" : "Regenerate Narrative"}
+      </button>
+    </div>
+  )
+}
+
 // ─── Detail Panel ────────────────────────────────────────────────
 function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => void }) {
   const [exporting, setExporting] = useState(false)
@@ -560,6 +605,9 @@ function AuditDetailPanel({ audit, onClose }: { audit: Audit; onClose: () => voi
               </div>
             </div>
           </div>
+
+          {/* Regenerate Narrative (v2 audits only) */}
+          {audit._version === "v2" && <RegenerateNarrativeButton auditId={audit._id} reasoning={audit.reasoning} />}
 
           {/* Reasoning */}
           {audit.reasoning && (
