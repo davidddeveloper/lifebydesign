@@ -32,8 +32,9 @@ export async function GET() {
         endTime:          (raw.availability?.end_time        ?? "15:30") as string,
         slotDurationMins: Number(raw.availability?.slot_duration_mins ?? 30),
       },
-      officeAddress:  String(raw.office_address  ?? "62 Dundas Street, Freetown, Sierra Leone"),
-      directionsUrl:  String(raw.directions_url  ?? "https://maps.google.com/?q=62+Dundas+Street+Freetown+Sierra+Leone"),
+      officeAddress:      String(raw.office_address       ?? "62 Dundas Street, Freetown, Sierra Leone"),
+      directionsUrl:      String(raw.directions_url       ?? "https://maps.google.com/?q=62+Dundas+Street+Freetown+Sierra+Leone"),
+      brandPrimaryColor:  String(raw.brand_primary_color  ?? "#1A1A1A").replace(/^"|"$/g, ""),
     }
 
     return NextResponse.json({ settings }, { status: 200 })
