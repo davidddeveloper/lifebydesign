@@ -62,6 +62,19 @@ export interface NormalisedAudit {
   mainProblemSolved: string | null
   reasonsNotBuying: string | null
 
+  // v2-only enriched fields
+  bands?: {
+    who: string; what: string; traffic: string; sell: string; operations: string
+  }
+  narrativeSections?: {
+    whatIsWorking: string
+    primaryConstraintNarrative: string
+    whatThisCosts: string
+    rootCause: string
+    nextStep: string
+  }
+  revenueOpportunityText?: string
+
   // Status & meta
   status: string
   dashboardId: string | null
@@ -173,6 +186,21 @@ function mapV2(row: any): NormalisedAudit {
     revenueImpact: {
       explanation: row.revenue_opportunity_text ?? undefined,
     },
+    bands: {
+      who:        row.band_who        ?? "CRITICAL",
+      what:       row.band_what       ?? "CRITICAL",
+      traffic:    row.band_traffic    ?? "CRITICAL",
+      sell:       row.band_sell       ?? "CRITICAL",
+      operations: row.band_operations ?? "CRITICAL",
+    },
+    narrativeSections: {
+      whatIsWorking:                row.narrative_what_working         ?? "",
+      primaryConstraintNarrative:   row.narrative_primary_constraint   ?? "",
+      whatThisCosts:                row.narrative_cost                 ?? "",
+      rootCause:                    row.narrative_root_cause           ?? "",
+      nextStep:                     row.narrative_next_step            ?? "",
+    },
+    revenueOpportunityText: row.revenue_opportunity_text ?? "",
     quickWin: {},
     topChallenge: row.q28 ?? null,
     oneThingToFix: row.q29 ?? null,

@@ -1,5 +1,5 @@
 // components/AuditResultsPDF.tsx
-import React from 'react';
+// Used by admin export (/admin/audits). Separate from AuditResultsPDFV2.tsx (used on results page).
 import {
   Document,
   Page,
@@ -13,260 +13,283 @@ import { USD_TO_SLE, formatSLE, usdHint } from '@/lib/currency';
 
 const blue = '#177fc9';
 const blueLighter = '#E8F4FD';
-const blueLight = '#42adff';
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 44,
+    paddingTop: 36,
     backgroundColor: '#ffffff',
     fontFamily: 'Helvetica',
   },
-  header: {
-    marginBottom: 30,
-    borderBottom: 3,
-    borderBottomColor: blue,
-    paddingBottom: 20,
+
+  // Per-page header (logo + title)
+  pageHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 28,
+    paddingBottom: 14,
+    borderBottom: 1,
+    borderBottomColor: '#E5E7EB',
   },
-  title: {
-    fontSize: 28,
-    fontWeight: 700,
-    color: blue,
-    marginBottom: 8,
+  pageHeaderLeft: {
+    flex: 1,
   },
-  subtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 4,
+  pageHeaderLogo: {
+    width: 72,
+    height: 31,
   },
+  pageHeaderTitle: {
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+    color: '#9CA3AF',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+  },
+  pageHeaderSub: {
+    fontSize: 9,
+    color: '#6B7280',
+    marginTop: 2,
+  },
+
   section: {
-    marginBottom: 25,
+    marginBottom: 22,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 700,
-    color: '#1a1a1a',
-    marginBottom: 15,
-    borderLeft: 4,
-    borderLeftColor: blue,
-    paddingLeft: 12,
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+    color: '#9CA3AF',
+    letterSpacing: 1.2,
+    textTransform: 'uppercase',
+    marginBottom: 10,
   },
+
+  // Constraint highlight box
   constraintBox: {
     backgroundColor: blueLighter,
-    padding: 20,
-    borderRadius: 8,
-    borderLeft: 8,
+    padding: 16,
+    borderRadius: 6,
+    borderLeft: 4,
     borderLeftColor: blue,
     marginBottom: 20,
   },
   constraintLabel: {
-    fontSize: 11,
-    color: '#666',
+    fontSize: 8,
+    color: blue,
     textTransform: 'uppercase',
     letterSpacing: 1,
-    marginBottom: 8,
+    marginBottom: 5,
   },
   constraintName: {
-    fontSize: 24,
-    fontWeight: 700,
-    color: blue,
-    marginBottom: 8,
+    fontSize: 18,
+    fontFamily: 'Helvetica-Bold',
+    color: '#1A1A1A',
+    marginBottom: 5,
   },
   constraintScore: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 12,
+    fontSize: 10,
+    color: '#555',
+    marginBottom: 10,
   },
+
   text: {
-    fontSize: 11,
-    color: '#333',
+    fontSize: 10,
+    color: '#374151',
     lineHeight: 1.6,
   },
+
+  // Score rows with bar
   scoreRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
-    padding: 10,
-    backgroundColor: '#f9fafb',
-    borderRadius: 6,
+    marginBottom: 7,
   },
-  scoreRowHighlight: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-    padding: 10,
-    backgroundColor: blueLighter,
-    borderRadius: 6,
-    borderLeft: 3,
-    borderLeftColor: blue,
+  scoreLabel: {
+    fontSize: 9,
+    color: '#374151',
+    width: 130,
   },
-  scoreName: {
-    fontSize: 11,
-    fontWeight: 600,
-    color: '#333',
+  scoreBarBg: {
+    flex: 1,
+    height: 6,
+    backgroundColor: '#E5E7EB',
+    borderRadius: 3,
+    marginHorizontal: 8,
+  },
+  scoreBarFill: {
+    height: 6,
+    backgroundColor: blue,
+    borderRadius: 3,
+  },
+  scoreBarFillLow: {
+    height: 6,
+    backgroundColor: '#DC2626',
+    borderRadius: 3,
+  },
+  scoreBarFillHighlight: {
+    height: 6,
+    backgroundColor: blue,
+    borderRadius: 3,
   },
   scoreValue: {
-    fontSize: 13,
-    fontWeight: 700,
+    fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
     color: blue,
+    width: 32,
+    textAlign: 'right',
   },
-  scoreBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  scoreValueLow: {
+    fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
+    color: '#DC2626',
+    width: 32,
+    textAlign: 'right',
   },
+
+  // Evidence
   evidenceItem: {
     flexDirection: 'row',
-    marginBottom: 10,
+    marginBottom: 8,
     padding: 10,
-    backgroundColor: blueLighter,
-    borderRadius: 6,
+    backgroundColor: '#F9FAFB',
+    borderRadius: 5,
   },
   evidenceNumber: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
     backgroundColor: blue,
     color: '#fff',
-    fontSize: 12,
-    fontWeight: 700,
+    fontSize: 10,
+    fontFamily: 'Helvetica-Bold',
     textAlign: 'center',
-    paddingTop: 5,
+    paddingTop: 4,
     marginRight: 10,
+    flexShrink: 0,
   },
   evidenceText: {
     flex: 1,
     fontSize: 10,
-    color: '#333',
+    color: '#374141',
     lineHeight: 1.5,
   },
-  revenueBox: {
-    backgroundColor: '#F0FDF4',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-  },
-  revenueLabel: {
-    fontSize: 9,
-    color: '#666',
-    textTransform: 'uppercase',
-    letterSpacing: 1,
-    marginBottom: 4,
-  },
-  revenueAmount: {
-    fontSize: 22,
-    fontWeight: 700,
-    color: '#059669',
-    marginBottom: 3,
-  },
-  costBox: {
-    backgroundColor: '#FEF2F2',
-    padding: 16,
-    borderRadius: 8,
-    marginBottom: 12,
-    borderLeft: 4,
-    borderLeftColor: '#DC2626',
-  },
-  costAmount: {
-    fontSize: 22,
-    fontWeight: 700,
-    color: '#DC2626',
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 30,
-    left: 40,
-    right: 40,
-    textAlign: 'center',
-    fontSize: 9,
-    color: '#999',
-    borderTop: 1,
-    borderTopColor: '#e5e7eb',
-    paddingTop: 12,
-  },
-  divider: {
-    borderBottom: 1,
-    borderBottomColor: '#e5e7eb',
-    marginVertical: 16,
-  },
+
+  // Revenue
   row: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 10,
   },
   col: {
     flex: 1,
   },
-  // Cover page
-  coverPage: {
-    padding: 0,
-    backgroundColor: '#ffffff',
-    fontFamily: 'Helvetica',
+  revenueBox: {
+    backgroundColor: '#F0FDF4',
+    padding: 14,
+    borderRadius: 6,
+    marginBottom: 10,
   },
-  coverTopBar: {
-    height: 8,
-    backgroundColor: blue,
+  revenueLabel: {
+    fontSize: 8,
+    color: '#6B7280',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    marginBottom: 3,
   },
-  coverContent: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 60,
+  revenueAmount: {
+    fontSize: 18,
+    fontFamily: 'Helvetica-Bold',
+    color: '#059669',
+    marginBottom: 2,
   },
-  coverLogo: {
-    width: 260,
-    height: 113,
-    marginBottom: 50,
+  costBox: {
+    backgroundColor: '#FEF2F2',
+    padding: 14,
+    borderRadius: 6,
+    marginBottom: 10,
+    borderLeft: 3,
+    borderLeftColor: '#DC2626',
   },
-  coverLine: {
-    width: 60,
-    height: 3,
-    backgroundColor: blue,
-    marginBottom: 30,
+  costAmount: {
+    fontSize: 18,
+    fontFamily: 'Helvetica-Bold',
+    color: '#DC2626',
   },
-  coverTitle: {
-    fontSize: 32,
-    fontWeight: 700,
-    color: '#1a1a1a',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  coverSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 40,
-  },
-  coverBusinessName: {
-    fontSize: 22,
-    fontWeight: 700,
-    color: blue,
-    textAlign: 'center',
-    marginBottom: 6,
-  },
-  coverOwner: {
-    fontSize: 13,
-    color: '#666',
-    textAlign: 'center',
-    marginBottom: 4,
-  },
-  coverDate: {
-    fontSize: 11,
-    color: '#999',
-    textAlign: 'center',
-    marginTop: 12,
-  },
-  coverBottom: {
-    paddingVertical: 24,
-    paddingHorizontal: 60,
-    borderTop: 1,
-    borderTopColor: '#e5e7eb',
+
+  footer: {
+    position: 'absolute',
+    bottom: 28,
+    left: 44,
+    right: 44,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    borderTop: 1,
+    borderTopColor: '#E5E7EB',
+    paddingTop: 8,
   },
-  coverBottomText: {
+  footerText: {
+    fontSize: 8,
+    color: '#9CA3AF',
+  },
+
+  // Cover page
+  coverPage: {
+    backgroundColor: '#1A1A1A',
+    padding: 0,
+    fontFamily: 'Helvetica',
+  },
+  coverTop: {
+    flex: 1,
+    paddingTop: 72,
+    paddingHorizontal: 52,
+    justifyContent: 'flex-end',
+  },
+  coverLogo: {
+    width: 200,
+    height: 87,
+    marginBottom: 52,
+  },
+  coverTitle: {
+    fontSize: 26,
+    fontFamily: 'Helvetica-Bold',
+    color: '#FFFFFF',
+    lineHeight: 1.2,
+    marginBottom: 6,
+  },
+  coverSubtitle: {
+    fontSize: 11,
+    color: '#888888',
+    letterSpacing: 1,
+    marginBottom: 48,
+  },
+  coverConstraintLabel: {
+    fontSize: 8,
+    color: '#666666',
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
+    marginBottom: 5,
+  },
+  coverConstraintValue: {
+    fontSize: 14,
+    fontFamily: 'Helvetica-Bold',
+    color: blue,
+    marginBottom: 28,
+  },
+  coverBottom: {
+    paddingHorizontal: 52,
+    paddingVertical: 28,
+    borderTop: 1,
+    borderTopColor: '#333333',
+  },
+  coverMeta: {
     fontSize: 9,
-    color: '#999',
+    color: '#666666',
+    marginBottom: 3,
+  },
+  coverMetaBold: {
+    fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
+    color: '#999999',
+    marginBottom: 3,
   },
 });
 
@@ -292,6 +315,11 @@ interface AuditResultsPDFProps {
   };
 }
 
+function formatDate(str: string) {
+  if (!str) return ''
+  return new Date(str).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
 export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
   const constraint = data.final_constraint || 'Unknown';
   const evidencePoints = Array.isArray(data.evidence_points) ? data.evidence_points
@@ -299,137 +327,152 @@ export const AuditResultsPDF = ({ data }: AuditResultsPDFProps) => {
       ? (() => { try { const p = JSON.parse(data.evidence_points as string); return Array.isArray(p) ? p : []; } catch { return []; } })()
       : [];
 
-  const formattedDate = data.created_at
-    ? new Date(data.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-    : '';
+  const formattedDate = formatDate(data.created_at)
 
   return (
-    <Document>
-      {/* Cover Page */}
+    <Document title={`Constraint Audit — ${data.business_name}`} author="Startup Bodyshop">
+      {/* ── Cover Page ── */}
       <Page size="A4" style={styles.coverPage}>
-        <View style={styles.coverTopBar} />
-        <View style={styles.coverContent}>
+        <View style={styles.coverTop}>
           <Image style={styles.coverLogo} src={LOGO_BASE64} />
-          <View style={styles.coverLine} />
-          <Text style={styles.coverTitle}>Constraint Audit</Text>
+          <Text style={styles.coverTitle}>Constraint Audit{"\n"}Results</Text>
           <Text style={styles.coverSubtitle}>Business Analysis Report</Text>
-          <Text style={styles.coverBusinessName}>{data.business_name}</Text>
-          <Text style={styles.coverOwner}>{data.owner_name}</Text>
-          {formattedDate ? <Text style={styles.coverDate}>{formattedDate}</Text> : null}
+          <Text style={styles.coverConstraintLabel}>Primary Constraint Identified</Text>
+          <Text style={styles.coverConstraintValue}>{constraint}</Text>
         </View>
         <View style={styles.coverBottom}>
-          <Text style={styles.coverBottomText}>startupbodyshop.com</Text>
-          <Text style={styles.coverBottomText}>Confidential</Text>
+          {data.business_name ? <Text style={styles.coverMetaBold}>{data.business_name}</Text> : null}
+          {data.owner_name ? <Text style={styles.coverMeta}>{data.owner_name}</Text> : null}
+          {formattedDate ? <Text style={[styles.coverMeta, { marginTop: 12 }]}>{formattedDate}</Text> : null}
+          <Text style={[styles.coverMeta, { marginTop: 8 }]}>Confidential · startupbodyshop.com</Text>
         </View>
       </Page>
 
-      {/* Page 2: Constraint + Scores */}
+      {/* ── Page 2: Constraint + Scores ── */}
       <Page size="A4" style={styles.page}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Constraint Audit Results</Text>
-          <Text style={styles.subtitle}>{data.business_name} - {data.owner_name}</Text>
-          {formattedDate ? <Text style={styles.subtitle}>{formattedDate}</Text> : null}
+        <View style={styles.pageHeader}>
+          <View style={styles.pageHeaderLeft}>
+            <Text style={styles.pageHeaderTitle}>Constraint-Busting Business Audit</Text>
+            <Text style={styles.pageHeaderSub}>{data.business_name} · {data.owner_name}</Text>
+          </View>
+          <Image style={styles.pageHeaderLogo} src={LOGO_BASE64} />
         </View>
 
+        {/* Constraint box */}
         <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Your #1 Constraint</Text>
           <View style={styles.constraintBox}>
-            <Text style={styles.constraintLabel}>Your #1 Constraint</Text>
+            <Text style={styles.constraintLabel}>Primary Constraint</Text>
             <Text style={styles.constraintName}>{constraint}</Text>
-            <Text style={styles.constraintScore}>
-              Constraint Score: {data.primary_score}/10
-            </Text>
-            <Text style={styles.text}>{data.reasoning}</Text>
+            {data.primary_score > 0 && (
+              <Text style={styles.constraintScore}>Constraint Score: {data.primary_score}/10</Text>
+            )}
+            {data.reasoning ? <Text style={styles.text}>{data.reasoning}</Text> : null}
           </View>
         </View>
 
+        {/* Scores */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Your Scorecard</Text>
-          {data.scores && Object.entries(data.scores).map(([lever, score]) => (
-            <View
-              key={lever}
-              style={constraint && lever.includes(constraint.split(' ')[0]) ? styles.scoreRowHighlight : styles.scoreRow}
-            >
-              <Text style={styles.scoreName}>{lever}</Text>
-              <Text style={styles.scoreValue}>{score}/10</Text>
-            </View>
-          ))}
+          <Text style={styles.sectionTitle}>Your 5 Lever Scores</Text>
+          {data.scores && Object.entries(data.scores).map(([lever, score]) => {
+            const isConstraint = constraint && lever.includes(constraint.split(' ')[0])
+            const isLow = score < 5
+            const pct = `${Math.min(100, Math.round((score / 10) * 100))}%`
+            return (
+              <View key={lever} style={styles.scoreRow}>
+                <Text style={[styles.scoreLabel, isConstraint ? { fontFamily: 'Helvetica-Bold' } : {}]}>{lever}</Text>
+                <View style={styles.scoreBarBg}>
+                  <View style={[isLow ? styles.scoreBarFillLow : styles.scoreBarFill, { width: pct }]} />
+                </View>
+                <Text style={isLow ? styles.scoreValueLow : styles.scoreValue}>{score}/10</Text>
+              </View>
+            )
+          })}
         </View>
 
-        <View style={styles.footer}>
-          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 600</Text>
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>Startup Bodyshop · startupbodyshop.com · +232 30 600 600</Text>
+          <Text style={styles.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>
       </Page>
 
-      {/* Page 3: Evidence + Revenue Impact */}
+      {/* ── Page 3: Evidence + Revenue ── */}
       <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Why This Is Your Bottleneck</Text>
-          {evidencePoints.map((point: string, index: number) => (
-            <View key={index} style={styles.evidenceItem}>
-              <Text style={styles.evidenceNumber}>{index + 1}</Text>
-              <Text style={styles.evidenceText}>{point}</Text>
-            </View>
-          ))}
+        <View style={styles.pageHeader}>
+          <View style={styles.pageHeaderLeft}>
+            <Text style={styles.pageHeaderTitle}>Evidence &amp; Revenue Impact</Text>
+            <Text style={styles.pageHeaderSub}>{data.business_name}</Text>
+          </View>
+          <Image style={styles.pageHeaderLogo} src={LOGO_BASE64} />
         </View>
+
+        {evidencePoints.length > 0 && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Why This Is Your Bottleneck</Text>
+            {evidencePoints.map((point: string, i: number) => (
+              <View key={i} style={styles.evidenceItem}>
+                <Text style={styles.evidenceNumber}>{i + 1}</Text>
+                <Text style={styles.evidenceText}>{point}</Text>
+              </View>
+            ))}
+          </View>
+        )}
 
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>What This Costs You</Text>
-
           <View style={styles.row}>
             <View style={[styles.revenueBox, styles.col]}>
               <Text style={styles.revenueLabel}>Current Monthly</Text>
-              <Text style={styles.revenueAmount}>
-                {formatSLE(data.revenue_impact?.currentMonthly || 0)}
-              </Text>
-              <Text style={styles.text}>
-                {usdHint(data.revenue_impact?.currentMonthly || 0)}
-              </Text>
+              <Text style={styles.revenueAmount}>{formatSLE(data.revenue_impact?.currentMonthly || 0)}</Text>
+              <Text style={styles.text}>{usdHint(data.revenue_impact?.currentMonthly || 0)}</Text>
             </View>
-
             <View style={[styles.revenueBox, styles.col]}>
               <Text style={styles.revenueLabel}>Potential Monthly</Text>
-              <Text style={styles.revenueAmount}>
-                {formatSLE(data.revenue_impact?.potentialMonthly || 0)}
-              </Text>
+              <Text style={styles.revenueAmount}>{formatSLE(data.revenue_impact?.potentialMonthly || 0)}</Text>
             </View>
           </View>
-
           <View style={styles.costBox}>
-            <Text style={styles.revenueLabel}>Monthly Opportunity Cost</Text>
-            <Text style={styles.costAmount}>
-              {formatSLE(data.revenue_impact?.monthlyOpportunityCost || 0)}
-            </Text>
+            <Text style={styles.revenueLabel}>Yearly Opportunity Cost</Text>
+            <Text style={styles.costAmount}>{formatSLE(data.revenue_impact?.yearlyOpportunityCost || 0)}</Text>
             <Text style={[styles.text, { marginTop: 4 }]}>
-              That is {formatSLE(data.revenue_impact?.yearlyOpportunityCost || 0)} per year
-              ({usdHint(data.revenue_impact?.yearlyOpportunityCost || 0)})
+              {usdHint(data.revenue_impact?.yearlyOpportunityCost || 0)} per year
             </Text>
           </View>
-
-          {data.revenue_impact?.explanation && (
-            <View style={{ padding: 12, backgroundColor: '#f9fafb', borderRadius: 6 }}>
-              <Text style={styles.text}>{data.revenue_impact.explanation}</Text>
-            </View>
-          )}
+          {data.revenue_impact?.explanation ? (
+            <Text style={styles.text}>{data.revenue_impact.explanation}</Text>
+          ) : null}
         </View>
 
-        <View style={styles.footer}>
-          <Text>Startup Bodyshop  |  startupbodyshop.com  |  +232 30 600 600</Text>
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>Startup Bodyshop · startupbodyshop.com · +232 30 600 600</Text>
+          <Text style={styles.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>
       </Page>
 
-      {/* Page 4: Next Steps */}
+      {/* ── Page 4: Next Steps ── */}
       <Page size="A4" style={styles.page}>
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Next Steps</Text>
-          <Text style={[styles.text, { marginBottom: 8 }]}>
-            Ready to break through your #1 constraint? Reach out to discuss your personalized roadmap.
-          </Text>
-          <Text style={styles.text}>WhatsApp: +232 30 600 600</Text>
-          <Text style={styles.text}>Web: startupbodyshop.com</Text>
+        <View style={styles.pageHeader}>
+          <View style={styles.pageHeaderLeft}>
+            <Text style={styles.pageHeaderTitle}>Your Next Step</Text>
+            <Text style={styles.pageHeaderSub}>{data.business_name}</Text>
+          </View>
+          <Image style={styles.pageHeaderLogo} src={LOGO_BASE64} />
         </View>
 
-        <View style={styles.footer}>
-          <Text>Tenacity Ventures Limited {new Date().getFullYear()} | startupbodyshop.com</Text>
+        <View style={styles.constraintBox}>
+          <Text style={styles.constraintLabel}>Primary Constraint</Text>
+          <Text style={styles.constraintName}>{constraint}</Text>
+        </View>
+
+        <Text style={[styles.text, { marginBottom: 14 }]}>
+          Breaking through a constraint requires focused action on the right lever — not general effort across everything. The next step is a conversation with a Startup Bodyshop coach to turn this diagnosis into a concrete 90-day plan.
+        </Text>
+        <Text style={[styles.text, { marginBottom: 4 }]}>WhatsApp: +232 30 600 600</Text>
+        <Text style={styles.text}>Web: startupbodyshop.com</Text>
+
+        <View style={styles.footer} fixed>
+          <Text style={styles.footerText}>Tenacity Ventures Limited {new Date().getFullYear()} · Confidential</Text>
+          <Text style={styles.footerText} render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
         </View>
       </Page>
     </Document>
