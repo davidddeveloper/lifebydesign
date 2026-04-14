@@ -13,6 +13,8 @@ import {
   ResponsiveContainer, Tooltip,
 } from "recharts"
 import BookingModal, { type BookingPrefill } from "@/components/BookingModal"
+import FeedbackWidget from "@/components/FeedbackWidget"
+import { useBrandTheme } from "@/lib/use-brand-theme"
 
 // ─────────────────────────────────────────────
 // Types
@@ -55,26 +57,28 @@ const LEVERS = [
   { key: "operations", label: "DELIVER", sublabel: "Operations", scoreKey: "score_operations", bandKey: "band_operations" },
 ] as const
 
-const CTA_CONFIG: Record<string, { label: string; description: string; href: string }> = {
+// routeToWorkshops: true  → Link to /workshops page
+// routeToWorkshops: false → Opens the booking modal
+const CTA_CONFIG: Record<string, { label: string; description: string; routeToWorkshops: boolean }> = {
   workshop: {
     label: "Register for the Workshop",
     description: "A structured 2-day programme to break through your constraint with hands-on exercises and peer learning.",
-    href: "/workshops",
+    routeToWorkshops: true,
   },
   vip_consultation: {
     label: "Book a VIP Consultation",
     description: "A private 1-on-1 session with a Startup Bodyshop coach to build your personalised 90-day action plan.",
-    href: "/constraint-audit#book",
+    routeToWorkshops: true,
   },
   "90day_programme": {
     label: "Start the 90-Day Programme",
     description: "Three months of weekly coaching, implementation support, and accountability to break through your constraint.",
-    href: "/constraint-audit#book",
+    routeToWorkshops: false,
   },
   scaling: {
     label: "Book a Scaling Conversation",
     description: "Your business is performing well across all levers. Let's talk about what the next stage looks like.",
-    href: "/constraint-audit#book",
+    routeToWorkshops: false,
   },
 }
 
@@ -351,6 +355,7 @@ function AuditChatWidget({ auditId, data }: { auditId: string | null; data: Audi
 // ─────────────────────────────────────────────
 
 export default function AuditResultsV2({ data }: { data: AuditResultsData }) {
+  const { primary: brandPrimary } = useBrandTheme()
   const [downloading, setDownloading] = useState(false)
   const [openSection, setOpenSection] = useState<string | null>("narrative_what_working")
   const [bookingOpen, setBookingOpen] = useState(false)
@@ -631,9 +636,9 @@ export default function AuditResultsV2({ data }: { data: AuditResultsData }) {
         {/* Revenue Opportunity */}
         {data.revenue_opportunity_text && (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.25 }} className="mb-8">
-            <div className="bg-[#1A1A1A] rounded-xl p-6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#555] mb-2">Revenue Opportunity</p>
-              <p className="text-sm text-[#AAA] leading-relaxed">{data.revenue_opportunity_text}</p>
+            <div className="rounded-xl p-6" style={{ backgroundColor: brandPrimary }}>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-[#FFFFFF60] mb-2">Revenue Opportunity</p>
+              <p className="text-sm text-white/80 leading-relaxed">{data.revenue_opportunity_text}</p>
             </div>
           </motion.div>
         )}
@@ -660,15 +665,29 @@ export default function AuditResultsV2({ data }: { data: AuditResultsData }) {
           <h2 className="text-[11px] font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Your Recommended Next Step</h2>
           <div className="bg-white rounded-xl border border-[#E5E5E5] p-6">
             <p className="text-sm text-[#555] leading-relaxed mb-5">{cta.description}</p>
-            <button
-              onClick={() => setBookingOpen(true)}
-              className="inline-flex items-center gap-2 bg-[#1A1A1A] text-white px-6 py-3 text-sm font-semibold hover:bg-black transition-colors rounded-lg"
-            >
-              {cta.label}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {cta.routeToWorkshops ? (
+              <Link
+                href="/workshops"
+                className="inline-flex items-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-80 rounded-lg"
+                style={{ backgroundColor: brandPrimary }}
+              >
+                {cta.label}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            ) : (
+              <button
+                onClick={() => setBookingOpen(true)}
+                className="inline-flex items-center gap-2 text-white px-6 py-3 text-sm font-semibold transition-opacity hover:opacity-80 rounded-lg"
+                style={{ backgroundColor: brandPrimary }}
+              >
+                {cta.label}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            )}
           </div>
         </motion.div>
 
@@ -685,8 +704,10 @@ export default function AuditResultsV2({ data }: { data: AuditResultsData }) {
         </motion.div>
       </div>
 
-      {/* AI Chat Widget */}
-      <AuditChatWidget auditId={data.audit_id} data={data} />
+      {/* AI Chat Widget — controlled by NEXT_PUBLIC_RESULT_ASSISTANT_ENABLED */}
+      {process.env.NEXT_PUBLIC_RESULT_ASSISTANT_ENABLED === "true" && (
+        <AuditChatWidget auditId={data.audit_id} data={data} />
+      )}
 
       {/* Booking Modal */}
       <BookingModal
@@ -694,6 +715,8 @@ export default function AuditResultsV2({ data }: { data: AuditResultsData }) {
         onClose={() => setBookingOpen(false)}
         prefill={bookingPrefill}
       />
+
+      <FeedbackWidget page="results" auditId={data.audit_id} brandColor={brandPrimary} />
     </div>
   )
 }

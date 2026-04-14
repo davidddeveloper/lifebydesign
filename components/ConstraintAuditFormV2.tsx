@@ -1,9 +1,11 @@
 "use client"
 
-import { useState, useEffect, useCallback, useRef, KeyboardEvent } from "react"
+import React, { useState, useEffect, useCallback, useRef, KeyboardEvent } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import BookingModal, { type BookingPrefill } from "@/components/BookingModal"
+import FeedbackWidget from "@/components/FeedbackWidget"
+import { useBrandTheme } from "@/lib/use-brand-theme"
 
 // ─────────────────────────────────────────────
 // Types
@@ -718,6 +720,7 @@ const NAV_SECTIONS = [
 ]
 
 export default function ConstraintAuditFormV2({ onSubmit }: Props) {
+  const { primary: brandPrimary, hover: brandHover } = useBrandTheme()
   const [screenIndex, setScreenIndex] = useState(0)
   const [direction, setDirection] = useState(1)
   const [formData, setFormData] = useState<FormData>(INITIAL_FORM)
@@ -917,12 +920,20 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
   const progressPct = Math.round((answeredCount / answerableScreens.length) * 100)
 
   return (
-    <div className="min-h-screen bg-[#EBEBEB] relative overflow-hidden" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+    <div
+      className="min-h-screen bg-[#EBEBEB] relative overflow-hidden"
+      style={{
+        fontFamily: "system-ui, -apple-system, sans-serif",
+        "--brand-primary": brandPrimary,
+        "--brand-hover": brandHover,
+      } as React.CSSProperties}
+    >
       {/* Progress bar */}
       {screen.type !== "welcome" && (
         <div className="fixed top-0 left-0 right-0 h-[3px] bg-[#D4D4D4] z-50">
           <motion.div
-            className="h-full bg-[#2D2D2D]"
+            className="h-full"
+            style={{ backgroundColor: "var(--brand-primary)" }}
             initial={false}
             animate={{ width: `${progressPct}%` }}
             transition={{ duration: 0.4, ease: "easeOut" }}
@@ -942,10 +953,10 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
           className="min-h-screen flex flex-col"
         >
           {screen.type === "welcome" && (
-            <WelcomeScreen onStart={goNext} />
+            <WelcomeScreen onStart={goNext} brandColor={brandPrimary} />
           )}
           {screen.type === "section-intro" && (
-            <SectionIntroScreen screen={screen} onContinue={goNext} onBack={goPrev} />
+            <SectionIntroScreen screen={screen} onContinue={goNext} onBack={goPrev} brandColor={brandPrimary} />
           )}
           {screen.type === "multi-input" && (
             <MultiInputScreen
@@ -955,6 +966,7 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               onNext={goNext}
               onBack={goPrev}
               canAdvance={canAdvance()}
+              brandColor={brandPrimary}
             />
           )}
           {screen.type === "choice" && (
@@ -966,6 +978,7 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               onNext={goNext}
               onBack={goPrev}
               canAdvance={canAdvance()}
+              brandColor={brandPrimary}
             />
           )}
           {screen.type === "textarea" && (
@@ -976,6 +989,7 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               onNext={goNext}
               onBack={goPrev}
               canAdvance={canAdvance()}
+              brandColor={brandPrimary}
             />
           )}
           {screen.type === "submit" && (
@@ -983,6 +997,7 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               formData={formData}
               onSubmit={handleFinalSubmit}
               onBack={goPrev}
+              brandColor={brandPrimary}
             />
           )}
         </motion.div>
@@ -1021,10 +1036,18 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-2xl sm:left-6 sm:right-auto sm:w-80 sm:bottom-20 sm:rounded-xl"
+              className="fixed bottom-0 left-0 right-0 z-60 bg-white shadow-2xl sm:left-6 sm:right-auto sm:w-80 sm:bottom-20 sm:rounded-xl"
             >
-              <div className="px-5 pt-5 pb-2 border-b border-[#F0F0F0]">
+              <div className="px-5 pt-5 pb-2 border-b border-[#F0F0F0] flex items-center justify-between">
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#999]">Jump to section</p>
+                {process.env.NEXT_PUBLIC_SHOW_BETA_TAG === "true" && (
+                  <span
+                    className="text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded text-white"
+                    style={{ backgroundColor: brandPrimary }}
+                  >
+                    Beta
+                  </span>
+                )}
               </div>
               <div className="pb-3">
                 {NAV_SECTIONS.map((section, i) => {
@@ -1042,10 +1065,12 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
                       onClick={() => goToScreen(section.screenIdx)}
                       className={`w-full flex items-center gap-3 px-5 py-3 text-left hover:bg-[#F7F7F7] transition-colors ${isActive ? "bg-[#F7F7F7]" : ""}`}
                     >
-                      <div className={`w-6 h-6 flex items-center justify-center text-[11px] font-bold flex-shrink-0 ${isDone ? "bg-[#1A1A1A] text-white" :
-                        isActive ? "bg-[#1A1A1A] text-white" :
-                          "bg-[#EBEBEB] text-[#999]"
-                        }`}>
+                      <div
+                        className="w-6 h-6 flex items-center justify-center text-[11px] font-bold flex-shrink-0"
+                        style={isDone || isActive
+                          ? { backgroundColor: "var(--brand-primary)", color: "#fff" }
+                          : { backgroundColor: "#EBEBEB", color: "#999" }}
+                      >
                         {isDone && !isActive ? (
                           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3 h-3">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -1056,7 +1081,7 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
                         {section.label}
                       </span>
                       {isActive && (
-                        <span className="ml-auto w-1.5 h-1.5 rounded-full bg-[#1A1A1A] flex-shrink-0" />
+                        <span className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: "var(--brand-primary)" }} />
                       )}
                     </button>
                   )
@@ -1066,7 +1091,8 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
               <div className="px-5 pt-2 pb-4 border-t border-[#F0F0F0]">
                 <button
                   onClick={() => { setShowNav(false); setBookingOpen(true) }}
-                  className="w-full flex items-center justify-center gap-2 bg-[#1A1A1A] text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-black transition-colors"
+                  className="w-full flex items-center justify-center gap-2 text-white py-2.5 rounded-lg text-sm font-semibold transition-colors"
+                  style={{ backgroundColor: "var(--brand-primary)" }}
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -1085,31 +1111,46 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Nav arrows (bottom-right, hidden on welcome) */}
-      {screen.type !== "welcome" && screen.type !== "submit" && (
-        <div className="fixed bottom-6 right-6 flex gap-2 z-50">
-          <button
-            onClick={goPrev}
-            disabled={screenIndex === 0}
-            className="w-10 h-10 bg-[#2D2D2D] text-white flex items-center justify-center disabled:opacity-30 hover:bg-black transition-colors"
-            aria-label="Previous"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
-            </svg>
-          </button>
-          <button
-            onClick={goNext}
-            disabled={!canAdvance()}
-            className="w-10 h-10 bg-[#2D2D2D] text-white flex items-center justify-center disabled:opacity-30 hover:bg-black transition-colors"
-            aria-label="Next"
-          >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
+      <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
+        {/* Feedback beside nav arrows — desktop only */}
+        <div className="hidden fixed bottom-6 right-30 sm:block">
+          <FeedbackWidget
+            page="constraint-audit"
+            brandColor={brandPrimary}
+            positionClassName="flex flex-col items-end"
+          />
         </div>
-      )}
+        {/* Bottom-right fixed bar — feedback (desktop) + nav arrows */}
+        <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
+          {/* Nav arrows — hidden on welcome/submit */}
+          {screen.type !== "welcome" && screen.type !== "submit" && (
+            <>
+              <button
+                onClick={goPrev}
+                disabled={screenIndex === 0}
+                className="w-10 h-10 text-white flex items-center justify-center disabled:opacity-30 transition-colors"
+                style={{ backgroundColor: "var(--brand-primary)" }}
+                aria-label="Previous"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+                </svg>
+              </button>
+              <button
+                onClick={goNext}
+                disabled={!canAdvance()}
+                className="w-10 h-10 text-white flex items-center justify-center disabled:opacity-30 transition-colors"
+                style={{ backgroundColor: "var(--brand-primary)" }}
+                aria-label="Next"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* Booking Modal — "Get Help" flow from nav */}
       <BookingModal
@@ -1117,12 +1158,19 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
         onClose={() => setBookingOpen(false)}
         prefill={{
           firstName: formData.ownerName ? formData.ownerName.split(" ")[0] : undefined,
-          lastName:  formData.ownerName ? formData.ownerName.split(" ").slice(1).join(" ") || undefined : undefined,
-          email:     formData.email     || undefined,
-          phone:     formData.phone     || undefined,
+          lastName: formData.ownerName ? formData.ownerName.split(" ").slice(1).join(" ") || undefined : undefined,
+          email: formData.email || undefined,
+          phone: formData.phone || undefined,
           monthlyRevenue: formData.monthlyRevenue || undefined,
           source: "nav_form",
         }}
+      />
+
+      {/* Feedback centered — mobile only */}
+      <FeedbackWidget
+        page="constraint-audit"
+        brandColor={brandPrimary}
+        positionClassName="sm:hidden fixed bottom-20 left-1/2 -translate-x-1/2 z-50 flex flex-col items-center"
       />
     </div>
   )
@@ -1132,7 +1180,8 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
 // Welcome Screen
 // ─────────────────────────────────────────────
 
-function WelcomeScreen({ onStart }: { onStart: () => void }) {
+function WelcomeScreen({ onStart, brandColor = "#1A1A1A" }: { onStart: () => void; brandColor?: string }) {
+  const brandPrimary = brandColor
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
       {/* Back link */}
@@ -1157,10 +1206,10 @@ function WelcomeScreen({ onStart }: { onStart: () => void }) {
       </div>
 
       {/* Title */}
-      <h1 className="text-4xl sm:text-5xl font-bold text-[#1A1A1A] leading-tight mb-2">
+      <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-2" style={{ color: brandPrimary }}>
         The Constraint-Busting
       </h1>
-      <h1 className="text-4xl sm:text-5xl font-bold text-[#1A1A1A] leading-tight mb-3">
+      <h1 className="text-4xl sm:text-5xl font-bold leading-tight mb-3" style={{ color: brandPrimary }}>
         Business Audit
       </h1>
       {/*<p className="text-sm font-medium text-[#888] mb-10 tracking-wide">Version 3.0</p>*/}
@@ -1170,7 +1219,7 @@ function WelcomeScreen({ onStart }: { onStart: () => void }) {
       <div className="space-y-4 mb-10">
         <p className="text-base text-[#3D3D3D] leading-relaxed">
           This assessment identifies the single constraint holding your business back.
-          It takes approximately <strong>15 minutes</strong> to complete.
+          It takes approximately <strong style={{ color: brandPrimary }}>15 minutes</strong> to complete.
         </p>
         <p className="text-base text-[#3D3D3D] leading-relaxed">
           Answer each question as honestly as you can — there are no right or wrong answers.
@@ -1202,7 +1251,8 @@ function WelcomeScreen({ onStart }: { onStart: () => void }) {
       <div className="flex items-center gap-4">
         <button
           onClick={onStart}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-8 py-4 text-base font-semibold hover:bg-black transition-colors"
+          className="inline-flex items-center gap-3 text-white px-8 py-4 text-base font-semibold transition-colors"
+          style={{ backgroundColor: brandPrimary }}
         >
           Start the Audit
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -1223,11 +1273,14 @@ function SectionIntroScreen({
   screen,
   onContinue,
   onBack,
+  brandColor = "#1A1A1A",
 }: {
   screen: Screen
   onContinue: () => void
   onBack: () => void
+  brandColor?: string
 }) {
+  const brandPrimary = brandColor
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
       {/* Lever number pill */}
@@ -1244,7 +1297,7 @@ function SectionIntroScreen({
       </div>
 
       {/* Lever name */}
-      <h2 className="text-5xl sm:text-6xl font-bold text-[#1A1A1A] mb-3">
+      <h2 className="text-5xl sm:text-6xl font-bold mb-3" style={{ color: brandPrimary }}>
         {screen.leverName}
       </h2>
       <p className="text-lg font-medium text-[#888] mb-6">{screen.leverTagline}</p>
@@ -1256,7 +1309,8 @@ function SectionIntroScreen({
       <div className="flex items-center gap-4">
         <button
           onClick={onContinue}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-7 py-3.5 text-sm font-semibold hover:bg-black transition-colors"
+          className="inline-flex items-center gap-3 text-white px-7 py-3.5 text-sm font-semibold transition-colors"
+          style={{ backgroundColor: brandPrimary }}
         >
           Continue
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -1280,6 +1334,7 @@ function MultiInputScreen({
   onNext,
   onBack,
   canAdvance,
+  brandColor = "#1A1A1A",
 }: {
   screen: Screen
   formData: FormData
@@ -1287,8 +1342,11 @@ function MultiInputScreen({
   onNext: () => void
   onBack: () => void
   canAdvance: boolean
+  brandColor?: string
 }) {
+  const brandPrimary = brandColor
   const [touched, setTouched] = useState<Record<string, boolean>>({})
+  const [focusedField, setFocusedField] = useState<string | null>(null)
 
   const validate = (field: InputField, val: string): string => {
     if (field.key === "teamSize") return ""
@@ -1317,7 +1375,7 @@ function MultiInputScreen({
         <div className="text-xs font-semibold text-[#888] uppercase tracking-widest mb-4">
           Business Information
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#1A1A1A] mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold mb-2" style={{ color: brandPrimary }}>
           {screen.groupTitle}
         </h2>
         {screen.groupSubtitle && (
@@ -1337,8 +1395,10 @@ function MultiInputScreen({
                 {field.label}
                 {field.key !== "teamSize" && <span className="text-[#C0392B] ml-1">*</span>}
               </label>
-              <div className={`flex items-center gap-2 border-b-2 transition-colors pb-1 ${hasError ? "border-[#C0392B]" : "border-[#CCC] focus-within:border-[#1A1A1A]"
-                }`}>
+              <div
+                className="flex items-center gap-2 border-b-2 transition-colors pb-1"
+                style={{ borderColor: hasError ? "#C0392B" : focusedField === field.key ? brandPrimary : "#CCC" }}
+              >
                 {field.prefix && (
                   <span className="text-sm font-medium text-[#888]">{field.prefix}</span>
                 )}
@@ -1346,7 +1406,8 @@ function MultiInputScreen({
                   type={field.type ?? "text"}
                   value={val}
                   onChange={e => onChange(field.key, e.target.value)}
-                  onBlur={() => setTouched(t => ({ ...t, [field.key]: true }))}
+                  onFocus={() => setFocusedField(field.key)}
+                  onBlur={() => { setTouched(t => ({ ...t, [field.key]: true })); setFocusedField(null) }}
                   placeholder={field.placeholder}
                   className="w-full bg-transparent text-base text-[#1A1A1A] placeholder-[#BBB] outline-none"
                   onKeyDown={e => {
@@ -1367,7 +1428,8 @@ function MultiInputScreen({
         <button
           onClick={handleNext}
           disabled={!canAdvance}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-7 py-3.5 text-sm font-semibold hover:bg-black transition-colors disabled:opacity-40"
+          className="inline-flex items-center gap-3 text-white px-7 py-3.5 text-sm font-semibold transition-colors disabled:opacity-40"
+          style={{ backgroundColor: brandPrimary }}
         >
           OK
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -1392,6 +1454,7 @@ function ChoiceScreen({
   onNext,
   onBack,
   canAdvance,
+  brandColor = "#1A1A1A",
 }: {
   screen: Screen
   currentValue: any
@@ -1400,7 +1463,9 @@ function ChoiceScreen({
   onNext: () => void
   onBack: () => void
   canAdvance: boolean
+  brandColor?: string
 }) {
+  const brandPrimary = brandColor
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
       {/* Question number + section */}
@@ -1417,7 +1482,7 @@ function ChoiceScreen({
       </div>
 
       {/* Question */}
-      <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] leading-snug mb-4 max-w-xl">
+      <h2 className="text-xl sm:text-2xl font-bold leading-snug mb-4 max-w-xl" style={{ color: brandPrimary }}>
         {screen.question}
       </h2>
 
@@ -1439,11 +1504,11 @@ function ChoiceScreen({
               onClick={() => onSelect(screen.fieldKey!, opt.value)}
               initial={false}
               animate={{
-                backgroundColor: isJust ? "#1A1A1A" : isSelected ? "#2D2D2D" : "#FFFFFF",
-                borderColor: isSelected ? "#1A1A1A" : "#D4D4D4",
+                backgroundColor: isJust || isSelected ? brandPrimary : "#FFFFFF",
+                borderColor: isSelected ? brandPrimary : "#D4D4D4",
                 color: isSelected ? "#FFFFFF" : "#1A1A1A",
               }}
-              whileHover={{ borderColor: "#1A1A1A" }}
+              whileHover={{ borderColor: brandPrimary }}
               transition={{ duration: 0.15 }}
               className="w-full flex items-center gap-3 px-4 py-3 border text-left transition-colors"
             >
@@ -1468,7 +1533,8 @@ function ChoiceScreen({
         <div className="flex items-center gap-4">
           <button
             onClick={onNext}
-            className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-7 py-3.5 text-sm font-semibold hover:bg-black transition-colors"
+            className="inline-flex items-center gap-3 text-white px-7 py-3.5 text-sm font-semibold transition-colors"
+            style={{ backgroundColor: brandPrimary }}
           >
             OK
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -1493,6 +1559,7 @@ function TextareaScreen({
   onNext,
   onBack,
   canAdvance,
+  brandColor = "#1A1A1A",
 }: {
   screen: Screen
   value: string
@@ -1500,8 +1567,11 @@ function TextareaScreen({
   onNext: () => void
   onBack: () => void
   canAdvance: boolean
+  brandColor?: string
 }) {
+  const brandPrimary = brandColor
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [textareaFocused, setTextareaFocused] = useState(false)
 
   useEffect(() => {
     setTimeout(() => textareaRef.current?.focus(), 300)
@@ -1523,7 +1593,7 @@ function TextareaScreen({
       </div>
 
       {/* Question */}
-      <h2 className="text-xl sm:text-2xl font-bold text-[#1A1A1A] leading-snug mb-4 max-w-xl">
+      <h2 className="text-xl sm:text-2xl font-bold leading-snug mb-4 max-w-xl" style={{ color: brandPrimary }}>
         {screen.question}
       </h2>
 
@@ -1535,7 +1605,7 @@ function TextareaScreen({
       )}
 
       {/* Textarea */}
-      <div className="border-b-2 border-[#CCC] focus-within:border-[#1A1A1A] transition-colors mb-8">
+      <div className="border-b-2 transition-colors mb-8" style={{ borderColor: textareaFocused ? brandPrimary : "#CCC" }}>
         <textarea
           ref={textareaRef}
           value={value}
@@ -1543,6 +1613,8 @@ function TextareaScreen({
           placeholder="Type your answer here..."
           rows={3}
           className="w-full bg-transparent text-base text-[#1A1A1A] placeholder-[#BBB] outline-none resize-none leading-relaxed py-2"
+          onFocus={() => setTextareaFocused(true)}
+          onBlur={() => setTextareaFocused(false)}
           onKeyDown={e => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault()
@@ -1557,7 +1629,8 @@ function TextareaScreen({
         <button
           onClick={onNext}
           disabled={!canAdvance}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-7 py-3.5 text-sm font-semibold hover:bg-black transition-colors disabled:opacity-40"
+          className="inline-flex items-center gap-3 text-white px-7 py-3.5 text-sm font-semibold transition-colors disabled:opacity-40"
+          style={{ backgroundColor: brandPrimary }}
         >
           OK
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
@@ -1578,11 +1651,14 @@ function SubmitScreen({
   formData,
   onSubmit,
   onBack,
+  brandColor = "#1A1A1A",
 }: {
   formData: FormData
   onSubmit: () => void
   onBack: () => void
+  brandColor?: string
 }) {
+  const brandPrimary = brandColor
   // Build the list of required choice screens, excluding Q2 when Q2a = "A"
   const capacityFlag = formData.q2a === "A"
   const requiredScreens = SCREENS.filter(s => {
@@ -1603,7 +1679,7 @@ function SubmitScreen({
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
       {/* Completion indicator */}
       <div className="mb-10">
-        <div className="w-14 h-14 bg-[#1A1A1A] flex items-center justify-center mb-6">
+        <div className="w-14 h-14 flex items-center justify-center mb-6" style={{ backgroundColor: brandPrimary }}>
           <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2.5} className="w-7 h-7">
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
@@ -1630,7 +1706,7 @@ function SubmitScreen({
             "Your personalised diagnostic report is displayed immediately",
           ].map((item, i) => (
             <li key={i} className="flex items-start gap-3 text-sm text-[#2D2D2D]">
-              <span className="flex-shrink-0 w-5 h-5 bg-[#1A1A1A] text-white text-[10px] font-bold flex items-center justify-center rounded-full mt-0.5">
+              <span className="flex-shrink-0 w-5 h-5 text-white text-[10px] font-bold flex items-center justify-center rounded-full mt-0.5" style={{ backgroundColor: brandPrimary }}>
                 {i + 1}
               </span>
               {item}
@@ -1652,7 +1728,8 @@ function SubmitScreen({
         <button
           onClick={onSubmit}
           disabled={!allAnswered}
-          className="inline-flex items-center gap-3 bg-[#1A1A1A] text-white px-8 py-4 text-base font-semibold hover:bg-black transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          className="inline-flex items-center gap-3 text-white px-8 py-4 text-base font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{ backgroundColor: brandPrimary }}
         >
           Generate My Report
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-4 h-4">
