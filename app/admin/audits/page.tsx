@@ -86,6 +86,7 @@ interface Audit {
     operations: number
   }
   primaryConstraint: string
+  secondaryConstraint: string
   primaryScore: number
   confidence: number
   reasoning: string
@@ -106,6 +107,13 @@ interface Audit {
   dashboardId: string | null
   submittedAt: string
   recommendedCta?: string | null
+  // v2-only
+  bands?: { who: string; what: string; traffic: string; sell: string; operations: string }
+  narrativeSections?: {
+    whatIsWorking: string; primaryConstraintNarrative: string
+    whatThisCosts: string; rootCause: string; nextStep: string
+  }
+  revenueOpportunityText?: string
 }
 
 type TimeFilter = "all" | "today" | "this_week" | "this_month" | "last_month" | "this_year" | "last_year"
@@ -207,15 +215,20 @@ function ConstraintTag({ constraint }: { constraint: string }) {
 
 // ─── Export Helpers ───────────────────────────────────────────────
 async function exportToPDF(audits: Audit[]) {
-  const { generatePDFBlob } = await import("@/lib/generate-pdf")
+  const { generatePDFBlob, generatePDFBlobV2 } = await import("@/lib/generate-pdf")
+
+  async function blobFor(a: Audit): Promise<Blob> {
+    if (a._version === "v2") return generatePDFBlobV2(mapAuditToPDFDataV2(a))
+    return generatePDFBlob(mapAuditToPDFData(a))
+  }
 
   if (audits.length === 1) {
     const a = audits[0]
-    const blob = await generatePDFBlob(mapAuditToPDFData(a))
+    const blob = await blobFor(a)
     downloadBlob(blob, `${(a.businessName || "Audit").replace(/\s+/g, "-")}-Audit.pdf`)
   } else {
     for (const a of audits) {
-      const blob = await generatePDFBlob(mapAuditToPDFData(a))
+      const blob = await blobFor(a)
       downloadBlob(blob, `${(a.businessName || "Audit").replace(/\s+/g, "-")}-Audit.pdf`)
       await new Promise((r) => setTimeout(r, 300))
     }
@@ -244,6 +257,45 @@ function mapAuditToPDFData(a: Audit) {
     },
     evidence_points: safeArray(a.evidencePoints),
     revenue_impact: ri,
+  }
+}
+
+function mapAuditToPDFDataV2(a: Audit) {
+  const scores = a.scores ?? { who: 0, what: 0, sell: 0, traffic: 0, operations: 0 }
+  const bands = a.bands ?? { who: "CRITICAL", what: "CRITICAL", traffic: "CRITICAL", sell: "CRITICAL", operations: "CRITICAL" }
+  const narrative = a.narrativeSections ?? { whatIsWorking: "", primaryConstraintNarrative: a.reasoning ?? "", whatThisCosts: "", rootCause: "", nextStep: "" }
+  return {
+    businessName: a.businessName || "",
+    ownerName: a.ownerName || "",
+    industry: a.industry || "",
+    monthlyRevenue: String(a.monthlyRevenue || ""),
+    createdAt: a.submittedAt || "",
+    primaryConstraint: a.primaryConstraint || "—",
+    secondaryConstraint: a.secondaryConstraint ?? null,
+    ruleApplied: 0,
+    scores: {
+      who: scores.who ?? 0,
+      what: scores.what ?? 0,
+      traffic: scores.traffic ?? 0,
+      sell: scores.sell ?? 0,
+      operations: scores.operations ?? 0,
+    },
+    bands: {
+      who: bands.who,
+      what: bands.what,
+      traffic: bands.traffic,
+      sell: bands.sell,
+      operations: bands.operations,
+    },
+    narrative: {
+      whatIsWorking: narrative.whatIsWorking,
+      primaryConstraintNarrative: narrative.primaryConstraintNarrative,
+      whatThisCosts: narrative.whatThisCosts,
+      rootCause: narrative.rootCause,
+      nextStep: narrative.nextStep,
+    },
+    recommendedCta: a.recommendedCta || "vip_consultation",
+    revenueOpportunityText: a.revenueOpportunityText || a.revenueImpact?.explanation || "",
   }
 }
 
@@ -849,20 +901,18 @@ export default function AdminAuditsPage() {
                   <button
                     key={tf.value}
                     onClick={() => { setTimeFilter(tf.value); setShowDateRange(false) }}
-                    className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
-                      timeFilter === tf.value && !showDateRange
+                    className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors ${timeFilter === tf.value && !showDateRange
                         ? "bg-blue-600 text-white"
                         : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
+                      }`}
                   >
                     {tf.label}
                   </button>
                 ))}
                 <button
                   onClick={() => { setShowDateRange(!showDateRange); setTimeFilter("all") }}
-                  className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 ${
-                    showDateRange ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                  }`}
+                  className={`px-3 py-2 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 ${showDateRange ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
                 >
                   <Calendar className="w-3 h-3" />
                   Range
