@@ -786,7 +786,7 @@ export default function AdminAuditsPage() {
   ]
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+    <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
       {/* Header + Toolbar */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5">

@@ -591,7 +591,7 @@ export default function AdminWorkshopsPage() {
   ]
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50 overflow-hidden">
+    <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
 
       {/* ── Top bar ── */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 z-10">

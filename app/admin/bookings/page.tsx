@@ -156,10 +156,10 @@ export default function AdminBookingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           updates: [
-            { key: "revenue_threshold", value: Number(editThreshold) },
-            { key: "redirect_url",      value: editRedirectUrl },
-            { key: "office_address",    value: editOfficeAddr },
-            { key: "directions_url",    value: editDirUrl },
+            { key: "revenue_threshold",   value: Number(editThreshold) },
+            { key: "redirect_url",        value: editRedirectUrl },
+            { key: "office_address",      value: editOfficeAddr },
+            { key: "directions_url",      value: editDirUrl },
             { key: "assigned_team",     value: assignedTeam },
             { key: "notification_team", value: notifTeam },
             { key: "availability", value: {
@@ -180,14 +180,14 @@ export default function AdminBookingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F7F6F3]">
+      <div className="h-full flex items-center justify-center bg-[#F7F6F3]">
         <div className="w-8 h-8 border-2 border-[#1A1A1A] border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F6F3]" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
+    <div className="h-full overflow-auto bg-[#F7F6F3]" style={{ fontFamily: "system-ui, -apple-system, sans-serif" }}>
       {/* Header */}
       <div className="bg-white border-b border-[#E5E5E5] sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">

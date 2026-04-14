@@ -1,9 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { FileText, Mail, CalendarDays, ChevronRight, LogOut, PencilRuler, Book } from "lucide-react"
-import Image from "next/image"
+import { FileText, Mail, CalendarDays, ChevronRight, Book } from "lucide-react"
 
 const NAV_CARDS = [
   {
@@ -13,10 +11,10 @@ const NAV_CARDS = [
     description: "View and manage audit submissions, track status, and export reports.",
   },
   {
-    href: "/admin/emails",
-    icon: Mail,
-    title: "Email Campaigns",
-    description: "Manage contacts from audits and workshops, and send targeted campaigns.",
+    href: "/admin/bookings",
+    icon: Book,
+    title: "Bookings",
+    description: "Manage coaching session bookings, update status, and configure availability.",
   },
   {
     href: "/admin/workshops",
@@ -25,96 +23,48 @@ const NAV_CARDS = [
     description: "Track registrations, manage payments, and communicate with attendees.",
   },
   {
-    href: "/admin/bookings",
-    icon: Book,
-    description: "Manage bookings."
-  }
+    href: "/admin/emails",
+    icon: Mail,
+    title: "Email Campaigns",
+    description: "Manage contacts from audits and workshops, and send targeted campaigns.",
+  },
 ]
 
 export default function AdminDashboardPage() {
-  const router = useRouter()
-
-  async function handleLogout() {
-    await fetch("/api/admin/auth", { method: "DELETE" })
-    router.push("/admin/login")
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top bar */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-              <Image src="/lifebydesignlogo.png" alt="Life by Design Logo" width={32} height={32} />
-            </div>
-            <div>
-              <span className="text-sm font-semibold text-gray-900">Admin Dashboard</span>
-              <span className="hidden sm:inline text-sm text-gray-400 ml-2">· Startup Bodyshop</span>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign out</span>
-          </button>
-        </div>
-      </header>
-
-      {/* Main content */}
-      <main className="max-w-5xl mx-auto px-6 py-12">
+    <div className="h-full overflow-auto bg-[#F7F7F7]">
+      <main className="max-w-3xl mx-auto px-6 py-10">
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="text-sm text-gray-500 mt-1">Select a section below to get started.</p>
+          <h1 className="text-2xl font-bold text-[#1A1A1A]">Welcome back</h1>
+          <p className="text-sm text-[#888] mt-1">Select a section below to get started.</p>
         </div>
 
         {/* Navigation cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {NAV_CARDS.map(({ href, icon: Icon, title, description }) => (
             <Link
               key={href}
               href={href}
-              className="group bg-white border border-gray-200 rounded-xl p-6 flex flex-col gap-4 hover:border-blue-300 hover:shadow-md transition-all duration-150"
+              className="group bg-white border border-[#E5E5E5] rounded-xl p-6 flex flex-col gap-4 hover:border-[#1A1A1A] hover:shadow-md transition-all duration-150"
             >
               <div className="flex items-start justify-between">
-                <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                  <Icon className="w-5 h-5 text-blue-600" />
+                <div className="w-10 h-10 bg-[#F5F5F5] rounded-lg flex items-center justify-center group-hover:bg-[#1A1A1A] transition-colors">
+                  <Icon className="w-5 h-5 text-[#555] group-hover:text-white transition-colors" />
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight className="w-4 h-4 text-[#CCC] group-hover:text-[#1A1A1A] group-hover:translate-x-0.5 transition-all" />
               </div>
               <div>
-                <h2 className="text-sm font-semibold text-gray-900 mb-1">{title}</h2>
-                <p className="text-xs text-gray-500 leading-relaxed">{description}</p>
+                <h2 className="text-sm font-semibold text-[#1A1A1A] mb-1">{title}</h2>
+                <p className="text-xs text-[#888] leading-relaxed">{description}</p>
               </div>
             </Link>
           ))}
         </div>
-
-        {/* Edit Website */}
-        <div className="mt-6 pt-6 border-t border-gray-200">
-          <Link
-            href="/studio"
-            target="_blank"
-            className="group inline-flex items-center gap-3 bg-white border border-gray-200 rounded-xl px-5 py-4 hover:border-indigo-300 hover:shadow-md transition-all duration-150"
-          >
-            <div className="w-9 h-9 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
-              <PencilRuler className="w-4 h-4 text-indigo-600" />
-            </div>
-            <div>
-              <span className="text-sm font-semibold text-gray-900">Edit Website</span>
-              <p className="text-xs text-gray-500">Open Sanity CMS to manage website content</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all ml-auto" />
-          </Link>
-        </div>
       </main>
 
-      {/* Footer */}
-      <footer className="max-w-5xl mx-auto px-6 pb-8">
-        <p className="text-xs text-gray-400">
-          &copy; {new Date().getFullYear()} startupbodyshop.com. Admin panel.
+      <footer className="max-w-3xl mx-auto px-6 pb-8">
+        <p className="text-xs text-[#CCC]">
+          &copy; {new Date().getFullYear()} startupbodyshop.com &mdash; Admin panel
         </p>
       </footer>
     </div>
