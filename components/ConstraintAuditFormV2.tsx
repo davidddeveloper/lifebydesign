@@ -1114,11 +1114,13 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
       <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
         {/* Feedback beside nav arrows — desktop only */}
         <div className="hidden fixed bottom-6 right-30 sm:block">
-          <FeedbackWidget
-            page="constraint-audit"
-            brandColor={brandPrimary}
-            positionClassName="flex flex-col items-end"
-          />
+          {screen.type !== "welcome" &&
+            <FeedbackWidget
+              page="constraint-audit"
+              brandColor={brandPrimary}
+              positionClassName="flex flex-col items-end"
+            />
+          }
         </div>
         {/* Bottom-right fixed bar — feedback (desktop) + nav arrows */}
         <div className="fixed bottom-6 right-6 flex items-center gap-2 z-50">
@@ -1185,7 +1187,7 @@ function WelcomeScreen({ onStart, brandColor = "#1A1A1A" }: { onStart: () => voi
   return (
     <div className="min-h-screen flex flex-col justify-center px-6 py-16 max-w-2xl mx-auto w-full">
       {/* Back link */}
-      <div className="mb-12">
+      <div className="mb-12 flex justify-between items-center">
         <Link
           href="/"
           className="text-sm text-[#666] hover:text-[#2D2D2D] transition-colors inline-flex items-center gap-1.5"
@@ -1195,6 +1197,28 @@ function WelcomeScreen({ onStart, brandColor = "#1A1A1A" }: { onStart: () => voi
           </svg>
           Back to site
         </Link>
+
+        <div className={`flex flex-col items-start z-50 flex flex-col gap-2`}>
+          {/* Floating button */}
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.97 }}
+            onClick={() => { }}
+            className="flex items-center gap-2 text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg transition-all"
+            style={{ backgroundColor: brandColor }}
+          >
+
+            <span className="flex items-center gap-1.5">
+              <span
+                className="text-[8px] font-bold uppercase tracking-widest bg-white rounded px-1 py-0.5"
+                style={{ color: brandColor }}
+              >
+                Beta
+              </span>
+              v2
+            </span>
+          </motion.button>
+        </div>
       </div>
 
       {/* Badge */}
