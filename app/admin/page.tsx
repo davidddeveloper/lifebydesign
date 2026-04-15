@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileText, Mail, CalendarDays, ChevronRight, Book } from "lucide-react"
+import { FileText, Mail, CalendarDays, ChevronRight, Book, BarChart2 } from "lucide-react"
 
 const NAV_CARDS = [
   {
@@ -28,6 +28,12 @@ const NAV_CARDS = [
     title: "Email Campaigns",
     description: "Manage contacts from audits and workshops, and send targeted campaigns.",
   },
+  {
+    href: "/admin/analytics",
+    icon: BarChart2,
+    title: "Audit Analytics",
+    description: "See insights on customer journey from constraint audit: unique visitors, dropoff points, page views..."
+  }
 ]
 
 export default function AdminDashboardPage() {

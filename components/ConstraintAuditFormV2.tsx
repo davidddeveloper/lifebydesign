@@ -6,6 +6,7 @@ import Link from "next/link"
 import BookingModal, { type BookingPrefill } from "@/components/BookingModal"
 import FeedbackWidget from "@/components/FeedbackWidget"
 import { useBrandTheme } from "@/lib/use-brand-theme"
+import { trackEvent } from "@/lib/analytics"
 
 // ─────────────────────────────────────────────
 // Types
@@ -719,6 +720,14 @@ const NAV_SECTIONS = [
   { label: "Final Questions", icon: "6", screenIdx: 37, fields: ["q28", "q29", "q30"] },
 ]
 
+function getSectionForIndex(idx: number): string {
+  // Walk NAV_SECTIONS in reverse to find the last section whose start <= idx
+  for (let i = NAV_SECTIONS.length - 1; i >= 0; i--) {
+    if (idx >= NAV_SECTIONS[i].screenIdx) return NAV_SECTIONS[i].label
+  }
+  return "Welcome"
+}
+
 export default function ConstraintAuditFormV2({ onSubmit }: Props) {
   const { primary: brandPrimary, hover: brandHover } = useBrandTheme()
   const [screenIndex, setScreenIndex] = useState(0)
@@ -745,6 +754,56 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
       }
     } catch { }
   }, [])
+
+  // ── Analytics ──────────────────────────────────────────────────────────────
+
+  // Track form start on mount (fire once)
+  const startTimeRef = useRef<number>(Date.now())
+  useEffect(() => {
+    trackEvent("audit_started")
+  }, [])
+
+  // Track every screen view + section entries
+  useEffect(() => {
+    const s = SCREENS[screenIndex]
+    const section = getSectionForIndex(screenIndex)
+    trackEvent("audit_screen_viewed", {
+      screen_id: s.id,
+      screen_index: screenIndex,
+      screen_type: s.type,
+      section,
+      progress_pct: Math.round((screenIndex / (SCREENS.length - 1)) * 100),
+    })
+    if (s.type === "section-intro") {
+      trackEvent("audit_section_entered", {
+        section,
+        screen_index: screenIndex,
+      })
+    }
+  }, [screenIndex])
+
+  // Track abandonment when the user navigates away mid-form
+  useEffect(() => {
+    const handleAbandon = () => {
+      const s = SCREENS[screenIndex]
+      // Only fire if they haven't reached the submit screen
+      if (s.type === "submit") return
+      trackEvent("audit_abandoned", {
+        screen_id: s.id,
+        screen_index: screenIndex,
+        section: getSectionForIndex(screenIndex),
+        progress_pct: Math.round((screenIndex / (SCREENS.length - 1)) * 100),
+        time_on_form_seconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+      })
+    }
+    window.addEventListener("pagehide", handleAbandon)
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") handleAbandon()
+    })
+    return () => {
+      window.removeEventListener("pagehide", handleAbandon)
+    }
+  }, [screenIndex])
 
   // Debounced save
   const persist = useCallback((data: FormData, idx: number) => {
@@ -898,6 +957,11 @@ export default function ConstraintAuditFormV2({ onSubmit }: Props) {
   }
 
   const handleFinalSubmit = () => {
+    trackEvent("audit_submitted", {
+      industry: formData.industry,
+      monthly_revenue: formData.monthlyRevenue,
+      time_on_form_seconds: Math.round((Date.now() - startTimeRef.current) / 1000),
+    })
     try {
       localStorage.removeItem(STORAGE_KEY)
       localStorage.removeItem(STORAGE_STEP_KEY)
