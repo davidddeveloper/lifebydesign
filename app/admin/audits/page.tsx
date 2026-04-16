@@ -114,6 +114,16 @@ interface Audit {
     whatThisCosts: string; rootCause: string; nextStep: string
   }
   revenueOpportunityText?: string
+  v2Scores?: {
+    q1: number | null; q2: number | null; q3: number | null
+    q5: number | null; q6: number | null; q7: number | null; q8: number | null
+    q9: number | null; q10: number | null; q11: number | null
+    q13: number | null; q14: number | null; q15: number | null
+    q16: number | null; q17: number | null
+    q18: number | null; q19: number | null; q20: number | null; q21: number | null
+    q23: number | null; q24: number | null; q25: number | null
+    q26: number | null; q27: number | null
+  }
 }
 
 type TimeFilter = "all" | "today" | "this_week" | "this_month" | "last_month" | "this_year" | "last_year"
@@ -213,6 +223,164 @@ function ConstraintTag({ constraint }: { constraint: string }) {
   )
 }
 
+// ─── v2 question score → option text lookup ──────────────────────
+const V2_LABELS: Record<string, Record<number, string>> = {
+  q1: {
+    1: "I haven't really thought about it — I serve anyone who will pay",
+    2: "I have a rough sense but I take most opportunities that come my way",
+    3: "I have a clear type of customer I prefer and actively look for",
+    4: "I have a very specific ideal customer profile and I focus on them consistently",
+  },
+  q2: {
+    2: "0 to 2 new customers",
+    4: "3 to 5 new customers",
+    6: "6 to 10 new customers",
+    8: "More than 10 new customers",
+  },
+  q3: {
+    1: "Very little — most customers find me by chance or accident",
+    2: "Some — I rely mainly on word of mouth from people I already know",
+    3: "Moderate — I do some deliberate activity to attract the right people",
+    4: "A lot — I actively and consistently target and reach my ideal customers",
+  },
+  q5: {
+    1: "Most customers make a single small purchase and do not return",
+    2: "Customers return occasionally but overall spending across the year is modest",
+    3: "Customers come back reasonably regularly and their total spending is meaningful",
+    4: "Customers are loyal, returning frequently, and their total annual value is high relative to my type of business",
+  },
+  q6: {
+    1: "I am significantly cheaper — I compete mainly on being the lowest price",
+    2: "I am a little cheaper — I usually come in below the going rate",
+    3: "I charge roughly the same as others in my area",
+    4: "I charge more — because I offer something noticeably better",
+    5: "I charge significantly more — and customers still choose me",
+  },
+  q7: {
+    1.5: "Many customers seem disappointed, complain, or do not come back",
+    3: "Most customers are okay but rarely express strong satisfaction",
+    4.5: "Most customers seem genuinely happy and I get regular positive feedback",
+    6: "Almost all customers are very satisfied — I hear it regularly and see it in their behaviour",
+  },
+  q8: {
+    2: "Never — I have never had an unprompted referral",
+    4: "Occasionally — maybe once or twice in the past year",
+    6: "Sometimes — a few times per quarter, without me asking",
+    8: "Regularly — I receive unprompted referrals almost every month",
+  },
+  q9: {
+    1: "No — I don't have any documented proof",
+    2: "I have a few positive messages or comments I could share",
+    3: "I have several testimonials I can show on request",
+    4: "I have documented results with numbers or specific before-and-after stories",
+    5: "I have extensive proof — multiple case studies, measurable outcomes, and results data",
+  },
+  q10: {
+    2: "Almost never — most customers only buy once",
+    4: "Occasionally — they return a few times over the course of a year",
+    6: "Regularly — most customers come back multiple times",
+    8: "Continuously — most of my customers are ongoing, recurring buyers",
+  },
+  q11: {
+    1: "No — I offer one thing and that is all",
+    2: "I have thought about it but have not set anything up",
+    3: "I have additional offers but I rarely actively sell them",
+    4: "Yes — I regularly offer and sell additional products or services to existing customers",
+  },
+  q13: {
+    1: "Mostly by chance — they passed by, saw a sign, or found me randomly",
+    2: "Mostly through personal connections — friends, family, or people who already know me",
+    3: "Through a mix of word of mouth and some deliberate activity I do",
+    4: "Through a consistent system I run — regular outreach, promotions, or partnerships",
+  },
+  q14: {
+    1.5: "I do not do anything regularly — customers come when they come",
+    3: "Occasionally — I do something when I remember or feel motivated",
+    4.5: "At least once or twice a week — I have a loose routine",
+    6: "Every week without fail — I have a consistent practice that I stick to",
+  },
+  q15: {
+    2: "Fewer than 5 enquiries",
+    4: "5 to 15 enquiries",
+    6: "16 to 30 enquiries",
+    8: "31 to 60 enquiries",
+    10: "More than 60 enquiries",
+  },
+  q16: {
+    1: "Completely unpredictable — I have no idea what next month will bring",
+    2: "Rough guess — I can estimate within a very wide range",
+    3: "Reasonably confident — I can usually estimate within about 25%",
+    4: "Very confident — my enquiry flow is consistent and I can predict it reliably",
+  },
+  q17: {
+    1: "No — if they don't buy immediately I lose touch completely",
+    2: "Sometimes — I follow up if I happen to remember",
+    3: "Usually — I try to follow up with most people who show interest",
+    4: "Always — I have a system and I work it consistently for everyone who enquires",
+  },
+  q18: {
+    1.5: "I send them a price and wait to hear back — no real process",
+    3: "I have an informal conversation and try to close it, but it varies each time",
+    4.5: "I follow a loose process — I explain what I offer, answer questions, and ask for payment",
+    6: "I follow a clear, consistent process every time — I know what I say and in what order",
+  },
+  q19: {
+    2: "Fewer than 2 in 10 (less than 20%)",
+    4: "2 to 3 in 10 (20–30%)",
+    6: "4 to 5 in 10 (40–50%)",
+    8: "6 or more in 10 (60%+)",
+  },
+  q20: {
+    1: "Much slower than typical for my type of business",
+    2: "A little slower than typical — it takes longer than it probably should",
+    3: "About the same as typical for my type of business",
+    4: "Faster than typical — I close and collect payment more quickly than most",
+  },
+  q21: {
+    2: "No — if they don't buy at first I move on and forget about them",
+    4: "Sometimes — if I happen to remember or they contact me again",
+    6: "Usually — I follow up with most people after a few days",
+    8: "Always — I have a consistent follow-up system and I use it for everyone",
+  },
+  q23: {
+    1: "It would completely stop — nothing happens without me personally",
+    2: "Major problems would occur — things would fall apart quickly",
+    3: "Some things would slow down, but most could be managed without me",
+    4: "It would run normally — I have clear systems and people who can handle things",
+  },
+  q24: {
+    1: "Everything is in my head — nothing is written down anywhere",
+    2: "A few things are noted somewhere, but it is mostly informal and incomplete",
+    3: "The main steps of my most important work are written down or documented somewhere",
+    4: "Most of how I run and deliver the business is documented and accessible to others",
+  },
+  q25: {
+    2: "I do not track any of these — I work from memory and feel",
+    4: "I have a rough sense but nothing I track consistently",
+    6: "I check most of these numbers most months, though not perfectly",
+    8: "Yes — I track all of these regularly and could tell you the numbers right now",
+  },
+  q26: {
+    0: "No — I don't know my profit margin / losing money or breaking even",
+    4: "I keep roughly 10–20 out of every 100 Leones I earn",
+    6: "I keep roughly 21–35 out of every 100 Leones I earn",
+    8: "I keep more than 35 out of every 100 Leones I earn",
+  },
+  q27: {
+    1.5: "Almost entirely IN — I have no real time to plan or improve anything",
+    3: "Mainly IN, with some ON — roughly 25% of my time is on strategy and improvement",
+    4.5: "A reasonable balance — about half my time is on strategy and improvement",
+    6: "Mainly ON — most of my time is spent building and improving the business",
+  },
+}
+
+function v2Label(qKey: string, score: number | null | undefined): string {
+  if (score === null || score === undefined) return ""
+  const text = V2_LABELS[qKey]?.[score]
+  if (!text) return String(score)
+  return `${text} (score - ${score})`
+}
+
 // ─── Export Helpers ───────────────────────────────────────────────
 async function exportToPDF(audits: Audit[]) {
   const { generatePDFBlob, generatePDFBlobV2 } = await import("@/lib/generate-pdf")
@@ -300,95 +468,149 @@ function mapAuditToPDFDataV2(a: Audit) {
 }
 
 function buildResultsRows(audits: Audit[]) {
-  return audits.map((a) => ({
-    "Business Name": a.businessName,
-    Owner: a.ownerName,
-    Email: a.email,
-    Phone: a.phone,
-    Industry: a.industry,
-    Status: a.status,
-    Constraint: a.primaryConstraint,
-    "Constraint Score": a.primaryScore,
-    Confidence: a.confidence,
-    "WHO Score": a.scores?.who,
-    "WHAT Score": a.scores?.what,
-    "SELL Score": a.scores?.sell,
-    "TRAFFIC Score": a.scores?.traffic,
-    "OPS Score": a.scores?.operations,
-    "Current Monthly (Le)": a.revenueImpact?.currentMonthly,
-    "Potential Monthly (Le)": a.revenueImpact?.potentialMonthly,
-    "Monthly Opp. Cost (Le)": a.revenueImpact?.monthlyOpportunityCost,
-    "Yearly Opp. Cost (Le)": a.revenueImpact?.yearlyOpportunityCost,
-    "Yearly Opp. Cost (USD)": a.revenueImpact?.yearlyOpportunityCost
-      ? Math.round(a.revenueImpact.yearlyOpportunityCost / USD_TO_SLE)
-      : 0,
-    "Quick Win": a.quickWin?.action,
-    Reasoning: a.reasoning,
-    "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
-  }))
+  return audits.map((a) => {
+    const isV2 = a._version === "v2"
+    return {
+      "Business Name": a.businessName,
+      Owner: a.ownerName,
+      Email: a.email,
+      Phone: a.phone,
+      Industry: a.industry,
+      "Audit Version": a.auditVersion ?? "",
+      Status: a.status,
+      Constraint: a.primaryConstraint,
+      "Constraint Score": a.primaryScore,
+      Confidence: isV2 ? "" : a.confidence,
+      "WHO Score": a.scores?.who,
+      "WHAT Score": a.scores?.what,
+      "SELL Score": a.scores?.sell,
+      "TRAFFIC Score": a.scores?.traffic,
+      "OPS Score": a.scores?.operations,
+      // v1 revenue breakdown (blank for v2 — v2 doesn't store these separately)
+      "Current Monthly (Le)": isV2 ? "" : a.revenueImpact?.currentMonthly,
+      "Potential Monthly (Le)": isV2 ? "" : a.revenueImpact?.potentialMonthly,
+      "Monthly Opp. Cost (Le)": isV2 ? "" : a.revenueImpact?.monthlyOpportunityCost,
+      "Yearly Opp. Cost (Le)": isV2 ? "" : a.revenueImpact?.yearlyOpportunityCost,
+      "Yearly Opp. Cost (USD)": isV2 ? "" : (a.revenueImpact?.yearlyOpportunityCost
+        ? Math.round(a.revenueImpact.yearlyOpportunityCost / USD_TO_SLE)
+        : 0),
+      // v2 revenue & narrative (blank for v1)
+      "Revenue Opportunity": isV2 ? (a.revenueOpportunityText ?? a.revenueImpact?.explanation ?? "") : "",
+      "Quick Win": isV2 ? "" : a.quickWin?.action,
+      // v1: full AI reasoning; v2: full joined narrative
+      Reasoning: a.reasoning,
+      // v2 narrative sections (blank for v1)
+      "What's Working": isV2 ? (a.narrativeSections?.whatIsWorking ?? "") : "",
+      "Primary Constraint Detail": isV2 ? (a.narrativeSections?.primaryConstraintNarrative ?? "") : "",
+      "What This Costs": isV2 ? (a.narrativeSections?.whatThisCosts ?? "") : "",
+      "Root Cause": isV2 ? (a.narrativeSections?.rootCause ?? "") : "",
+      "Next Step": isV2 ? (a.narrativeSections?.nextStep ?? "") : "",
+      "Recommended CTA": isV2 ? (a.recommendedCta ?? "") : "",
+      "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
+    }
+  })
 }
 
 function buildSubmissionsRows(audits: Audit[]) {
-  return audits.map((a) => ({
-    // Basic
-    "Business Name": a.businessName,
-    Owner: a.ownerName,
-    Email: a.email,
-    Phone: a.phone,
-    Industry: a.industry,
-    "Years in Business": a.yearsInBusiness,
-    "Monthly Revenue (Le)": a.monthlyRevenue,
-    "# of Customers": a.numberOfCustomers,
-    "Team Size": a.teamSize,
-    // WHO
-    "Ideal Customer": a.idealCustomer,
-    "Customer Types": a.customerTypes,
-    "New Customers Last Month": a.newCustomersLastMonth,
-    "Conversion Rate": a.conversionRate,
-    "Biggest Problem": a.biggestProblem,
-    "Turn Down Bad Fits?": a.turnDownBadFits,
-    // WHAT
-    "Main Problem Solved": a.mainProblemSolved,
-    Solution: a.solution,
-    "Avg Transaction Value": a.avgTransactionValue,
-    "Pricing vs Competitors": a.pricingVsCompetitors,
-    "Customer Satisfaction": a.customerSatisfaction,
-    "Referral Frequency": a.referralFrequency,
-    "Proof Level": a.proofLevel,
-    // SELL
-    "Has Sales Script?": a.hasSalesScript,
-    "Sales Conversations/Month": a.salesConversations,
-    "Conversion to Customer": a.conversionToCustomer,
-    "Time to Close": a.timeToClose,
-    "Reasons Not Buying": a.reasonsNotBuying,
-    "Follow-Up System": a.followUpSystem,
-    // TRAFFIC
-    "Traffic - Referrals %": a.trafficReferrals,
-    "Traffic - Social %": a.trafficSocial,
-    "Traffic - Ads %": a.trafficAds,
-    "Traffic - Partnerships %": a.trafficPartnerships,
-    "Traffic - Walk-ins %": a.trafficWalkIns,
-    "Traffic - Other %": a.trafficOther,
-    "Posting Frequency": a.postingFrequency,
-    "Weekly Reach": a.weeklyReach,
-    "Monthly Leads": a.monthlyLeads,
-    "Lead Predictability": a.leadPredictability,
-    "Has Lead Magnet?": a.hasLeadMagnet,
-    // OPERATIONS
-    "Business Without You": a.businessWithoutYou,
-    "Written Procedures?": a.writtenProcedures,
-    "Repeat Purchases": a.repeatPurchases,
-    "Has Upsells?": a.hasUpsells,
-    "Track Numbers?": a.trackNumbers,
-    "Profit Margin": a.profitMargin,
-    "Hours/Week": a.hoursPerWeek,
-    "Time On vs In Business": a.timeOnVsIn,
-    // FINAL
-    "Top Challenge": a.topChallenge,
-    "One Thing to Fix": a.oneThingToFix,
-    "12-Month Goal": a.twelveMonthGoal,
-    "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
-  }))
+  return audits.map((a) => {
+    const isV2 = a._version === "v2"
+    const q = a.v2Scores
+    return {
+      // Basic (shared)
+      "Business Name": a.businessName,
+      Owner: a.ownerName,
+      Email: a.email,
+      Phone: a.phone,
+      Industry: a.industry,
+      "Audit Version": a.auditVersion ?? "",
+      "Years in Business": a.yearsInBusiness,
+      "Monthly Revenue (Le)": a.monthlyRevenue,
+      "# of Customers": a.numberOfCustomers,
+      "Team Size": a.teamSize,
+      // ── WHO (open text — both versions) ──
+      "Ideal Customer": a.idealCustomer,
+      // v1-only WHO text fields
+      "Customer Types": isV2 ? "" : a.customerTypes,
+      "New Customers Last Month": isV2 ? "" : a.newCustomersLastMonth,
+      "Conversion Rate": isV2 ? "" : a.conversionRate,
+      "Biggest Problem": isV2 ? "" : a.biggestProblem,
+      "Turn Down Bad Fits?": isV2 ? "" : a.turnDownBadFits,
+      // v2-only WHO answers
+      "WHO - Customer Clarity": isV2 ? v2Label("q1", q?.q1) : "",
+      "WHO - New Customers/Month": isV2 ? v2Label("q2", q?.q2) : "",
+      "WHO - Acquisition Control": isV2 ? v2Label("q3", q?.q3) : "",
+      // ── WHAT ──
+      "Main Problem Solved": a.mainProblemSolved,
+      // v1-only WHAT text fields
+      Solution: isV2 ? "" : a.solution,
+      "Avg Transaction Value": isV2 ? "" : a.avgTransactionValue,
+      "Pricing vs Competitors": isV2 ? "" : a.pricingVsCompetitors,
+      "Customer Satisfaction": isV2 ? "" : a.customerSatisfaction,
+      "Referral Frequency": isV2 ? "" : a.referralFrequency,
+      "Proof Level": isV2 ? "" : a.proofLevel,
+      // v2-only WHAT answers
+      "WHAT - Customer Relationship Value": isV2 ? v2Label("q5", q?.q5) : "",
+      "WHAT - Pricing vs Competitors": isV2 ? v2Label("q6", q?.q6) : "",
+      "WHAT - Customer Satisfaction": isV2 ? v2Label("q7", q?.q7) : "",
+      "WHAT - Unprompted Referrals": isV2 ? v2Label("q8", q?.q8) : "",
+      "WHAT - Documented Evidence": isV2 ? v2Label("q9", q?.q9) : "",
+      "WHAT - Repeat Purchase Frequency": isV2 ? v2Label("q10", q?.q10) : "",
+      "WHAT - Additional Offers": isV2 ? v2Label("q11", q?.q11) : "",
+      // ── SELL ──
+      "Reasons Not Buying": a.reasonsNotBuying,
+      // v1-only SELL text fields
+      "Has Sales Script?": isV2 ? "" : a.hasSalesScript,
+      "Sales Conversations/Month": isV2 ? "" : a.salesConversations,
+      "Conversion to Customer": isV2 ? "" : a.conversionToCustomer,
+      "Time to Close": isV2 ? "" : a.timeToClose,
+      "Follow-Up System": isV2 ? "" : a.followUpSystem,
+      // v2-only SELL answers
+      "SELL - Sales Process": isV2 ? v2Label("q18", q?.q18) : "",
+      "SELL - Close Rate": isV2 ? v2Label("q19", q?.q19) : "",
+      "SELL - Time to Close": isV2 ? v2Label("q20", q?.q20) : "",
+      "SELL - Follow-Up System": isV2 ? v2Label("q21", q?.q21) : "",
+      // ── TRAFFIC ──
+      // v1-only TRAFFIC fields
+      "Traffic - Referrals %": isV2 ? "" : a.trafficReferrals,
+      "Traffic - Social %": isV2 ? "" : a.trafficSocial,
+      "Traffic - Ads %": isV2 ? "" : a.trafficAds,
+      "Traffic - Partnerships %": isV2 ? "" : a.trafficPartnerships,
+      "Traffic - Walk-ins %": isV2 ? "" : a.trafficWalkIns,
+      "Traffic - Other %": isV2 ? "" : a.trafficOther,
+      "Posting Frequency": isV2 ? "" : a.postingFrequency,
+      "Weekly Reach": isV2 ? "" : a.weeklyReach,
+      "Monthly Leads": isV2 ? "" : a.monthlyLeads,
+      "Lead Predictability": isV2 ? "" : a.leadPredictability,
+      "Has Lead Magnet?": isV2 ? "" : a.hasLeadMagnet,
+      // v2-only TRAFFIC answers
+      "TRAFFIC - Acquisition Channel": isV2 ? v2Label("q13", q?.q13) : "",
+      "TRAFFIC - Deliberate Weekly Action": isV2 ? v2Label("q14", q?.q14) : "",
+      "TRAFFIC - Monthly Enquiries": isV2 ? v2Label("q15", q?.q15) : "",
+      "TRAFFIC - Enquiry Predictability": isV2 ? v2Label("q16", q?.q16) : "",
+      "TRAFFIC - Warm Lead Follow-Up": isV2 ? v2Label("q17", q?.q17) : "",
+      // ── OPERATIONS ──
+      // v1-only OPS text fields
+      "Business Without You": isV2 ? "" : a.businessWithoutYou,
+      "Written Procedures?": isV2 ? "" : a.writtenProcedures,
+      "Repeat Purchases": isV2 ? "" : a.repeatPurchases,
+      "Has Upsells?": isV2 ? "" : a.hasUpsells,
+      "Track Numbers?": isV2 ? "" : a.trackNumbers,
+      "Profit Margin": isV2 ? "" : a.profitMargin,
+      "Hours/Week": isV2 ? "" : a.hoursPerWeek,
+      "Time On vs In Business": isV2 ? "" : a.timeOnVsIn,
+      // v2-only OPS answers
+      "OPS - Business Without You": isV2 ? v2Label("q23", q?.q23) : "",
+      "OPS - Documented Knowledge": isV2 ? v2Label("q24", q?.q24) : "",
+      "OPS - Tracks Business Numbers": isV2 ? v2Label("q25", q?.q25) : "",
+      "OPS - Profit Margin": isV2 ? v2Label("q26", q?.q26) : "",
+      "OPS - Time On vs In Business": isV2 ? v2Label("q27", q?.q27) : "",
+      // ── FINAL (shared open text) ──
+      "Top Challenge": a.topChallenge,
+      "One Thing to Fix": a.oneThingToFix,
+      "12-Month Goal": a.twelveMonthGoal,
+      "Submitted At": a.submittedAt ? new Date(a.submittedAt).toLocaleDateString() : "",
+    }
+  })
 }
 
 function autoColWidths(rows: Record<string, unknown>[]) {

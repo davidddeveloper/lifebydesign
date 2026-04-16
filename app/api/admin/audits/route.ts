@@ -75,6 +75,18 @@ export interface NormalisedAudit {
   }
   revenueOpportunityText?: string
 
+  // v2-only raw question scores (numeric)
+  v2Scores?: {
+    q1: number | null; q2: number | null; q3: number | null
+    q5: number | null; q6: number | null; q7: number | null; q8: number | null
+    q9: number | null; q10: number | null; q11: number | null
+    q13: number | null; q14: number | null; q15: number | null
+    q16: number | null; q17: number | null
+    q18: number | null; q19: number | null; q20: number | null; q21: number | null
+    q23: number | null; q24: number | null; q25: number | null
+    q26: number | null; q27: number | null
+  }
+
   // Status & meta
   status: string
   dashboardId: string | null
@@ -202,6 +214,16 @@ function mapV2(row: any): NormalisedAudit {
     },
     revenueOpportunityText: row.revenue_opportunity_text ?? "",
     quickWin: {},
+    v2Scores: {
+      q1:  row.q1  ?? null, q2:  row.q2  ?? null, q3:  row.q3  ?? null,
+      q5:  row.q5  ?? null, q6:  row.q6  ?? null, q7:  row.q7  ?? null,
+      q8:  row.q8  ?? null, q9:  row.q9  ?? null, q10: row.q10 ?? null, q11: row.q11 ?? null,
+      q13: row.q13 ?? null, q14: row.q14 ?? null, q15: row.q15 ?? null,
+      q16: row.q16 ?? null, q17: row.q17 ?? null,
+      q18: row.q18 ?? null, q19: row.q19 ?? null, q20: row.q20 ?? null, q21: row.q21 ?? null,
+      q23: row.q23 ?? null, q24: row.q24 ?? null, q25: row.q25 ?? null,
+      q26: row.q26 ?? null, q27: row.q27 ?? null,
+    },
     topChallenge: row.q28 ?? null,
     oneThingToFix: row.q29 ?? null,
     twelveMonthGoal: row.q30 ?? null,
@@ -264,7 +286,10 @@ export async function GET(request: NextRequest) {
         .select(`
           id, business_name, owner_name, email, phone, industry,
           years_in_business, monthly_revenue, number_of_customers, team_size,
-          q4, q12, q22, q28, q29, q30,
+          q1, q2, q3, q4, q5, q6, q7, q8, q9, q10, q11,
+          q12, q13, q14, q15, q16, q17,
+          q18, q19, q20, q21, q22,
+          q23, q24, q25, q26, q27, q28, q29, q30,
           score_who, score_what, score_sell, score_traffic, score_operations,
           band_who, band_what, band_traffic, band_sell, band_operations,
           primary_constraint, primary_score, secondary_constraint, secondary_score,
