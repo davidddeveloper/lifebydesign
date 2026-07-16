@@ -36,6 +36,7 @@ import { WorkshopRegistrationModal } from "@/components/workshop-registration-mo
       'Register by clicking "I\'m Ready to Scale" to fill out an application form. We review applications to ensure fit and reach out within 48 hours with next steps and investment details.',
   },*/}
 import type { HomeFaqSection, FAQReferenceSection } from '@/sanity/lib/types'
+import Link from "next/link"
 
 const defaultFaqs = [
   {
@@ -149,14 +150,16 @@ export function WorkshopFaq({ data, onOpenForm }: WorkshopFaqProps) {
           </div>
 
           {/* CTA Button */}
+          {/** onClick={onOpenForm || (() => setIsModalOpen(true))} */}
           <div className="text-center">
-            <Button
-              size="default"
-              onClick={onOpenForm || (() => setIsModalOpen(true))}
-              className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
-            >
-              I'M READY TO SCALE
-            </Button>
+            <Link href="/constraint-audit">
+              <Button
+                size="default"
+                className="bg-[#177fc9] hover:bg-[#42adff] text-white font-bold text-lg px-12 md:px-24 py-4 rounded-full h-auto"
+              >
+                I'M READY TO SCALE
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
