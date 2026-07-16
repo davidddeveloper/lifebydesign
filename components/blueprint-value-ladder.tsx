@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import { CheckCircle2 } from "lucide-react"
 import type { PricingPathsSection } from "@/sanity/lib/types"
+import Link from "next/link"
 
 const defaultTiers = [
   {
@@ -17,6 +18,7 @@ const defaultTiers = [
       "20-page workbook + certificate",
     ],
     cta: "Enroll in Workshop",
+    ctaUrl: "/workshops",
     highlighted: true,
     price: "",
   },
@@ -33,6 +35,7 @@ const defaultTiers = [
       "Success rate: 5% execute fully",
     ],
     cta: "",
+    ctaUrl: "/workshops",
     highlighted: false,
     price: "",
   },
@@ -52,6 +55,7 @@ const defaultTiers = [
       "Gurantee: Full refund if zero improvement",
     ],
     cta: "Apply for the Program",
+    ctaUrl: "/workshops",
     highlighted: false,
     price: "Discuss pricing with our team",
   },
@@ -70,7 +74,8 @@ export function BlueprintValueLadder({ data, onOpenForm }: BlueprintValueLadderP
     features: path.features || [],
     cta: path.ctaText || "",
     highlighted: path.stage === "Stage 1",
-    price: path.price || ""
+    price: path.price || "",
+    ctaUrl: path.ctaUrl || ""
   })) || defaultTiers
 
   return (
@@ -95,8 +100,8 @@ export function BlueprintValueLadder({ data, onOpenForm }: BlueprintValueLadderP
               transition={{ delay: i * 0.15, duration: 0.6 }}
               viewport={{ once: true }}
               className={`rounded-2xl overflow-hidden transition-all ${tier.highlighted
-                  ? "ring-2 ring-[#177fc9] transform md:scale-105"
-                  : "border border-gray-200 hover:border-gray-300"
+                ? "ring-2 ring-[#177fc9] transform md:scale-105"
+                : "border border-gray-200 hover:border-gray-300"
                 }`}
             >
               <div className={`${tier.highlighted ? "bg-[#177fc9] text-white" : "bg-gray-50"} px-8 py-6`}>
@@ -122,16 +127,20 @@ export function BlueprintValueLadder({ data, onOpenForm }: BlueprintValueLadderP
                   ))}
                 </ul>
 
-                <button
-                  onClick={tier.stage !== "Stage 3" ? onOpenForm : () => { }}
-                  className={`w-full py-3 px-6 font-bold rounded-lg transition-colors ${tier.highlighted
+                <Link href={tier.ctaUrl}>
+                  {/**
+                   * onClick={tier.stage !== "Stage 3" ? onOpenForm : () => { }} 
+                   */}
+                  <button
+                    className={`w-full py-3 px-6 font-bold rounded-lg transition-colors ${tier.highlighted
                       ? "bg-[#177fc9] text-white hover:bg-[#177fc9]"
                       : "border-2 border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white"
-                    }
+                      }
                     ${tier.stage !== "Stage 3" ? "cursor-pointer" : "cursor-not-allowed"}`}
-                >
-                  {tier.cta}
-                </button>
+                  >
+                    {tier.cta}
+                  </button>
+                </Link>
               </div>
             </motion.div>
           ))}
