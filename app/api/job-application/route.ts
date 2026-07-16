@@ -1,32 +1,75 @@
-import { NextResponse } from "next/server"
+// app/api/job-application/route.ts
+// Job application submission → Supabase `job_applications` table
 
-export async function POST(request: Request) {
+import { NextRequest, NextResponse } from "next/server"
+import { supabaseAdmin } from "@/lib/supabase"
+
+export async function POST(request: NextRequest) {
   try {
-    const formData = await request.json()
+    const body = await request.json()
 
-    console.log('this is the form data lol', formData)
-    
-
-    const response = await fetch("https://n8n.srv1108378.hstgr.cloud/webhook/ca03a7b6-ebaf-45ad-b3d6-19a96bfad777", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    })
-
-    if (!response.ok) {
-      console.log('this is the response', response)
-      throw new Error("Failed to submit to n8n")
+    const email =
+      typeof body.email === "string" ? body.email.trim().toLowerCase() : ""
+    if (!email.includes("@")) {
+      return NextResponse.json(
+        { success: false, error: "Valid email is required" },
+        { status: 400 }
+      )
     }
 
-    const data = await response.json().catch(() => ({}))
+    const jobId = (body.jobId || body.job_id || "").toString().trim()
+    const jobTitle = (body.jobTitle || body.job_title || "").toString().trim()
 
-    console.log('this is the data 2', data)
+    if (!jobId || !jobTitle) {
+      return NextResponse.json(
+        { success: false, error: "Job id and title are required" },
+        { status: 400 }
+      )
+    }
 
-    return NextResponse.json({ success: true, data }, { status: 200 })
+    const row = {
+      job_id: jobId,
+      job_title: jobTitle,
+      job_department: body.jobDepartment ?? body.department ?? null,
+      sanity_document_id: body.sanityDocumentId ?? body.sanity_document_id ?? null,
+      first_name: body.firstName ?? null,
+      last_name: body.lastName ?? null,
+      email,
+      phone: body.phone ?? null,
+      portfolio: body.portfolio ?? null,
+      cover_letter: body.coverLetter ?? null,
+      source: body.source ?? "Job Application",
+      status: "new",
+      ip_address:
+        request.headers.get("x-forwarded-for") ||
+        request.headers.get("x-real-ip") ||
+        null,
+      user_agent: request.headers.get("user-agent") || null,
+    }
+
+    const { data, error } = await supabaseAdmin
+      .from("job_applications")
+      .insert(row)
+      .select("id, created_at")
+      .single()
+
+    if (error) {
+      console.error("[job-application] Supabase insert error:", error.message)
+      return NextResponse.json(
+        { success: false, error: "Failed to save application" },
+        { status: 500 }
+      )
+    }
+
+    return NextResponse.json(
+      { success: true, id: data.id, created_at: data.created_at },
+      { status: 200 }
+    )
   } catch (error) {
-    console.error("API Route Error:", error)
-    return NextResponse.json({ success: false, error: "Failed to submit form" }, { status: 500 })
+    console.error("[job-application] unhandled error:", error)
+    return NextResponse.json(
+      { success: false, error: "Failed to submit application" },
+      { status: 500 }
+    )
   }
 }
