@@ -7,13 +7,15 @@ import Image from "next/image"
 import {
   LayoutDashboard, FileText, Book, CalendarDays, Mail,
   PencilRuler, LogOut, Menu, X, ExternalLink, Settings, BarChart2,
-  Building2,
+  Building2, BookOpen, Briefcase,
 } from "lucide-react"
 
 const NAV_ITEMS = [
   { href: "/admin",            label: "Dashboard",         icon: LayoutDashboard, exact: true },
   { href: "/admin/audits",     label: "Constraint Audits", icon: FileText },
   { href: "/admin/partners",   label: "Partners",          icon: Building2 },
+  { href: "/admin/kolat-books", label: "Kolat Books",      icon: BookOpen },
+  { href: "/admin/job-applications", label: "Job Applications", icon: Briefcase },
   { href: "/admin/bookings",   label: "Bookings",          icon: Book },
   { href: "/admin/workshops",  label: "Workshops",         icon: CalendarDays },
   { href: "/admin/emails",     label: "Emails",            icon: Mail },
