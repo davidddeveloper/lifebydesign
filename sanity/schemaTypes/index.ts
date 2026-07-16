@@ -57,6 +57,7 @@ import { workshopBenefits } from './workshopBenefits'
 import { workshopValue } from './workshopValue'
 
 import { auditSubmission } from './auditSubmission'
+import { jobPosting } from './job-posting'
 
 
 
@@ -71,5 +72,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     kolatBooksPage, pricingPlans, workflowPhases, deliverablesSection, productPromise,
     workshopsPage, workshopBenefits, workshopValue,
     auditSubmission,
+    jobPosting,
   ],
 }
