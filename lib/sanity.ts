@@ -104,6 +104,47 @@ export async function getAllCategories() {
   )
 }*/}
 
+/** Published job postings for /careers/jobs */
+export type SanityJobPosting = {
+  _id: string
+  title: string
+  slug: string
+  department: string | null
+  type: string | null
+  location: string | null
+  description: string | null
+  responsibilities: string[] | null
+  requirements: string[] | null
+  compensation: string | null
+  applicationEmail: string | null
+  publishedAt: string | null
+}
+
+export async function getPublishedJobPostings(): Promise<SanityJobPosting[]> {
+  try {
+    const rows = await client.fetch(
+      `*[_type == "jobPosting" && published == true] | order(sortOrder asc, publishedAt desc) {
+        _id,
+        title,
+        "slug": slug.current,
+        department,
+        type,
+        location,
+        description,
+        responsibilities,
+        requirements,
+        compensation,
+        applicationEmail,
+        publishedAt,
+      }`,
+    )
+    return Array.isArray(rows) ? rows : []
+  } catch (error) {
+    console.error("[sanity] getPublishedJobPostings error:", error)
+    return []
+  }
+}
+
 export async function getRecommendedPosts(currentSlug: string, limit = 3) {
   return client.fetch(
     `*[_type == "blog" && published == true && slug.current != $slug] | order(publishedAt desc)[0..${limit - 1}] {
