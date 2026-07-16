@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileText, Mail, CalendarDays, ChevronRight, Book, BarChart2, Building2 } from "lucide-react"
+import { FileText, Mail, CalendarDays, ChevronRight, Book, BarChart2, Building2, BookOpen, Briefcase } from "lucide-react"
 
 const NAV_CARDS = [
   {
@@ -15,6 +15,18 @@ const NAV_CARDS = [
     icon: Building2,
     title: "Partners",
     description: "Browse portfolio company applications, update status, and export leads.",
+  },
+  {
+    href: "/admin/kolat-books",
+    icon: BookOpen,
+    title: "Kolat Books Inquiries",
+    description: "Browse bookkeeping service inquiries, update status, and export leads.",
+  },
+  {
+    href: "/admin/job-applications",
+    icon: Briefcase,
+    title: "Job Applications",
+    description: "Browse applications received under each job posting from careers.",
   },
   {
     href: "/admin/bookings",
