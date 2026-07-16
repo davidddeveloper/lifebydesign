@@ -14,6 +14,8 @@ interface Job {
   id: string
   title: string
   email: string
+  department?: string
+  sanityDocumentId?: string
 }
 
 interface JobApplicationModalProps {
@@ -99,6 +101,8 @@ export function JobApplicationModal({ isOpen, onClose, job }: JobApplicationModa
           coverLetter: formData.coverLetter,
           jobTitle: job.title,
           jobId: job.id,
+          jobDepartment: job.department || null,
+          sanityDocumentId: job.sanityDocumentId || null,
           submittedAt: new Date().toISOString(),
           source: "Job Application",
         }),
