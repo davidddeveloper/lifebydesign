@@ -43,6 +43,8 @@ export function BlueprintHero({ data, onOpenForm }: BlueprintHeroProps) {
   const subheading = data?.subheading || "Most businesses are stuck because they're fixing the wrong problems. The Scaling Blueprint identifies your ONE constraint—then gives you the exact 90-day plan to eliminate it."
 
   const primaryCtaText = data?.primaryCta?.text || "Get Started"
+  const primaryCtaUrl = data?.primaryCta?.url || "/constraint-audit"
+
   // primaryCta?.url handling might need logic if it's a modal trigger vs link.
   // The original component uses onOpenForm for "Get Started".
   // If data.primaryCta.url is empty or "#", we might assume modal?
@@ -70,12 +72,13 @@ export function BlueprintHero({ data, onOpenForm }: BlueprintHeroProps) {
           </motion.p>
 
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <button
-              onClick={onOpenForm}
-              className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
-            >
-              {primaryCtaText}
-            </button>
+            <Link href={primaryCtaUrl}>
+              <button
+                className="px-4 py-2 bg-[#177fc9] text-white font-bold rounded-full cursor-pointer hover:bg-[#42adff] transition-colors text-lg"
+              >
+                {primaryCtaText}
+              </button>
+            </Link>
             <Link
               href={secondaryCtaUrl}
               className="px-4 py-2 border-2 border-gray-900 text-gray-900 font-bold rounded-full hover:bg-gray-900 hover:text-white transition-colors text-lg"
