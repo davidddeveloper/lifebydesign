@@ -4,7 +4,7 @@
 import { useEffect, useState, useMemo, useCallback } from "react"
 import {
   Search, RefreshCw, ChevronDown, ChevronUp, X, Calendar,
-  Eye, Download, Building2, MapPin, Mail, Phone, Globe,
+  Eye, Download, Building2, MapPin, Mail, Phone, Globe, Trash2,
 } from "lucide-react"
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -140,24 +140,39 @@ function DetailPanel({
   partner,
   onClose,
   onUpdate,
+  onDelete,
 }: {
   partner: Partner
   onClose: () => void
   onUpdate: (id: string, updates: Partial<Partner>) => Promise<void>
+  onDelete: (id: string) => Promise<void>
 }) {
   const [status, setStatus] = useState(partner.status)
   const [notes, setNotes] = useState(partner.admin_notes ?? "")
   const [saving, setSaving] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState(false)
 
   useEffect(() => {
     setStatus(partner.status)
     setNotes(partner.admin_notes ?? "")
+    setConfirmDelete(false)
   }, [partner])
 
   async function handleSave() {
     setSaving(true)
     await onUpdate(partner.id, { status, admin_notes: notes })
     setSaving(false)
+  }
+
+  async function handleDelete() {
+    if (!confirmDelete) {
+      setConfirmDelete(true)
+      return
+    }
+    setDeleting(true)
+    await onDelete(partner.id)
+    setDeleting(false)
   }
 
   const Field = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -302,11 +317,47 @@ function DetailPanel({
               </div>
               <button
                 onClick={handleSave}
-                disabled={saving}
+                disabled={saving || deleting}
                 className="w-full py-2.5 bg-[#1A1A1A] hover:bg-black text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors"
               >
                 {saving ? "Saving…" : "Save changes"}
               </button>
+
+              <div className="pt-4 border-t border-gray-100">
+                {confirmDelete ? (
+                  <div className="space-y-2">
+                    <p className="text-sm text-red-600 font-medium">
+                      Permanently delete this application? This cannot be undone.
+                    </p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleDelete}
+                        disabled={deleting}
+                        className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-lg disabled:opacity-50 transition-colors"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        {deleting ? "Deleting…" : "Yes, delete"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmDelete(false)}
+                        disabled={deleting}
+                        className="flex-1 py-2.5 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleDelete}
+                    disabled={saving || deleting}
+                    className="w-full inline-flex items-center justify-center gap-1.5 py-2.5 border border-red-200 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-50 disabled:opacity-50 transition-colors"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    Delete application
+                  </button>
+                )}
+              </div>
             </div>
           </section>
         </div>
@@ -457,6 +508,20 @@ export default function AdminPartnersPage() {
       alert("Failed to update partner")
     }
   }, [detail])
+
+  const deletePartner = useCallback(async (id: string) => {
+    const res = await fetch("/api/admin/partners", {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id }),
+    })
+    if (res.ok) {
+      setPartners(prev => prev.filter(p => p.id !== id))
+      setDetail(null)
+    } else {
+      alert("Failed to delete partner")
+    }
+  }, [])
 
   const TIME_OPTIONS: { value: TimeFilter; label: string }[] = [
     { value: "all", label: "All Time" },
@@ -732,6 +797,7 @@ export default function AdminPartnersPage() {
           partner={detail}
           onClose={() => setDetail(null)}
           onUpdate={updatePartner}
+          onDelete={deletePartner}
         />
       )}
     </div>
