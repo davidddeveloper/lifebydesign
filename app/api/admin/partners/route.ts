@@ -62,3 +62,38 @@ export async function PATCH(request: NextRequest) {
     )
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    let id = searchParams.get("id")
+
+    if (!id) {
+      try {
+        const body = await request.json()
+        id = body?.id ?? null
+      } catch {
+        // no body
+      }
+    }
+
+    if (!id) {
+      return NextResponse.json({ error: "id required" }, { status: 400 })
+    }
+
+    const { error } = await supabaseAdmin
+      .from("partners")
+      .delete()
+      .eq("id", id)
+
+    if (error) throw error
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("[admin/partners] delete error:", error)
+    return NextResponse.json(
+      { error: "Failed to delete partner" },
+      { status: 500 }
+    )
+  }
+}
