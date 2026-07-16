@@ -1,5 +1,5 @@
 import type { StructureBuilder } from "sanity/structure"
-import { HomeIcon, DocumentIcon, CaseIcon, UsersIcon, RocketIcon } from "@sanity/icons"
+import { HomeIcon, DocumentIcon, CaseIcon, UsersIcon } from "@sanity/icons"
 
 const structure = (S: StructureBuilder) =>
   S.list()
@@ -30,9 +30,15 @@ const structure = (S: StructureBuilder) =>
 
       S.listItem().title("Blog Posts").icon(DocumentIcon).child(S.documentTypeList("post").title("Blog Posts")),
 
+      S.listItem()
+        .title("Job Postings")
+        .icon(CaseIcon)
+        .child(S.documentTypeList("jobPosting").title("Job Postings")),
+
       // All other document types
       ...S.documentTypeListItems().filter(
-        (listItem) => !["homePage", "aboutPage", "blog", "product", "jobPosting"].includes(listItem.getId() ?? ""),
+        (listItem) =>
+          !["homePage", "aboutPage", "blog", "product", "jobPosting"].includes(listItem.getId() ?? ""),
       ),
     ])
 
