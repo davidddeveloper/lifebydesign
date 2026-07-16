@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { FileText, Mail, CalendarDays, ChevronRight, Book, BarChart2 } from "lucide-react"
+import { FileText, Mail, CalendarDays, ChevronRight, Book, BarChart2, Building2 } from "lucide-react"
 
 const NAV_CARDS = [
   {
@@ -9,6 +9,12 @@ const NAV_CARDS = [
     icon: FileText,
     title: "Constraint Audits",
     description: "View and manage audit submissions, track status, and export reports.",
+  },
+  {
+    href: "/admin/partners",
+    icon: Building2,
+    title: "Partners",
+    description: "Browse portfolio company applications, update status, and export leads.",
   },
   {
     href: "/admin/bookings",
