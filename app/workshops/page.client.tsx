@@ -7,9 +7,10 @@ import { Footer } from "@/components/Footer"
 import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
 import { WorkshopHero } from "@/components/workshop-hero"
 import { WorkshopBenefits } from "@/components/workshop-benefits"
+import { VIPBenefits } from "@/components/vip-consultation-benefits"
 import { WorkshopValue } from "@/components/workshop-value"
 import { WorkshopFaq } from "@/components/workshop-faq"
-import type { WorkshopsPage, HeroSection, WorkshopBenefitsSection, WorkshopValueSection, FAQReferenceSection } from "@/sanity/lib/types"
+import type { WorkshopsPage, HeroSection, WorkshopBenefitsSection, VIPBenefitsSection, WorkshopValueSection, FAQReferenceSection } from "@/sanity/lib/types"
 
 interface WorkshopPageClientProps {
     pageData?: WorkshopsPage | null
@@ -59,6 +60,7 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
     const sections = pageData?.sections || []
     const heroData = sections.find(s => s._type === "heroSection") as HeroSection | undefined
     const benefitsData = sections.find(s => s._type === "workshopBenefits") as WorkshopBenefitsSection | undefined
+    const VIPBenefitsData = sections.find(s => s._type === "VIPBenefits") as VIPBenefitsSection | undefined
     const valueData = sections.find(s => s._type === "workshopValue") as WorkshopValueSection | undefined
     const faqData = sections.find(s => s._type === "faqReference") as FAQReferenceSection | undefined
 
@@ -68,6 +70,7 @@ export default function WorkshopPageClient({ pageData }: WorkshopPageClientProps
             <main>
                 <WorkshopHero data={heroData} />
                 <WorkshopBenefits data={benefitsData} />
+                <VIPBenefits data={VIPBenefitsData} />
                 <WorkshopValue data={valueData} />
                 <WorkshopFaq data={faqData} onOpenForm={() => setFormModalOpen(true)} />
             </main>
