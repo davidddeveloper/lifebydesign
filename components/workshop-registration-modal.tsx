@@ -674,12 +674,12 @@ export function WorkshopRegistrationModal({
                               <span className="text-[#177fc9] font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span> 2500</span>
                             </div>
                             <h3 className="font-bold text-gray-900 text-lg mb-1">Workshop</h3>
-                            <p className="text-sm text-gray-500 mb-4">2-day group training event</p>
+                            <p className="text-sm text-gray-500 mb-4">Group training event</p>
                             <ul className="space-y-1.5 mb-5">
                               {[
                                 "Identify your #1 business constraint",
-                                "Group training with peer entrepreneurs",
-                                "Build your 90-day action plan",
+                                "Learn the 5 Levers Framework with peer entrepreneurs",
+                                "Build your 90-day action plan and leave with an accountability partner",
                               ].map((item) => (
                                 <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
                                   <Check className="w-4 h-4 text-[#177fc9] mt-0.5 shrink-0" />
@@ -707,9 +707,9 @@ export function WorkshopRegistrationModal({
                             <p className="text-sm text-gray-500 mb-4">Private 1-on-1 strategy session</p>
                             <ul className="space-y-1.5 mb-5">
                               {[
-                                "Deep-dive into your specific challenges",
-                                "Personalized strategy for your business",
-                                "Direct 1-on-1 time with our team",
+                                "Deep-dive into your specific business and challenges",
+                                "Your constraint confirmed with evidence and a personalised roadmap to fix it",
+                                "Direct one-on-one time with our team, and a clear recommended next step",
                               ].map((item) => (
                                 <li key={item} className="flex items-start gap-2 text-sm text-gray-600">
                                   <Check className="w-4 h-4 text-amber-600 mt-0.5 shrink-0" />
