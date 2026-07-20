@@ -33,6 +33,7 @@ import type {
   WorkflowPhasesSection as WorkflowPhasesSectionType,
   PricingPlansSection as PricingPlansSectionType,
   WorkshopBenefitsSection as WorkshopBenefitsSectionType,
+  VIPBenefitsSection as VIPBenefitsSectionType,
   WorkshopValueSection as WorkshopValueSectionType,
 } from '@/sanity/lib/types'
 
@@ -79,6 +80,7 @@ import { DeliverablesComponent } from './sections/Deliverables'
 import { WorkflowPhasesComponent } from './sections/WorkflowPhases'
 import { PricingPlansComponent } from './sections/PricingPlans'
 import { WorkshopBenefitsComponent } from './sections/WorkshopBenefits'
+import { VIPBenefitsComponent } from './sections/VIPBenefits'
 import { WorkshopValueComponent } from './sections/WorkshopValue'
 
 // Generic fallback for FAQs if necessary, or reuse WorkshopFaq
@@ -246,6 +248,10 @@ export function SectionRenderer({ sections, onOpenForm, page }: SectionRendererP
           // Workshop Sections
           case 'workshopBenefits':
             return <WorkshopBenefitsComponent key={key} data={section as WorkshopBenefitsSectionType} />
+
+          // VIPBenefits
+          case 'VIPBenefits':
+            return <VIPBenefitsComponent key={key} data={section as VIPBenefitsSectionType} />
 
           case 'workshopValue':
             return <WorkshopValueComponent key={key} data={section as WorkshopValueSectionType} />
