@@ -331,6 +331,18 @@ export interface WorkshopBenefitsSection extends BaseSection {
   }>
 }
 
+// VIP Benefits
+export interface VIPBenefitsSection extends BaseSection {
+  _type: 'VIPBenefits'
+  benefits?: Array<{
+    _key: string
+    number?: string
+    title?: string
+    description?: string
+    image?: SanityImage
+  }>
+}
+
 // Workshop Value
 export interface WorkshopValueSection extends BaseSection {
   _type: 'workshopValue'
@@ -388,6 +400,7 @@ export type WorkshopsPageSection =
   | HeroSection
   | WorkshopBenefitsSection
   | WorkshopValueSection
+  | VIPBenefitsSection
   | FAQReferenceSection
   | CTASection
 

@@ -425,6 +425,16 @@ export const workshopsPageQuery = groq`*[_type == "workshopsPage"][0]{
         image
       }
     },
+    // VIPBenefits
+    _type == "VIPBenefits" => {
+      benefits[]{
+        _key,
+        number,
+        title,
+        description,
+        image
+      }
+    },
     // workshopValue
     _type == "workshopValue" => {
       introText,
