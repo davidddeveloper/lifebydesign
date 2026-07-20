@@ -5,4 +5,5 @@ export { PricingPlansComponent } from './PricingPlans'
 
 // Workshop Sections
 export { WorkshopBenefitsComponent } from './WorkshopBenefits'
+export { VIPBenefitsComponent } from './VIPBenefits'
 export { WorkshopValueComponent } from './WorkshopValue'
