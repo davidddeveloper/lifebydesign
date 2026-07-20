@@ -36,14 +36,14 @@ export function VIPBenefits({ data }: VIPBenefitsProps) {
                 {/* Torn Paper Header */}
                 <div className="mb-16">
                     <div
-                        className="bg-[#1e293b] py-8 px-6 relative"
+                        className="bg-[#f63c61] py-8 px-6 relative"
                         style={{
                             clipPath:
                                 "polygon(0 0, 100% 0, 100% 85%, 98% 90%, 96% 85%, 94% 90%, 92% 85%, 90% 90%, 88% 85%, 86% 90%, 84% 85%, 82% 90%, 80% 85%, 78% 90%, 76% 85%, 74% 90%, 72% 85%, 70% 90%, 68% 85%, 66% 90%, 64% 85%, 62% 90%, 60% 85%, 58% 90%, 56% 85%, 54% 90%, 52% 85%, 50% 90%, 48% 85%, 46% 90%, 44% 85%, 42% 90%, 40% 85%, 38% 90%, 36% 85%, 34% 90%, 32% 85%, 30% 90%, 28% 85%, 26% 90%, 24% 85%, 22% 90%, 20% 85%, 18% 90%, 16% 85%, 14% 90%, 12% 85%, 10% 90%, 8% 85%, 6% 90%, 4% 85%, 2% 90%, 0 85%)",
                         }}
                     >
                         <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-white text-center">
-                            What you'll get at the <span className="underline decoration-4">in-person</span> VIP Consultation:
+                            What you'll get at the VIP Consultation:
                         </h2>
                     </div>
                 </div>
