@@ -1,9 +1,9 @@
 import { type SchemaTypeDefinition } from 'sanity'
 
-import {blockContentType} from './blockContentType'
-import {categoryType} from './categoryType'
-import {postType} from './postType'
-import {authorType} from './authorType'
+import { blockContentType } from './blockContentType'
+import { categoryType } from './categoryType'
+import { postType } from './postType'
+import { authorType } from './authorType'
 
 import { partner } from "./partner"
 import { productPage } from "./product"
@@ -15,8 +15,8 @@ import { ctaItem } from './ctaItem'
 import { ctas } from './ctas'
 
 import { homePage } from "./page"
-import {About} from "./about"
-import {founder} from "./founder"
+import { About } from "./about"
+import { founder } from "./founder"
 
 import { aboutHero } from './aboutHero'
 import { aboutStory } from './aboutStory'
@@ -54,6 +54,7 @@ import { productPromise } from './productPromise'
 
 import { workshopsPage } from './workshopsPage'
 import { workshopBenefits } from './workshopBenefits'
+import { VIPBenefits } from './VIPBenefits'
 import { workshopValue } from './workshopValue'
 
 import { auditSubmission } from './auditSubmission'
@@ -70,7 +71,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     scalingBlueprintPage, productHero, targetStages, outcomesSection, processSteps, pricingPaths, faqReference,
     heroSection, founderSection, homeFaqSection, partnersSection,
     kolatBooksPage, pricingPlans, workflowPhases, deliverablesSection, productPromise,
-    workshopsPage, workshopBenefits, workshopValue,
+    workshopsPage, workshopBenefits, VIPBenefits, workshopValue,
     auditSubmission,
     jobPosting,
   ],

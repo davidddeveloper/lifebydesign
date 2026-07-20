@@ -21,6 +21,7 @@ export const workshopsPage = defineType({
       of: [
         { type: "heroSection" },        // CTA + Hero image + heading/subheading
         { type: "workshopBenefits" },   // What you'll get sections (#1, #2, #3)
+        { type: "VIPBenefits" },        // VIP Benefits
         { type: "workshopValue" },      // Animated reasons / description
         { type: "faqReference" },       // reuse FAQ
         { type: "ctaSection" },         // reuse CTA
