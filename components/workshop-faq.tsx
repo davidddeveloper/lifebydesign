@@ -4,7 +4,14 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Plus, X } from "lucide-react"
+import Linkify from "linkify-react"
 import { WorkshopRegistrationModal } from "@/components/workshop-registration-modal"
+
+const linkifyOptions = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+  className: "text-[#177fc9] underline hover:no-underline",
+}
 
 {/*{
     question: "What actually happens during the 2 days?",
@@ -137,11 +144,19 @@ export function WorkshopFaq({ data, onOpenForm }: WorkshopFaqProps) {
                     {Array.isArray(faq.answer) ? (
                       <div className="space-y-4 text-gray-700 text-base leading-relaxed">
                         {faq.answer.map((line: string, i: number) => (
-                          <p key={i}>{line}</p>
+                          <p key={i} className={line.trim().startsWith("•") ? "pl-4" : ""}>
+                            <Linkify options={linkifyOptions}>{line}</Linkify>
+                          </p>
                         ))}
                       </div>
                     ) : (
-                      <p className="text-gray-700 text-lg leading-relaxed whitespace-pre-line">{faq.answer}</p>
+                      <div className="text-gray-700 text-lg leading-relaxed">
+                        {faq.answer.split("\n").map((line, i) => (
+                          <p key={i} className={line.trim().startsWith("•") ? "pl-4" : ""}>
+                            <Linkify options={linkifyOptions}>{line}</Linkify>
+                          </p>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </motion.div>

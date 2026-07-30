@@ -3,7 +3,14 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ChevronDown } from "lucide-react"
+import Linkify from "linkify-react"
 import type { FAQReferenceSection } from "@/sanity/lib/types"
+
+const linkifyOptions = {
+  target: "_blank",
+  rel: "noopener noreferrer",
+  className: "text-[#177fc9] underline hover:no-underline",
+}
 
 const defaultFaqs = [
   {
@@ -92,8 +99,12 @@ export function BlueprintFAQ({ data }: BlueprintFAQProps) {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
-                      <p className="text-gray-700 leading-relaxed">{faq.answer}</p>
+                    <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 text-gray-700 leading-relaxed">
+                      {faq.answer.split("\n").map((line, lineIndex) => (
+                        <p key={lineIndex} className={line.trim().startsWith("•") ? "pl-4" : ""}>
+                          <Linkify options={linkifyOptions}>{line}</Linkify>
+                        </p>
+                      ))}
                     </div>
                   </motion.div>
                 )}
