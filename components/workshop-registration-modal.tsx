@@ -671,7 +671,7 @@ export function WorkshopRegistrationModal({
                               <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center group-hover:bg-blue-200 transition-colors">
                                 <Users className="w-5 h-5 text-[#177fc9]" />
                               </div>
-                              <span className="text-[#177fc9] font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span> 2500</span>
+                              {/*<span className="text-[#177fc9] font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span> 2500</span>*/}
                             </div>
                             <h3 className="font-bold text-gray-900 text-lg mb-1">Workshop</h3>
                             <p className="text-sm text-gray-500 mb-4">Group training event</p>
@@ -701,7 +701,7 @@ export function WorkshopRegistrationModal({
                               <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center group-hover:bg-amber-200 transition-colors">
                                 <Star className="w-5 h-5 text-amber-600" />
                               </div>
-                              <span className="text-amber-600 font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span>3500</span>
+                              {/*<span className="text-amber-600 font-bold text-lg"><span className="text-xs font-normal text-gray-500">SLE</span>3500</span>*/}
                             </div>
                             <h3 className="font-bold text-gray-900 text-lg mb-1">VIP Consultation</h3>
                             <p className="text-sm text-gray-500 mb-4">Private 1-on-1 strategy session</p>
